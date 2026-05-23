@@ -4,288 +4,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вход - Kettik Study</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css"> 
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="csrf-token" content="<?= \App\Core\Csrf::token() ?>">
     <script>window.BASE_URL = '<?= BASE_URL ?>';</script>
     <script src="<?= BASE_URL ?>/assets/js/csrf.js"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            background: #f0f4ff;
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { primary: '#2563eb' }
+                }
+            }
         }
-
-        .auth-side {
-            display: none;
-            width: 50%;
-            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #1e40af 100%);
-            position: relative;
-            overflow: hidden;
-        }
-        .auth-side::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 0);
-            background-size: 24px 24px;
-        }
-        .auth-side-content {
-            position: relative;
-            z-index: 1;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 4rem;
-            color: white;
-        }
-        .auth-side-content h2 {
-            font-size: 2.25rem;
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-        }
-        .auth-side-content p {
-            font-size: 1rem;
-            color: rgba(255,255,255,0.7);
-            line-height: 1.6;
-            max-width: 400px;
-        }
-        .auth-side .decor-circle {
-            position: absolute;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-        .auth-side .decor-circle:nth-child(1) { width: 300px; height: 300px; top: -80px; right: -60px; }
-        .auth-side .decor-circle:nth-child(2) { width: 200px; height: 200px; bottom: -40px; left: -40px; }
-        .auth-side .decor-circle:nth-child(3) { width: 150px; height: 150px; bottom: 20%; right: 10%; border-color: rgba(255,255,255,0.04); }
-
-        .auth-main {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-        .auth-card {
-            width: 100%;
-            max-width: 420px;
-        }
-        .auth-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 2.5rem;
-            text-decoration: none;
-        }
-        .auth-logo img {
-            height: 44px;
-            width: auto;
-        }
-        .auth-logo span {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #1e3a8a;
-            letter-spacing: -0.02em;
-        }
-        .auth-title {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 0.25rem;
-        }
-        .auth-subtitle {
-            font-size: 0.9rem;
-            color: #6b7280;
-            margin-bottom: 2rem;
-        }
-
-        .field {
-            margin-bottom: 1.25rem;
-        }
-        .field label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #374151;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.5rem;
-        }
-        .field input {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            font-family: 'Inter', sans-serif;
-            color: #111827;
-            background: #fff;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .field input::placeholder {
-            color: #9ca3af;
-        }
-        .field input:focus {
-            outline: none;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 0.85rem;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            margin-top: 0.5rem;
-        }
-        .btn-login:hover {
-            background: #1d4ed8;
-        }
-        .btn-login:active {
-            transform: scale(0.99);
-        }
-
-        .auth-footer {
-            text-align: center;
-            margin-top: 1.75rem;
-            font-size: 0.875rem;
-            color: #6b7280;
-        }
-        .auth-footer a {
-            color: #2563eb;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .auth-footer a:hover {
-            text-decoration: underline;
-        }
-
-        .error-message {
-            background: #fef2f2;
-            color: #dc2626;
-            font-size: 0.85rem;
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            text-align: center;
-            display: none;
-            border: 1px solid #fecaca;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin: 1.5rem 0;
-            color: #9ca3af;
-            font-size: 0.8rem;
-        }
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: #e5e7eb;
-        }
-
-        .forgot-link {
-            float: right;
-            font-size: 0.8rem;
-            color: #2563eb;
-            text-decoration: none;
-            text-transform: none;
-            letter-spacing: normal;
-        }
-        .forgot-link:hover {
-            text-decoration: underline;
-        }
-
-        @media (min-width: 1024px) {
-            .auth-side { display: block; }
-        }
-    </style>
+    </script>
 </head>
-<body>
-    <div class="auth-side">
-        <div class="decor-circle"></div>
-        <div class="decor-circle"></div>
-        <div class="decor-circle"></div>
-        <div class="auth-side-content">
-            <h2>Добро пожаловать<br>в Kettik Study</h2>
-            <p>Ваш надёжный партнёр на пути к европейскому образованию. Войдите в личный кабинет для отслеживания процесса поступления.</p>
-        </div>
-    </div>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
 
-    <div class="auth-main">
-        <div class="auth-card">
-            <a href="<?= BASE_URL ?>/" class="auth-logo">
-                <img src="<?= BASE_URL ?>/assets/img/logo.PNG" alt="Kettik Study">
-                <span>Kettik Study</span>
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl border border-gray-100 p-8 sm:p-10">
+        
+        <div class="flex justify-center mb-8">
+            <a href="<?= BASE_URL ?>/" class="flex items-center gap-2 decoration-transparent">
+                <img src="<?= BASE_URL ?>/assets/img/logo.PNG" alt="Kettik Study" class="h-10 w-auto">
+                <span class="text-xl font-bold text-blue-900 tracking-tight">Kettik Study</span>
             </a>
-
-            <h1 class="auth-title" id="form-title">Вход в кабинет</h1>
-            <p class="auth-subtitle" id="form-subtitle">Введите свои данные для входа</p>
-
-            <div id="error-msg" class="error-message"></div>
-            <div id="success-msg" class="error-message" style="background: #f0fdf4; color: #166534; border-color: #bbf7d0;"></div>
-
-            <!-- Login Form -->
-            <form id="login-form">
-                <div class="field">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" required placeholder="name@company.com">
-                </div>
-                <div class="field">
-                    <label for="password">
-                        Пароль
-                        <a href="#" class="forgot-link" onclick="toggleForm('forgot'); return false;">Забыли пароль?</a>
-                    </label>
-                    <input type="password" id="password" required placeholder="••••••••">
-                </div>
-                <button type="submit" class="btn-login">Войти</button>
-                <div class="auth-footer">
-                    Нет аккаунта? <a href="<?= BASE_URL ?>/register">Зарегистрироваться</a>
-                </div>
-            </form>
-
-            <!-- Forgot Password Form -->
-            <form id="forgot-form" style="display: none;" onsubmit="handleForgot(event)">
-                <div class="field">
-                    <label for="forgot-email">Email для восстановления</label>
-                    <input type="email" id="forgot-email" required placeholder="name@company.com">
-                </div>
-                <button type="submit" class="btn-login">Отправить ссылку</button>
-                <div class="auth-footer">
-                    <a href="#" onclick="toggleForm('login'); return false;">Вернуться ко входу</a>
-                </div>
-            </form>
-
-            <!-- Reset Password Form -->
-            <form id="reset-form" style="display: none;" onsubmit="handleReset(event)">
-                <input type="hidden" id="reset-token">
-                <div class="field">
-                    <label for="new-password">Новый пароль</label>
-                    <input type="password" id="new-password" required placeholder="Минимум 6 символов" minlength="6">
-                </div>
-                <button type="submit" class="btn-login">Сохранить пароль</button>
-                <div class="auth-footer">
-                    <a href="#" onclick="toggleForm('login'); return false;">Вернуться ко входу</a>
-                </div>
-            </form>
-
         </div>
+
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-gray-900 tracking-tight" id="form-title">Вход в кабинет</h1>
+            <p class="text-sm text-gray-500 mt-2" id="form-subtitle">Введите свои данные для входа</p>
+        </div>
+
+        <div id="error-msg" class="bg-red-50 text-red-600 text-sm p-4 rounded-lg mb-6 border border-red-100 text-center" style="display: none;"></div>
+        <div id="success-msg" class="bg-green-50 text-green-700 text-sm p-4 rounded-lg mb-6 border border-green-100 text-center" style="display: none;"></div>
+
+        <!-- Login Form -->
+        <form id="login-form">
+            <div class="mb-5">
+                <label for="email" class="block text-sm font-semibold text-gray-700 mb-1.5 uppercase tracking-wider">Email</label>
+                <input type="email" id="email" required placeholder="name@company.com" 
+                    class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition bg-white text-gray-900">
+            </div>
+            <div class="mb-5">
+                <div class="flex items-center justify-between mb-1.5">
+                    <label for="password" class="block text-sm font-semibold text-gray-700 uppercase tracking-wider">Пароль</label>
+                    <a href="#" class="text-sm font-medium text-primary hover:underline transition" onclick="toggleForm('forgot'); return false;">Забыли пароль?</a>
+                </div>
+                <input type="password" id="password" required placeholder="••••••••" 
+                    class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition bg-white text-gray-900">
+            </div>
+            <button type="submit" class="w-full py-3.5 px-4 bg-primary hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/30 transition duration-200 mt-2">
+                Войти
+            </button>
+            <div class="text-center text-sm text-gray-500 mt-6">
+                Нет аккаунта? <a href="<?= BASE_URL ?>/register" class="font-semibold text-primary hover:underline transition">Зарегистрироваться</a>
+            </div>
+        </form>
+
+        <!-- Forgot Password Form -->
+        <form id="forgot-form" style="display: none;" onsubmit="handleForgot(event)">
+            <div class="mb-5">
+                <label for="forgot-email" class="block text-sm font-semibold text-gray-700 mb-1.5 uppercase tracking-wider">Email для восстановления</label>
+                <input type="email" id="forgot-email" required placeholder="name@company.com" 
+                    class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition bg-white text-gray-900">
+            </div>
+            <button type="submit" class="w-full py-3.5 px-4 bg-primary hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/30 transition duration-200 mt-2">
+                Отправить ссылку
+            </button>
+            <div class="text-center text-sm mt-6">
+                <a href="#" onclick="toggleForm('login'); return false;" class="font-semibold text-gray-500 hover:text-gray-900 transition">Вернуться ко входу</a>
+            </div>
+        </form>
+
+        <!-- Reset Password Form -->
+        <form id="reset-form" style="display: none;" onsubmit="handleReset(event)">
+            <input type="hidden" id="reset-token">
+            <div class="mb-5">
+                <label for="new-password" class="block text-sm font-semibold text-gray-700 mb-1.5 uppercase tracking-wider">Новый пароль</label>
+                <input type="password" id="new-password" required placeholder="Минимум 6 символов" minlength="6"
+                    class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition bg-white text-gray-900">
+            </div>
+            <button type="submit" class="w-full py-3.5 px-4 bg-primary hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/30 transition duration-200 mt-2">
+                Сохранить пароль
+            </button>
+            <div class="text-center text-sm mt-6">
+                <a href="#" onclick="toggleForm('login'); return false;" class="font-semibold text-gray-500 hover:text-gray-900 transition">Вернуться ко входу</a>
+            </div>
+        </form>
+
     </div>
 
+    <!-- ORIGINAL JS BLOCK PRESERVED EXACTLY AS BEFORE -->
     <script src="<?= BASE_URL ?>/assets/js/auth.js"></script>
     <script>
         // Check for reset token in URL
