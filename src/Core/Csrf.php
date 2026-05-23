@@ -12,10 +12,8 @@ class Csrf
             @session_start();
         }
 
-        if (!empty($_SESSION)) {
-            if (empty($_SESSION['csrf_token'])) {
-                $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-            }
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
         }
     }
 
@@ -40,8 +38,11 @@ class Csrf
     {
         self::init();
 
+        $headers = function_exists('getallheaders') ? getallheaders() : [];
         $token = $_POST['_csrf_token']
             ?? $_SERVER['HTTP_X_CSRF_TOKEN']
+            ?? $headers['X-CSRF-TOKEN']
+            ?? $headers['X-Csrf-Token']
             ?? null;
 
         if (!$token) {
