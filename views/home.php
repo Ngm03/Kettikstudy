@@ -665,107 +665,112 @@ $currentUser = $authService->getUserFromCookie();
     </section>
 
 
-    <section id="why-poland" class="py-24 bg-white relative overflow-hidden">
-        <div class="absolute top-20 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-blue-50/80 to-transparent rounded-full translate-x-1/3"></div>
-        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-tr from-indigo-50/60 to-transparent rounded-full -translate-x-1/4 translate-y-1/4"></div>
+        <section id="why-poland" class="py-24 bg-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-1/3 h-full bg-gray-50/50 rounded-l-[100px] hidden lg:block"></div>
         
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-16" data-aos="fade-up">
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-600 text-sm font-semibold mb-6">
+            <div class="text-center lg:text-left mb-16" data-aos="fade-up">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-sm font-semibold mb-6">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <?= __('poland_advantages') ?>
                 </div>
                 <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-5"><?= __('why_study_poland') ?></h2>
-                <p class="text-lg text-gray-500 max-w-2xl mx-auto"><?= __('quality_education_affordable') ?></p>
+                <p class="text-lg text-gray-500 max-w-2xl lg:mx-0 mx-auto"><?= __('quality_education_affordable') ?></p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5" data-aos="fade-right">
-                    <div class="group bg-gradient-to-br from-emerald-50 to-white rounded-2xl p-6 border border-emerald-100/60 hover:shadow-lg hover:shadow-emerald-100/50 transition-all duration-400">
-                        <div class="w-11 h-11 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center mb-4 shadow-md shadow-emerald-500/20">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+                <!-- Левая колонка: 6 воздушных преимуществ -->
+                <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-12" data-aos="fade-right">
+                    
+                    <!-- Преимущество 1 -->
+                    <div class="group relative">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-5 group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-600/30 group-hover:-translate-y-1 transition-all duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </div>
-                        <h4 class="font-bold text-gray-900 mb-1.5"><?= __('free_education') ?></h4>
+                        <h4 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-300"><?= __('free_education') ?></h4>
                         <p class="text-gray-500 text-sm leading-relaxed"><?= __('free_education_desc') ?></p>
                     </div>
 
-                    <div class="group bg-gradient-to-br from-blue-50 to-white rounded-2xl p-6 border border-blue-100/60 hover:shadow-lg hover:shadow-blue-100/50 transition-all duration-400">
-                        <div class="w-11 h-11 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-4 shadow-md shadow-blue-500/20">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"></path></svg>
+                    <!-- Преимущество 2 -->
+                    <div class="group relative">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-5 group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-600/30 group-hover:-translate-y-1 transition-all duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"></path></svg>
                         </div>
-                        <h4 class="font-bold text-gray-900 mb-1.5"><?= __('stipends') ?></h4>
+                        <h4 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-300"><?= __('stipends') ?></h4>
                         <p class="text-gray-500 text-sm leading-relaxed"><?= __('stipends_desc') ?></p>
                     </div>
 
-                    <div class="group bg-gradient-to-br from-amber-50 to-white rounded-2xl p-6 border border-amber-100/60 hover:shadow-lg hover:shadow-amber-100/50 transition-all duration-400">
-                        <div class="w-11 h-11 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center mb-4 shadow-md shadow-amber-500/20">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <!-- Преимущество 3 -->
+                    <div class="group relative">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-5 group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-600/30 group-hover:-translate-y-1 transition-all duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                         </div>
-                        <h4 class="font-bold text-gray-900 mb-1.5"><?= __('work_residence') ?></h4>
+                        <h4 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-300"><?= __('work_residence') ?></h4>
                         <p class="text-gray-500 text-sm leading-relaxed"><?= __('work_residence_desc') ?></p>
                     </div>
 
-                    <div class="group bg-gradient-to-br from-indigo-50 to-white rounded-2xl p-6 border border-indigo-100/60 hover:shadow-lg hover:shadow-indigo-100/50 transition-all duration-400">
-                        <div class="w-11 h-11 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center mb-4 shadow-md shadow-indigo-500/20">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    <!-- Преимущество 4 -->
+                    <div class="group relative">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-5 group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-600/30 group-hover:-translate-y-1 transition-all duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                         </div>
-                        <h4 class="font-bold text-gray-900 mb-1.5"><?= __('schengen_zone') ?></h4>
+                        <h4 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-300"><?= __('schengen_zone') ?></h4>
                         <p class="text-gray-500 text-sm leading-relaxed"><?= __('schengen_desc') ?></p>
                     </div>
 
-                    <div class="group bg-gradient-to-br from-teal-50 to-white rounded-2xl p-6 border border-teal-100/60 hover:shadow-lg hover:shadow-teal-100/50 transition-all duration-400">
-                        <div class="w-11 h-11 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl flex items-center justify-center mb-4 shadow-md shadow-teal-500/20">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    <!-- Преимущество 5 -->
+                    <div class="group relative">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-5 group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-600/30 group-hover:-translate-y-1 transition-all duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
                         </div>
-                        <h4 class="font-bold text-gray-900 mb-1.5"><?= __('safety') ?></h4>
+                        <h4 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-300"><?= __('safety') ?></h4>
                         <p class="text-gray-500 text-sm leading-relaxed"><?= __('safety_desc') ?></p>
                     </div>
 
-                    <div class="group bg-gradient-to-br from-purple-50 to-white rounded-2xl p-6 border border-purple-100/60 hover:shadow-lg hover:shadow-purple-100/50 transition-all duration-400">
-                        <div class="w-11 h-11 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-4 shadow-md shadow-purple-500/20">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+                    <!-- Преимущество 6 (Новые ключи) -->
+                    <div class="group relative">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-5 group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-600/30 group-hover:-translate-y-1 transition-all duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
                         </div>
-                        <h4 class="font-bold text-gray-900 mb-1.5">Диплом ЕС</h4>
-                        <p class="text-gray-500 text-sm leading-relaxed">Признан в ЕС и мире. Стоимость в 2-3 раза ниже Западной Европы</p>
+                        <h4 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-300"><?= __('eu_diploma') ?></h4>
+                        <p class="text-gray-500 text-sm leading-relaxed"><?= __('eu_diploma_desc') ?></p>
                     </div>
                 </div>
 
-                <div class="relative" data-aos="fade-left">
-                    <div class="relative rounded-3xl overflow-hidden shadow-2xl">
-                        <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Студенты в Польше" class="w-full h-[520px] object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent"></div>
+                <!-- Правая колонка: Фото со стекломорфизмом -->
+                <div class="lg:col-span-5 relative" data-aos="fade-left">
+                    <div class="relative rounded-3xl overflow-hidden shadow-2xl h-[600px]">
+                        <!-- Изображение -->
+                        <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Студенты в Польше" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent"></div>
                         
-                        <div class="absolute bottom-0 left-0 right-0 p-8">
+                        <!-- Блок статистики со стекломорфизмом -->
+                        <div class="absolute bottom-6 left-6 right-6 backdrop-blur-md bg-white/30 border border-white/40 rounded-2xl p-6">
                             <div class="grid grid-cols-3 gap-4">
                                 <div class="text-center">
-                                    <div class="text-3xl font-black text-white">400+</div>
-                                    <div class="text-xs text-gray-300 font-medium uppercase tracking-wider mt-1">Специальностей</div>
+                                    <div class="text-2xl font-black text-white">400+</div>
+                                    <div class="text-[10px] text-white/90 font-bold uppercase tracking-widest mt-1">Направлений</div>
                                 </div>
-                                <div class="text-center border-x border-white/20">
-                                    <div class="text-3xl font-black text-white">EN/PL</div>
-                                    <div class="text-xs text-gray-300 font-medium uppercase tracking-wider mt-1">Языки</div>
+                                <div class="text-center border-x border-white/30">
+                                    <div class="text-2xl font-black text-white">EN/PL</div>
+                                    <div class="text-[10px] text-white/90 font-bold uppercase tracking-widest mt-1">Языки</div>
                                 </div>
                                 <div class="text-center">
-                                    <div class="text-3xl font-black text-white">3-5</div>
-                                    <div class="text-xs text-gray-300 font-medium uppercase tracking-wider mt-1">Лет обучения</div>
+                                    <div class="text-2xl font-black text-white">&gt; 40</div>
+                                    <div class="text-[10px] text-white/90 font-bold uppercase tracking-widest mt-1">Вузов</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="absolute -bottom-6 -left-6 bg-white rounded-2xl p-5 shadow-xl border border-gray-100 max-w-[220px]" data-aos="fade-up" data-aos-delay="300">
-                        <div class="flex items-center gap-3 mb-2">
-                            <div class="w-9 h-9 bg-emerald-50 rounded-lg flex items-center justify-center">
-                                <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                            </div>
-                            <span class="text-sm font-bold text-gray-900">Стоимость жизни</span>
-                        </div>
-                        <p class="text-xs text-gray-500 leading-relaxed">Общежитие: 100–400K ₸/мес<br>Питание: 70–150K ₸/мес</p>
-                    </div>
+                    
+                    <!-- Декоративные элементы -->
+                    <div class="absolute -top-6 -right-6 w-24 h-24 bg-blue-100 rounded-full blur-2xl opacity-60 z-[-1]"></div>
+                    <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-indigo-100 rounded-full blur-2xl opacity-60 z-[-1]"></div>
                 </div>
             </div>
         </div>
     </section>
+
 
     <section class="py-16 relative overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-r from-gray-900 via-indigo-950 to-gray-900"></div>
