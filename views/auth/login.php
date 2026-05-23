@@ -198,6 +198,18 @@
             background: #e5e7eb;
         }
 
+        .forgot-link {
+            float: right;
+            font-size: 0.8rem;
+            color: #2563eb;
+            text-decoration: none;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
         @media (min-width: 1024px) {
             .auth-side { display: block; }
         }
@@ -221,29 +233,154 @@
                 <span>Kettik Study</span>
             </a>
 
-            <h1 class="auth-title">Вход в кабинет</h1>
-            <p class="auth-subtitle">Введите свои данные для входа</p>
+            <h1 class="auth-title" id="form-title">Вход в кабинет</h1>
+            <p class="auth-subtitle" id="form-subtitle">Введите свои данные для входа</p>
 
             <div id="error-msg" class="error-message"></div>
+            <div id="success-msg" class="error-message" style="background: #f0fdf4; color: #166534; border-color: #bbf7d0;"></div>
 
+            <!-- Login Form -->
             <form id="login-form">
                 <div class="field">
                     <label for="email">Email</label>
                     <input type="email" id="email" required placeholder="name@company.com">
                 </div>
                 <div class="field">
-                    <label for="password">Пароль</label>
+                    <label for="password">
+                        Пароль
+                        <a href="#" class="forgot-link" onclick="toggleForm('forgot'); return false;">Забыли пароль?</a>
+                    </label>
                     <input type="password" id="password" required placeholder="••••••••">
                 </div>
                 <button type="submit" class="btn-login">Войти</button>
+                <div class="auth-footer">
+                    Нет аккаунта? <a href="<?= BASE_URL ?>/register">Зарегистрироваться</a>
+                </div>
             </form>
 
-            <div class="auth-footer">
-                Нет аккаунта? <a href="<?= BASE_URL ?>/register">Зарегистрироваться</a>
-            </div>
+            <!-- Forgot Password Form -->
+            <form id="forgot-form" style="display: none;" onsubmit="handleForgot(event)">
+                <div class="field">
+                    <label for="forgot-email">Email для восстановления</label>
+                    <input type="email" id="forgot-email" required placeholder="name@company.com">
+                </div>
+                <button type="submit" class="btn-login">Отправить ссылку</button>
+                <div class="auth-footer">
+                    <a href="#" onclick="toggleForm('login'); return false;">Вернуться ко входу</a>
+                </div>
+            </form>
+
+            <!-- Reset Password Form -->
+            <form id="reset-form" style="display: none;" onsubmit="handleReset(event)">
+                <input type="hidden" id="reset-token">
+                <div class="field">
+                    <label for="new-password">Новый пароль</label>
+                    <input type="password" id="new-password" required placeholder="Минимум 6 символов" minlength="6">
+                </div>
+                <button type="submit" class="btn-login">Сохранить пароль</button>
+                <div class="auth-footer">
+                    <a href="#" onclick="toggleForm('login'); return false;">Вернуться ко входу</a>
+                </div>
+            </form>
+
         </div>
     </div>
 
     <script src="<?= BASE_URL ?>/assets/js/auth.js"></script>
+    <script>
+        // Check for reset token in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const resetToken = urlParams.get('reset_token');
+
+        if (resetToken) {
+            document.getElementById('reset-token').value = resetToken;
+            toggleForm('reset');
+        }
+
+        function toggleForm(formType) {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('forgot-form').style.display = 'none';
+            document.getElementById('reset-form').style.display = 'none';
+            
+            document.getElementById('error-msg').style.display = 'none';
+            document.getElementById('success-msg').style.display = 'none';
+
+            const title = document.getElementById('form-title');
+            const subtitle = document.getElementById('form-subtitle');
+
+            if (formType === 'forgot') {
+                document.getElementById('forgot-form').style.display = 'block';
+                title.textContent = 'Восстановление';
+                subtitle.textContent = 'Укажите email для получения ссылки';
+            } else if (formType === 'reset') {
+                document.getElementById('reset-form').style.display = 'block';
+                title.textContent = 'Новый пароль';
+                subtitle.textContent = 'Придумайте надежный пароль';
+            } else {
+                document.getElementById('login-form').style.display = 'block';
+                title.textContent = 'Вход в кабинет';
+                subtitle.textContent = 'Введите свои данные для входа';
+            }
+        }
+
+        function handleForgot(e) {
+            e.preventDefault();
+            const email = document.getElementById('forgot-email').value;
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            btn.textContent = 'Отправка...';
+
+            fetch(window.BASE_URL + '/api/auth/forgot-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            }).then(r => r.json()).then(data => {
+                btn.disabled = false;
+                btn.textContent = 'Отправить ссылку';
+                if (data.success) {
+                    const msg = document.getElementById('success-msg');
+                    // MVP Hack: Show token directly for testing
+                    if (data.debug_token) {
+                        msg.innerHTML = `Ссылка отправлена!<br><br><b style="color:red">MVP TEST LINK:</b><br><a href="?reset_token=${data.debug_token}">Нажми сюда чтобы сбросить пароль</a>`;
+                    } else {
+                        msg.textContent = data.message;
+                    }
+                    msg.style.display = 'block';
+                    document.getElementById('error-msg').style.display = 'none';
+                } else {
+                    const err = document.getElementById('error-msg');
+                    err.textContent = data.error;
+                    err.style.display = 'block';
+                    document.getElementById('success-msg').style.display = 'none';
+                }
+            });
+        }
+
+        function handleReset(e) {
+            e.preventDefault();
+            const token = document.getElementById('reset-token').value;
+            const password = document.getElementById('new-password').value;
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            btn.textContent = 'Сохранение...';
+
+            fetch(window.BASE_URL + '/api/auth/reset-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token, password })
+            }).then(r => r.json()).then(data => {
+                btn.disabled = false;
+                btn.textContent = 'Сохранить пароль';
+                if (data.success) {
+                    alert('Пароль успешно изменен! Теперь вы можете войти.');
+                    window.location.href = window.BASE_URL + '/login';
+                } else {
+                    const err = document.getElementById('error-msg');
+                    err.textContent = data.error;
+                    err.style.display = 'block';
+                }
+            });
+        }
+    </script>
 </body>
 </html>

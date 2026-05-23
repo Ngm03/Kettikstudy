@@ -110,6 +110,25 @@
     </div>
 </div>
 
+<div class="md-stat-card" style="display: block; margin-bottom: 24px;">
+    <h3 style="margin-bottom: 16px; font-size: 1.2rem; color: var(--man-text);">⚡ Единая очередь задач (Action Queue)</h3>
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="border-bottom: 1px solid var(--man-border); color: #64748b; font-size: 0.85rem; text-transform: uppercase;">
+                    <th style="padding: 12px 8px;">Студент</th>
+                    <th style="padding: 12px 8px;">Тип / Сумма</th>
+                    <th style="padding: 12px 8px;">Файл</th>
+                    <th style="padding: 12px 8px;">Действия</th>
+                </tr>
+            </thead>
+            <tbody id="pendingReceiptsTable">
+                <tr><td colspan="4" style="padding: 16px 8px; text-align: center; color: #64748b;">Загрузка...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
@@ -128,5 +147,108 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('statMyStudents').textContent = data.stats.my_students || 0;
             }
         });
+
+    loadActionQueue();
 });
+
+function loadActionQueue() {
+    fetch(`${window.BASE_URL}/api/manager/action-queue`)
+        .then(res => res.json())
+        .then(data => {
+            const tbody = document.getElementById('pendingReceiptsTable');
+            tbody.innerHTML = '';
+            if (data.success && data.actions && data.actions.length > 0) {
+                data.actions.forEach(a => {
+                    const tr = document.createElement('tr');
+                    tr.style.borderBottom = '1px solid var(--man-border)';
+                    
+                    const date = new Date(a.date).toLocaleDateString('ru-RU', {hour: '2-digit', minute:'2-digit'});
+                    
+                    let metaInfo = '';
+                    let fileLink = '';
+                    let actionButtons = '';
+                    
+                    if (a.action_type === 'receipt') {
+                        metaInfo = `💰 Чек: <br><span style="font-weight:600">${a.meta || 'Не указано'}</span>`;
+                        fileLink = `<a href="${window.BASE_URL}/api/payments/view-receipt?id=${a.id}" target="_blank" style="color: #3b82f6; text-decoration: none; font-size: 0.85rem;">📂 Открыть чек</a>`;
+                        actionButtons = `
+                            <button onclick="approveAction('receipt', ${a.id})" style="background: #22c55e; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-right: 4px;">✅ Одобрить</button>
+                            <button onclick="rejectAction('receipt', ${a.id})" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">❌ Отклонить</button>
+                        `;
+                    } else {
+                        const typeLabels = { passport: 'Паспорт', transcript: 'Аттестат', certificate: 'Сертификат' };
+                        const docType = typeLabels[a.item_type] || 'Документ';
+                        metaInfo = `📄 ${docType}`;
+                        fileLink = `<a href="${window.BASE_URL}/api/documents/view?id=${a.id}" target="_blank" style="color: #3b82f6; text-decoration: none; font-size: 0.85rem;">📂 Открыть док</a>`;
+                        actionButtons = `
+                            <button onclick="approveAction('document', ${a.id})" style="background: #22c55e; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-right: 4px;">✅ Одобрить</button>
+                            <button onclick="rejectAction('document', ${a.id})" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">❌ Отклонить</button>
+                        `;
+                    }
+
+                    tr.innerHTML = `
+                        <td style="padding: 12px 8px; font-weight: 500;">
+                            <a href="${window.BASE_URL}/manager/student?id=${a.student_id}" style="color: inherit; text-decoration: none;">${a.student_name}</a>
+                            <div style="font-size: 0.75rem; color: #64748b; font-weight: normal;">${date}</div>
+                        </td>
+                        <td style="padding: 12px 8px; font-size: 0.9rem;">${metaInfo}</td>
+                        <td style="padding: 12px 8px;">${fileLink}</td>
+                        <td style="padding: 12px 8px;">${actionButtons}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } else {
+                tbody.innerHTML = '<tr><td colspan="4" style="padding: 16px 8px; text-align: center; color: #64748b;">✅ Очередь задач пуста!</td></tr>';
+            }
+        });
+}
+
+function approveAction(type, id) {
+    if (type === 'receipt') {
+        if (!confirm('Подтвердить получение оплаты? Студент будет переведен в статус "enrolled".')) return;
+        fetch(`${window.BASE_URL}/api/admin/receipts/approve`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: id })
+        }).then(res => res.json()).then(data => {
+            if (data.success) { alert('Чек одобрен!'); loadActionQueue(); }
+            else alert('Ошибка: ' + (data.error || 'Неизвестная ошибка'));
+        });
+    } else if (type === 'document') {
+        fetch(`${window.BASE_URL}/api/admin/doc-status`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: id, status: 'approved' })
+        }).then(res => res.json()).then(data => {
+            if (data.success) { alert('Документ одобрен!'); loadActionQueue(); }
+            else alert('Ошибка: ' + (data.error || 'Неизвестная ошибка'));
+        });
+    }
+}
+
+function rejectAction(type, id) {
+    const reason = prompt('Укажите причину отклонения:');
+    if (reason === null) return;
+    if (reason.trim() === '') { alert('Причина обязательна'); return; }
+    
+    if (type === 'receipt') {
+        fetch(`${window.BASE_URL}/api/admin/receipts/reject`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: id, reason: reason })
+        }).then(res => res.json()).then(data => {
+            if (data.success) { alert('Чек отклонен.'); loadActionQueue(); }
+            else alert('Ошибка: ' + (data.error || 'Неизвестная ошибка'));
+        });
+    } else if (type === 'document') {
+        fetch(`${window.BASE_URL}/api/admin/doc-status`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: id, status: 'rejected', reason: reason })
+        }).then(res => res.json()).then(data => {
+            if (data.success) { alert('Документ отклонен.'); loadActionQueue(); }
+            else alert('Ошибка: ' + (data.error || 'Неизвестная ошибка'));
+        });
+    }
+}
 </script>

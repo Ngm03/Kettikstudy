@@ -20,6 +20,39 @@ class AdminController
         $this->logger = new Logger();
     }
 
+    private function canAccessStudent($studentId): bool
+    {
+        $user = $this->authService->getUserFromCookie();
+        if (!$user) return false;
+        if ($user['role'] === 'admin') return true;
+        if ($user['role'] === 'manager') {
+            $stmt = $this->db->prepare("SELECT manager_id FROM study_users WHERE id = ?");
+            $stmt->execute([$studentId]);
+            $managerId = $stmt->fetchColumn();
+            return $managerId == $user['sub'];
+        }
+        return false;
+    }
+
+    private function canAccessDocument($docId): bool
+    {
+        $user = $this->authService->getUserFromCookie();
+        if (!$user) return false;
+        if ($user['role'] === 'admin') return true;
+        if ($user['role'] === 'manager') {
+            $stmt = $this->db->prepare("
+                SELECT u.manager_id 
+                FROM study_documents d 
+                JOIN study_users u ON d.user_id = u.id 
+                WHERE d.id = ?
+            ");
+            $stmt->execute([$docId]);
+            $managerId = $stmt->fetchColumn();
+            return $managerId == $user['sub'];
+        }
+        return false;
+    }
+
     // Auth/Role checks removed — handled by Router middleware (AuthMiddleware + RoleMiddleware)
 
     public function documentsPage()
@@ -58,15 +91,30 @@ class AdminController
 
     public function getAllDocuments()
     {
+        header('Content-Type: application/json');
         
-        $db = Database::getInstance()->getConnection();
-        $stmt = $db->query("
+        $user = $this->authService->getUserFromCookie();
+        $isAdmin = ($user['role'] === 'admin');
+        $managerId = $user['sub'];
+
+        $sql = "
             SELECT d.*, u.full_name, u.email 
             FROM study_documents d 
             JOIN study_users u ON d.user_id = u.id 
-            ORDER BY d.created_at DESC
-        ");
-        $documents = $stmt->fetchAll();
+            WHERE 1=1
+        ";
+        $params = [];
+
+        if (!$isAdmin) {
+            $sql .= " AND u.manager_id = ?";
+            $params[] = $managerId;
+        }
+        
+        $sql .= " ORDER BY d.created_at DESC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        $documents = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         
         echo json_encode(['documents' => $documents]);
     }
@@ -122,6 +170,12 @@ class AdminController
         if (!$id) {
             http_response_code(400);
             echo json_encode(['error' => 'Missing ID']);
+            return;
+        }
+
+        if (!$this->canAccessStudent($id)) {
+            http_response_code(403);
+            echo json_encode(['error' => 'Access Denied: Not your student']);
             return;
         }
 
@@ -182,6 +236,12 @@ class AdminController
             return;
         }
 
+        if (!$this->canAccessStudent($userId)) {
+            http_response_code(403);
+            echo json_encode(['error' => 'Access Denied']);
+            return;
+        }
+
         $stmt = $this->db->prepare("UPDATE study_users SET admin_notes = ? WHERE id = ?");
         $stmt->execute([$notes, $userId]);
         
@@ -203,6 +263,12 @@ class AdminController
         if (!$docId || !in_array($status, ['approved', 'rejected'])) {
              echo json_encode(['error' => 'Invalid data']);
              return;
+        }
+
+        if (!$this->canAccessDocument($docId)) {
+            http_response_code(403);
+            echo json_encode(['error' => 'Access Denied']);
+            return;
         }
 
         $sql = "UPDATE study_documents SET status = ?, rejection_reason = ? WHERE id = ?";
@@ -355,6 +421,20 @@ class AdminController
             return;
         }
 
+        if (!$this->canAccessStudent($userId)) {
+            http_response_code(403);
+            echo json_encode(['error' => 'Access Denied']);
+            return;
+        }
+
+        $user = $this->authService->getUserFromCookie();
+        $isAdmin = ($user['role'] === 'admin');
+
+        // Managers cannot reassign students to other managers or change their own assigned leads to another manager
+        if (array_key_exists('manager_id', $input) && !$isAdmin) {
+            unset($input['manager_id']);
+        }
+
         if (isset($input['full_name']) || isset($input['phone']) || isset($input['email']) || isset($input['enrolled_role']) || isset($input['city_id']) || array_key_exists('manager_id', $input)) {
             $sql = "UPDATE study_users SET ";
             $params = [];
@@ -428,6 +508,12 @@ class AdminController
         if (!$id) {
             http_response_code(400);
             echo 'No ID';
+            return;
+        }
+
+        if (!$this->canAccessStudent($id)) {
+            http_response_code(403);
+            echo 'Access Denied';
             return;
         }
 

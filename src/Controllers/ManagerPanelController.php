@@ -194,4 +194,44 @@ class ManagerPanelController
             echo json_encode(['error' => 'Internal server error']);
         }
     }
+
+    public function getActionQueue()
+    {
+        header('Content-Type: application/json');
+        try {
+            $user = $this->authService->getUserFromCookie();
+            $isAdmin = ($user['role'] === 'admin') ? 1 : 0;
+
+            // Fetch pending documents
+            $stmtDocs = $this->db->prepare("
+                SELECT d.id, d.type as item_type, d.original_name as title, d.created_at as date, u.full_name as student_name, 'document' as action_type, u.id as student_id
+                FROM study_documents d
+                JOIN study_users u ON d.user_id = u.id
+                WHERE d.status = 'pending' AND (u.manager_id = ? OR 1 = ?)
+            ");
+            $stmtDocs->execute([$this->managerId, $isAdmin]);
+            $docs = $stmtDocs->fetchAll(\PDO::FETCH_ASSOC);
+
+            // Fetch pending receipts
+            $stmtReceipts = $this->db->prepare("
+                SELECT r.id, CONCAT(r.amount, ' ', r.currency) as meta, r.original_name as title, r.uploaded_at as date, u.full_name as student_name, 'receipt' as action_type, u.id as student_id
+                FROM study_payment_receipts r
+                JOIN study_users u ON r.user_id = u.id
+                WHERE r.status = 'pending' AND (u.manager_id = ? OR 1 = ?)
+            ");
+            $stmtReceipts->execute([$this->managerId, $isAdmin]);
+            $receipts = $stmtReceipts->fetchAll(\PDO::FETCH_ASSOC);
+
+            // Merge and sort
+            $actions = array_merge($docs, $receipts);
+            usort($actions, function($a, $b) {
+                return strtotime($a['date']) - strtotime($b['date']);
+            });
+
+            echo json_encode(['success' => true, 'actions' => $actions]);
+        } catch (\Exception $e) {
+            http_response_code(500);
+            echo json_encode(['error' => 'Internal server error']);
+        }
+    }
 }

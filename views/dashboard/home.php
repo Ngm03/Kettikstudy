@@ -25,6 +25,33 @@
             </p>
         </div>
 
+        <div class="card" id="payment-card" style="display: none; border-left: 4px solid #3b82f6;">
+            <h3 class="card-title">Оплата услуг</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+                Для завершения поступления загрузите чек об оплате услуг.
+            </p>
+            
+            <div id="payment-form-container">
+                <input type="number" id="payment-amount" placeholder="Сумма (например: 150000)" style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 6px;">
+                
+                <div class="upload-zone" id="payment-upload-zone" onclick="document.getElementById('receipt-file').click()" style="margin-bottom: 1rem; border: 2px dashed var(--border); padding: 1.5rem; text-align: center; border-radius: 8px; cursor: pointer;">
+                    <input type="file" id="receipt-file" style="display: none;" accept="image/jpeg,image/png,application/pdf" onchange="handleReceiptSelect(this)">
+                    <div style="font-weight: 600; color: var(--primary);" id="receipt-upload-text">Нажмите, чтобы выбрать файл чека</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">JPG, PNG или PDF (до 5 МБ)</div>
+                </div>
+                
+                <button class="btn btn-primary" id="btn-submit-receipt" onclick="submitReceipt()" disabled style="width: 100%; opacity: 0.5;">Отправить чек на проверку</button>
+            </div>
+            
+            <div id="payment-status-container" style="display: none; padding: 1rem; background: #f0fdf4; border-radius: 8px; margin-top: 1rem;">
+                <div style="font-weight: 600; color: #166534; display: flex; align-items: center; gap: 8px;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Чек загружен и отправлен на проверку
+                </div>
+                <div style="font-size: 0.85rem; color: #166534; margin-top: 4px;" id="payment-status-text">Ожидайте подтверждения менеджера.</div>
+            </div>
+        </div>
+
         <div class="card">
             <h3 class="card-title"><?= __('your_manager') ?></h3>
             <div style="display: flex; flex-direction: column; gap: 1.5rem;">
@@ -79,6 +106,13 @@
                     currentStep = data.stage.step;
                     renderTimeline();
                     updateStatusCard();
+                    
+                    // Show payment card if step is 4 or 5
+                    if (currentStep >= 4) {
+                        const pc = document.getElementById('payment-card');
+                        if (pc) pc.style.display = 'block';
+                        checkReceiptStatus();
+                    }
                 }
             });
 
@@ -163,6 +197,97 @@
     function requestCall() {
         alert('<?= __('call_requested') ?>');
     }
+
+    function checkReceiptStatus() {
+        fetch('<?= BASE_URL ?>/api/payments/my-receipts')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.receipts && data.receipts.length > 0) {
+                    const latest = data.receipts[0];
+                    const formContainer = document.getElementById('payment-form-container');
+                    const statusContainer = document.getElementById('payment-status-container');
+                    const statusText = document.getElementById('payment-status-text');
+                    
+                    if (latest.status === 'pending') {
+                        formContainer.style.display = 'none';
+                        statusContainer.style.display = 'block';
+                        statusContainer.style.background = '#fffbeb';
+                        statusContainer.style.color = '#b45309';
+                        statusText.style.color = '#b45309';
+                        statusText.innerHTML = 'Чек на проверке у менеджера. <a href="<?= BASE_URL ?>/api/payments/view-receipt?id=' + latest.id + '" target="_blank" style="color: inherit; text-decoration: underline;">Посмотреть файл</a>';
+                        statusContainer.querySelector('div').style.color = '#b45309';
+                    } else if (latest.status === 'approved') {
+                        formContainer.style.display = 'none';
+                        statusContainer.style.display = 'block';
+                        statusContainer.style.background = '#f0fdf4';
+                        statusText.innerHTML = 'Оплата подтверждена! Вы зачислены.';
+                    } else if (latest.status === 'rejected') {
+                        // Allow re-upload
+                        formContainer.style.display = 'block';
+                        statusContainer.style.display = 'block';
+                        statusContainer.style.background = '#fef2f2';
+                        statusContainer.querySelector('div').style.color = '#991b1b';
+                        statusContainer.querySelector('div').innerHTML = '❌ Ваш чек отклонен';
+                        statusText.style.color = '#991b1b';
+                        statusText.textContent = 'Причина: ' + (latest.rejection_reason || 'Обратитесь к менеджеру');
+                    }
+                }
+            });
+    }
+
+    function handleReceiptSelect(input) {
+        if (input.files.length > 0) {
+            document.getElementById('receipt-upload-text').textContent = input.files[0].name;
+            const btn = document.getElementById('btn-submit-receipt');
+            btn.removeAttribute('disabled');
+            btn.style.opacity = '1';
+        }
+    }
+
+    function submitReceipt() {
+        const fileInput = document.getElementById('receipt-file');
+        const amount = document.getElementById('payment-amount').value;
+        const file = fileInput.files[0];
+        
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+        if (amount) formData.append('amount', amount);
+
+        const btn = document.getElementById('btn-submit-receipt');
+        btn.innerHTML = 'Отправка...';
+        btn.disabled = true;
+
+        fetch('<?= BASE_URL ?>/api/payments/upload-receipt', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                checkReceiptStatus();
+            } else {
+                alert('Ошибка: ' + (data.error || 'Не удалось загрузить чек'));
+                btn.innerHTML = 'Отправить чек на проверку';
+                btn.disabled = false;
+            }
+        })
+        .catch(err => {
+            alert('Ошибка соединения');
+            btn.innerHTML = 'Отправить чек на проверку';
+            btn.disabled = false;
+        });
+    }
+
+    // Initialize receipt status check
+    document.addEventListener('DOMContentLoaded', () => {
+        // Show payment card if step >= 4 (Contract/Wait or Enrolled)
+        if (currentStep >= 4) {
+            document.getElementById('payment-card').style.display = 'block';
+            checkReceiptStatus();
+        }
+    });
 
     init();
 </script>

@@ -76,6 +76,10 @@ $router->post('/api/auth/register', [\App\Controllers\AuthController::class, 're
 $router->post('/api/auth/login',    [\App\Controllers\AuthController::class, 'login']);
 $router->post('/api/auth/logout',   [\App\Controllers\AuthController::class, 'logout']);
 
+// Восстановление пароля
+$router->post('/api/auth/forgot-password', [\App\Controllers\PasswordResetController::class, 'forgotPassword']);
+$router->post('/api/auth/reset-password',  [\App\Controllers\PasswordResetController::class, 'resetPassword']);
+
 // Публичный AI-чат на лендинге (до регистрации)
 $router->post('/api/chat/send', [\App\Controllers\ChatController::class, 'send']);
 
@@ -113,6 +117,11 @@ $router->post('/api/documents/upload', [\App\Controllers\DocumentController::cla
 $router->get('/api/documents/list',    [\App\Controllers\DocumentController::class, 'list'],   ['auth']);
 $router->get('/api/documents/view',    [\App\Controllers\DocumentController::class, 'view'],   ['auth']);
 $router->post('/api/documents/delete', [\App\Controllers\DocumentController::class, 'delete'], ['auth']);
+
+// Чеки об оплате (Студент)
+$router->post('/api/payments/upload-receipt', [\App\Controllers\PaymentController::class, 'uploadReceipt'], ['auth']);
+$router->get('/api/payments/my-receipts',     [\App\Controllers\PaymentController::class, 'myReceipts'],    ['auth']);
+$router->get('/api/payments/view-receipt',    [\App\Controllers\PaymentController::class, 'viewReceipt'],   ['auth']);
 
 // Профиль студента
 $router->get('/api/profile/details',     [\App\Controllers\ProfileController::class, 'getDetails'],        ['auth']);
@@ -170,6 +179,7 @@ $router->get('/api/manager/leads',             [\App\Controllers\ManagerPanelCon
 $router->post('/api/manager/leads/claim',      [\App\Controllers\ManagerPanelController::class, 'claimLead'],         ['auth', 'role:admin,manager']);
 $router->post('/api/manager/leads/status',     [\App\Controllers\ManagerPanelController::class, 'updateLeadStatus'],  ['auth', 'role:admin,manager']);
 $router->get('/api/manager/students',          [\App\Controllers\ManagerPanelController::class, 'getStudents'],       ['auth', 'role:admin,manager']);
+$router->get('/api/manager/action-queue',      [\App\Controllers\ManagerPanelController::class, 'getActionQueue'],    ['auth', 'role:admin,manager']);
 
 // ============================================================
 // МАРШРУТЫ АДМИНИСТРАТОРА (auth + role: admin only)
@@ -214,6 +224,11 @@ $router->get('/api/admin/logs',              [\App\Controllers\AdminController::
 $router->get('/api/admin/download-pdf',      [\App\Controllers\AdminController::class, 'downloadPdf'],        ['auth', 'role:admin,manager']);
 $router->post('/api/admin/doc-status',       [\App\Controllers\AdminController::class, 'updateDocStatus'],    ['auth', 'role:admin,manager']);
 $router->post('/api/admin/student-notes',    [\App\Controllers\AdminController::class, 'updateStudentNotes'], ['auth', 'role:admin,manager']);
+
+// Управление чеками об оплате (Менеджер/Админ)
+$router->get('/api/admin/receipts/pending',  [\App\Controllers\PaymentController::class, 'pendingReceipts'], ['auth', 'role:admin,manager']);
+$router->post('/api/admin/receipts/approve', [\App\Controllers\PaymentController::class, 'approveReceipt'],  ['auth', 'role:admin,manager']);
+$router->post('/api/admin/receipts/reject',  [\App\Controllers\PaymentController::class, 'rejectReceipt'],   ['auth', 'role:admin,manager']);
 $router->post('/api/admin/update-details',   [\App\Controllers\AdminController::class, 'updateStudentDetails'], ['auth', 'role:admin,manager']);
 $router->get('/api/admin/documents',         [\App\Controllers\AdminController::class, 'getAllDocuments'],     ['auth', 'role:admin,manager']);
 $router->post('/api/admin/broadcast',        [\App\Controllers\AdminController::class, 'sendBroadcast'],      ['auth', 'role:admin']);

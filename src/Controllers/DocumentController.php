@@ -45,10 +45,14 @@ class DocumentController
         $file = $_FILES['file'];
         $type = $_POST['type'];
 
-        $allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
-        if (!in_array($file['type'], $allowedTypes)) {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimeType = finfo_file($finfo, $file['tmp_name']);
+        finfo_close($finfo);
+
+        $allowedMimes = ['application/pdf', 'image/jpeg', 'image/png'];
+        if (!in_array($mimeType, $allowedMimes)) {
             http_response_code(400);
-            echo json_encode(['error' => 'Invalid file type. Only PDF, JPG, PNG allowed.']);
+            echo json_encode(['error' => 'Invalid file format. Only PDF, JPG, PNG allowed.']);
             return;
         }
 
@@ -68,8 +72,29 @@ class DocumentController
         $relativePath = 'uploads/docs/' . $userId . '/' . $filename;
 
         if (move_uploaded_file($file['tmp_name'], $destination)) {
-            $stmt = $this->db->prepare("INSERT INTO study_documents (user_id, type, file_path, original_name, status) VALUES (?, ?, ?, ?, 'pending')");
-            $stmt->execute([$userId, $type, $relativePath, $file['name']]);
+            if ($type !== 'other') {
+                $stmt = $this->db->prepare("SELECT id, file_path FROM study_documents WHERE user_id = ? AND type = ?");
+                $stmt->execute([$userId, $type]);
+                $existing = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+                if ($existing) {
+                    $oldPath = __DIR__ . '/../../' . $existing['file_path'];
+                    if (file_exists($oldPath)) @unlink($oldPath);
+
+                    $stmt = $this->db->prepare("
+                        UPDATE study_documents 
+                        SET file_path = ?, original_name = ?, status = 'pending', rejection_reason = NULL, created_at = CURRENT_TIMESTAMP 
+                        WHERE id = ?
+                    ");
+                    $stmt->execute([$relativePath, $file['name'], $existing['id']]);
+                } else {
+                    $stmt = $this->db->prepare("INSERT INTO study_documents (user_id, type, file_path, original_name, status) VALUES (?, ?, ?, ?, 'pending')");
+                    $stmt->execute([$userId, $type, $relativePath, $file['name']]);
+                }
+            } else {
+                $stmt = $this->db->prepare("INSERT INTO study_documents (user_id, type, file_path, original_name, status) VALUES (?, ?, ?, ?, 'pending')");
+                $stmt->execute([$userId, $type, $relativePath, $file['name']]);
+            }
 
             $stmt = $this->db->prepare("SELECT full_name FROM study_users WHERE id = ?");
             $stmt->execute([$userId]);
