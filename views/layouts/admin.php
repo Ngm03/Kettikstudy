@@ -14,6 +14,7 @@ if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
     <meta name="csrf-token" content="<?= \App\Core\Csrf::token() ?>">
     <script>window.BASE_URL = '<?= BASE_URL ?>';</script>
     <script src="<?= BASE_URL ?>/assets/js/csrf.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
