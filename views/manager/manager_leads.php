@@ -1,132 +1,65 @@
-<style>
-    .ml-filters {
-        display: flex; gap: 10px; margin-bottom: 20px;
-        flex-wrap: wrap;
-    }
-    .ml-filter-btn {
-        padding: 8px 16px; border-radius: 20px;
-        background: #fff; border: 1px solid var(--man-border);
-        color: #475569; font-size: 0.85rem; font-weight: 600;
-        cursor: pointer; transition: 0.2s;
-    }
-    .ml-filter-btn:hover { background: #f1f5f9; }
-    .ml-filter-btn.active {
-        background: var(--man-sidebar-active);
-        color: #fff; border-color: var(--man-sidebar-active);
-    }
-    
-    .ml-board {
-        display: flex; gap: 20px;
-        overflow-x: auto; padding-bottom: 20px;
-        min-height: calc(100vh - 220px);
-    }
-    .ml-column {
-        flex: 1; min-width: 300px; max-width: 400px;
-        background: #e2e8f0; border-radius: 12px;
-        display: flex; flex-direction: column;
-        padding: 12px; gap: 12px;
-    }
-    .ml-col-header {
-        font-weight: 700; font-size: 0.95rem; color: #1e293b;
-        display: flex; justify-content: space-between; align-items: center;
-        padding: 0 4px 8px;
-        border-bottom: 2px solid rgba(0,0,0,0.05);
-    }
-    .ml-col-count {
-        background: #cbd5e1; color: #334155;
-        font-size: 0.75rem; padding: 2px 8px; border-radius: 10px;
-    }
-
-    .ml-card {
-        background: #fff; border-radius: 10px;
-        padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        cursor: grab; transition: transform 0.2s;
-        border: 1px solid transparent;
-    }
-    .ml-card:active { cursor: grabbing; }
-    .ml-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-    
-    .ml-card-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
-    .ml-name { font-weight: 700; font-size: 1rem; color: #0f172a; }
-    .ml-time { font-size: 0.7rem; color: #94a3b8; }
-    
-    .ml-info-row { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #475569; margin-bottom: 4px; }
-    .ml-info-row svg { width: 14px; height: 14px; color: #94a3b8; }
-    
-    .ml-city { display: inline-block; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; margin-top: 6px; }
-    
-    .ml-actions { margin-top: 12px; display: flex; gap: 8px; }
-    .ml-btn {
-        flex: 1; padding: 8px; border-radius: 6px; font-size: 0.8rem; font-weight: 600;
-        cursor: pointer; border: none; transition: 0.2s;
-        display: flex; align-items: center; justify-content: center; gap: 4px;
-    }
-    .ml-btn-primary { background: #3b82f6; color: #fff; }
-    .ml-btn-primary:hover { background: #2563eb; }
-    .ml-btn-whatsapp { background: #22c55e; color: #fff; }
-    .ml-btn-whatsapp:hover { background: #16a34a; }
-    
-    .ml-modal-overlay {
-        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);
-        display: flex; align-items: center; justify-content: center;
-        opacity: 0; pointer-events: none; transition: 0.2s; z-index: 1000;
-    }
-    .ml-modal-overlay.active { opacity: 1; pointer-events: all; }
-    .ml-modal {
-        background: #fff; border-radius: 12px; padding: 24px;
-        width: 100%; max-width: 400px; transform: translateY(20px); transition: 0.3s;
-    }
-    .ml-modal-overlay.active .ml-modal { transform: translateY(0); }
-    .ml-modal h3 { font-size: 1.1rem; margin-bottom: 16px; color: #0f172a; }
-    .ml-select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; margin-bottom: 16px; font-family: 'Inter'; outline: none; }
-    .ml-modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
-    .ml-modal-btn { padding: 8px 16px; border-radius: 8px; cursor: pointer; border: none; font-weight: 600; }
-    .ml-modal-cancel { background: #f1f5f9; color: #475569; }
-    .ml-modal-save { background: #3b82f6; color: #fff; }
-</style>
-
-<div class="ml-filters">
-    <button class="ml-filter-btn active" onclick="setFilter('all', this)"><?= __('man_filter_all') ?></button>
-    <button class="ml-filter-btn" onclick="setFilter('new', this)"><?= __('man_filter_free') ?></button>
-    <button class="ml-filter-btn" onclick="setFilter('mine', this)"><?= __('man_filter_mine') ?></button>
-</div>
-
-<div class="ml-board">
-    <div class="ml-column" id="col-new">
-        <div class="ml-col-header">
-            <?= __('man_col_free') ?> <span class="ml-col-count" id="count-new">0</span>
-        </div>
-        <div class="ml-list" id="list-new"></div>
-    </div>
-
-    <div class="ml-column" id="col-contacted">
-        <div class="ml-col-header">
-            <?= __('man_col_working') ?> <span class="ml-col-count" id="count-contacted">0</span>
-        </div>
-        <div class="ml-list" id="list-contacted"></div>
-    </div>
-
-    <div class="ml-column" id="col-done">
-        <div class="ml-col-header">
-            <?= __('man_col_done') ?> <span class="ml-col-count" id="count-done">0</span>
-        </div>
-        <div class="ml-list" id="list-done"></div>
+<div class="mb-8">
+    <div class="bg-gray-100 p-1.5 rounded-xl inline-flex gap-1" id="filterTabs">
+        <button class="filter-btn active-tab px-5 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 bg-white shadow-sm text-gray-900" onclick="setFilter('all', this)"><?= __('man_filter_all') ?></button>
+        <button class="filter-btn px-5 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 text-gray-500 hover:text-gray-700 hover:bg-gray-200/50" onclick="setFilter('new', this)"><?= __('man_filter_free') ?></button>
+        <button class="filter-btn px-5 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 text-gray-500 hover:text-gray-700 hover:bg-gray-200/50" onclick="setFilter('mine', this)"><?= __('man_filter_mine') ?></button>
     </div>
 </div>
 
-<div class="ml-modal-overlay" id="statusModal">
-    <div class="ml-modal">
-        <h3><?= __('man_modal_change_status') ?></h3>
-        <select id="statusSelect" class="ml-select">
+<div class="flex gap-6 overflow-x-auto pb-6 min-h-[calc(100vh-220px)] snap-x">
+    <!-- Column: Free -->
+    <div class="flex-1 min-w-[320px] max-w-[400px] bg-gray-50/50 rounded-3xl p-5 border border-gray-100 flex flex-col gap-4 snap-center relative">
+        <div class="flex justify-between items-center px-1 mb-2">
+            <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <?= __('man_col_free') ?>
+            </h3>
+            <span class="bg-white px-2.5 py-1 rounded-lg shadow-sm text-xs font-bold text-gray-600 border border-gray-100" id="count-new">0</span>
+        </div>
+        <div class="flex flex-col gap-4" id="list-new"></div>
+    </div>
+
+    <!-- Column: Working -->
+    <div class="flex-1 min-w-[320px] max-w-[400px] bg-gray-50/50 rounded-3xl p-5 border border-gray-100 flex flex-col gap-4 snap-center relative">
+        <div class="flex justify-between items-center px-1 mb-2">
+            <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                <?= __('man_col_working') ?>
+            </h3>
+            <span class="bg-white px-2.5 py-1 rounded-lg shadow-sm text-xs font-bold text-gray-600 border border-gray-100" id="count-contacted">0</span>
+        </div>
+        <div class="flex flex-col gap-4" id="list-contacted"></div>
+    </div>
+
+    <!-- Column: Done -->
+    <div class="flex-1 min-w-[320px] max-w-[400px] bg-gray-50/50 rounded-3xl p-5 border border-gray-100 flex flex-col gap-4 snap-center relative">
+        <div class="flex justify-between items-center px-1 mb-2">
+            <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <?= __('man_col_done') ?>
+            </h3>
+            <span class="bg-white px-2.5 py-1 rounded-lg shadow-sm text-xs font-bold text-gray-600 border border-gray-100" id="count-done">0</span>
+        </div>
+        <div class="flex flex-col gap-4" id="list-done"></div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300" id="statusModal">
+    <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md transform translate-y-8 transition-transform duration-300" id="statusModalContent">
+        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+            <?= __('man_modal_change_status') ?>
+        </h3>
+        <select id="statusSelect" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-gray-700 mb-6 transition-all">
             <option value="new"><?= __('man_status_new') ?></option>
             <option value="contacted"><?= __('man_status_contacted') ?></option>
             <option value="converted"><?= __('man_status_converted') ?></option>
             <option value="rejected"><?= __('man_status_rejected') ?></option>
         </select>
-        <div class="ml-modal-actions">
-            <button class="ml-modal-btn ml-modal-cancel" onclick="closeStatusModal()"><?= __('man_btn_cancel') ?></button>
-            <button class="ml-modal-btn ml-modal-save" onclick="saveStatus()"><?= __('man_btn_save') ?></button>
+        <div class="flex justify-end gap-3">
+            <button class="px-5 py-2.5 rounded-xl font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors" onclick="closeStatusModal()"><?= __('man_btn_cancel') ?></button>
+            <button class="px-5 py-2.5 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-sm shadow-blue-600/20 transition-all" onclick="saveStatus()"><?= __('man_btn_save') ?></button>
         </div>
     </div>
 </div>
@@ -137,7 +70,7 @@ let viewingFilter = 'all'; // all, new, mine
 let currentLeadId = null;
 
 function loadLeads() {
-    showLoader();
+    if (typeof showLoader === 'function') showLoader();
     fetch(`${window.BASE_URL}/api/manager/leads`)
         .then(res => res.json())
         .then(data => {
@@ -146,12 +79,14 @@ function loadLeads() {
                 renderBoard();
             }
         })
-        .finally(() => hideLoader());
+        .finally(() => { if (typeof hideLoader === 'function') hideLoader(); });
 }
 
 function setFilter(filter, btn) {
-    document.querySelectorAll('.ml-filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    document.querySelectorAll('.filter-btn').forEach(b => {
+        b.className = 'filter-btn px-5 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 text-gray-500 hover:text-gray-700 hover:bg-gray-200/50';
+    });
+    btn.className = 'filter-btn active-tab px-5 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 bg-white shadow-sm text-gray-900';
     viewingFilter = filter;
     renderBoard();
 }
@@ -179,28 +114,37 @@ function renderBoard() {
         
         let actionsHtml = '';
         if (!isMine) {
-            actionsHtml = `<button class="ml-btn ml-btn-primary" onclick="claimLead(${lead.id})"><?= __('man_btn_claim') ?></button>`;
+            actionsHtml = `<button class="w-full mt-4 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm shadow-blue-600/20 transition-all" onclick="claimLead(${lead.id})">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                <?= __('man_btn_claim') ?>
+            </button>`;
         } else {
             actionsHtml = `
-                <a href="${waLink}" target="_blank" class="ml-btn ml-btn-whatsapp">
-                    <svg fill="currentColor" viewBox="0 0 24 24" width="16" height="16"><path d="M11.996 0C5.372 0 0 5.372 0 11.996c0 2.128.56 4.133 1.545 5.908L.044 24l6.23-1.636c1.713.905 3.655 1.417 5.722 1.417 6.623 0 11.995-5.372 11.995-11.995S18.619 0 11.996 0zm0 21.602c-1.801 0-3.522-.464-5.068-1.341l-.364-.207-3.765.986.996-3.666-.226-.358a9.827 9.827 0 01-1.423-5.174c0-5.42 4.41-9.83 9.83-9.83s9.829 4.41 9.829 9.83-4.41 9.83-9.83 9.83zm5.395-7.38c-.296-.148-1.751-.865-2.023-.965-.272-.098-.47-.148-.667.148-.198.297-.766.965-.94 1.163-.173.197-.346.222-.643.074-1.68-.838-2.903-1.928-3.99-3.708-.196-.322.285-.302.85-.929.073-.082.037-.148 0-.223-.037-.074-.667-1.609-.915-2.203-.242-.58-.487-.502-.667-.512-.173-.008-.372-.01-.568-.01-.198 0-.52.074-.792.371-.272.297-1.037 1.015-1.037 2.476s1.062 2.871 1.21 3.069c.148.198 2.093 3.194 5.074 4.482 2.046.885 2.76.744 3.28.625.68-.155 1.751-.715 1.998-1.408.248-.693.248-1.287.173-1.408-.073-.122-.272-.196-.568-.344z"/></svg> 
-                    WhatsApp
-                </a>
-                <button class="ml-btn" style="background:#f1f5f9; color:#475569;" onclick="openStatusModal(${lead.id}, '${lead.status}')"><?= __('man_btn_status') ?></button>
+                <div class="flex gap-2 mt-4">
+                    <a href="${waLink}" target="_blank" class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/50 transition-colors">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M11.996 0C5.372 0 0 5.372 0 11.996c0 2.128.56 4.133 1.545 5.908L.044 24l6.23-1.636c1.713.905 3.655 1.417 5.722 1.417 6.623 0 11.995-5.372 11.995-11.995S18.619 0 11.996 0zm0 21.602c-1.801 0-3.522-.464-5.068-1.341l-.364-.207-3.765.986.996-3.666-.226-.358a9.827 9.827 0 01-1.423-5.174c0-5.42 4.41-9.83 9.83-9.83s9.829 4.41 9.829 9.83-4.41 9.83-9.83 9.83zm5.395-7.38c-.296-.148-1.751-.865-2.023-.965-.272-.098-.47-.148-.667.148-.198.297-.766.965-.94 1.163-.173.197-.346.222-.643.074-1.68-.838-2.903-1.928-3.99-3.708-.196-.322.285-.302.85-.929.073-.082.037-.148 0-.223-.037-.074-.667-1.609-.915-2.203-.242-.58-.487-.502-.667-.512-.173-.008-.372-.01-.568-.01-.198 0-.52.074-.792.371-.272.297-1.037 1.015-1.037 2.476s1.062 2.871 1.21 3.069c.148.198 2.093 3.194 5.074 4.482 2.046.885 2.76.744 3.28.625.68-.155 1.751-.715 1.998-1.408.248-.693.248-1.287.173-1.408-.073-.122-.272-.196-.568-.344z"/></svg> 
+                        WhatsApp
+                    </a>
+                    <button class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors" onclick="openStatusModal(${lead.id}, '${lead.status}')">
+                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                        <?= __('man_btn_status') ?>
+                    </button>
+                </div>
             `;
         }
 
         const cardHtml = `
-            <div class="ml-card">
-                <div class="ml-card-header">
-                    <div class="ml-name">${lead.name || '<?= __('man_no_name') ?>'}</div>
-                    <div class="ml-time">${date}</div>
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md hover:border-blue-200 transition-all duration-300 relative group">
+                <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-blue-100 rounded-r-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="flex justify-between items-start mb-3">
+                    <div class="font-bold text-gray-900">${lead.name || '<?= __('man_no_name') ?>'}</div>
+                    <div class="text-[0.7rem] font-medium text-gray-400 bg-gray-50 px-2 py-0.5 rounded-md border border-gray-100">${date}</div>
                 </div>
-                <div class="ml-info-row">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                <div class="flex items-center gap-2 text-xs font-medium text-gray-600 mb-2">
+                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
                     ${lead.phone || '<?= __('man_no_phone') ?>'}
                 </div>
-                ${lead.city ? `<div class="ml-city">${lead.city}</div>` : ''}
+                ${lead.city ? `<div class="inline-flex items-center gap-1 bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-md text-[0.7rem] font-bold uppercase tracking-wider border border-indigo-100/50 mt-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>${lead.city}</div>` : ''}
                 
                 ${actionsHtml}
             </div>
@@ -224,7 +168,7 @@ function renderBoard() {
 }
 
 function claimLead(id) {
-    showLoader();
+    if (typeof showLoader === 'function') showLoader();
     fetch(`${window.BASE_URL}/api/manager/leads/claim`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -236,7 +180,7 @@ function claimLead(id) {
             loadLeads(); // Reload
         } else {
             alert(data.error || '<?= __('man_err_unknown') ?>');
-            hideLoader();
+            if (typeof hideLoader === 'function') hideLoader();
         }
     });
 }
@@ -244,11 +188,17 @@ function claimLead(id) {
 function openStatusModal(id, currentStatus) {
     currentLeadId = id;
     document.getElementById('statusSelect').value = currentStatus || 'contacted';
-    document.getElementById('statusModal').classList.add('active');
+    const modal = document.getElementById('statusModal');
+    const content = document.getElementById('statusModalContent');
+    modal.classList.remove('opacity-0', 'pointer-events-none');
+    content.classList.remove('translate-y-8');
 }
 
 function closeStatusModal() {
-    document.getElementById('statusModal').classList.remove('active');
+    const modal = document.getElementById('statusModal');
+    const content = document.getElementById('statusModalContent');
+    modal.classList.add('opacity-0', 'pointer-events-none');
+    content.classList.add('translate-y-8');
     currentLeadId = null;
 }
 
@@ -256,7 +206,7 @@ function saveStatus() {
     if (!currentLeadId) return;
     const status = document.getElementById('statusSelect').value;
     
-    showLoader();
+    if (typeof showLoader === 'function') showLoader();
     fetch(`${window.BASE_URL}/api/manager/leads/status`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -269,7 +219,7 @@ function saveStatus() {
             loadLeads();
         } else {
             alert('<?= __('msg_error') ?>' + (data.error || '<?= __('man_err_unknown') ?>'));
-            hideLoader();
+            if (typeof hideLoader === 'function') hideLoader();
         }
     });
 }
