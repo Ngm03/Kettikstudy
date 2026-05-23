@@ -1,4 +1,4 @@
-<?php
+п»ї<?php
 $settings = (new \App\Models\Setting())->getAll();
 $companyName = $settings['company_name'] ?? 'Kettik Study';
 $companyPhone = $settings['company_phone'] ?? '+7 701 631 41 21';
@@ -370,17 +370,17 @@ $currentUser = $authService->getUserFromCookie();
 
     
     <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 bg-gray-50 overflow-hidden">
-        <!-- Декоративные фоновые круги -->
+        <!-- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ -->
         <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-blue-100 opacity-50 blur-3xl"></div>
         <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-indigo-100 opacity-50 blur-3xl"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid lg:grid-cols-2 gap-12 items-center">
                 
-                <!-- Контент -->
+                <!-- пїЅпїЅпїЅпїЅпїЅпїЅпїЅ -->
                 <div class="text-center lg:text-left" data-aos="fade-up" data-aos-duration="1000">
                     <div class="inline-flex items-center px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-sm font-bold mb-6 tracking-wide">
-                        ?? <?= __("hero_badge_text") ?? "Набор на 2026/2027 учебный год открыт" ?>
+                        рџ”Ґ <?= __("hero_badge_text") === "hero_badge_text" ? "РќР°Р±РѕСЂ РЅР° 2026/2027 СѓС‡РµР±РЅС‹Р№ РіРѕРґ" : __("hero_badge_text") ?>
                     </div>
                     
                     <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6 tracking-tight">
@@ -420,10 +420,10 @@ $currentUser = $authService->getUserFromCookie();
                     </div>
                 </div>
 
-                <!-- Картинка -->
+                <!-- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ -->
                 <div class="relative hidden lg:block" data-aos="fade-left" data-aos-duration="1000">
                     <div class="absolute inset-0 bg-blue-600 translate-x-4 translate-y-4 rounded-2xl opacity-10"></div>
-                    <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Студенты" class="relative z-10 rounded-2xl shadow-2xl object-cover w-full h-[450px]">
+                    <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ" class="relative z-10 rounded-2xl shadow-2xl object-cover w-full h-[450px]">
                 </div>
             </div>
         </div>
