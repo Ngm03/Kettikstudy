@@ -1,0 +1,31 @@
+# === SECURITY: Database dumps — NEVER commit ===
+*.sql
+/migrations/*.sql
+/migrations/*.sql.gz
+# ================================================
+
+.env
+vendor/
+node_modules/
+uploads/
+public/uploads/
+
+debug*.log
+*.zip
+
+check_*.php
+test_*.php
+fix_*.php
+install_*.php
+seed_*.php
+run_migration_*.php
+migrate_*.php
+clean_*.php
+find_*.php
+debug_*.php
+create_*.php
+
+public/test_*.php
+public/diagnose.php
+public/fix_env.php
+public/add_translations.php

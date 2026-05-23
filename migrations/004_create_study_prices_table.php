@@ -1,0 +1,13 @@
+<?php
+
+return "
+CREATE TABLE IF NOT EXISTS study_prices (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    item_name VARCHAR(255) NOT NULL,
+    category VARCHAR(100),
+    price DECIMAL(10, 2) NOT NULL,
+    store VARCHAR(100),
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=INNODB;
+";

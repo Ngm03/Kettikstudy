@@ -1,0 +1,28 @@
+[СИСТЕМНЫЙ ЖУРНАЛ]
+2026-05-23: Проект инициализирован. Базовая структура директорий создана. Ожидание Фазы 1.
+-- Это была устаревшая запись. Реальное состояние ниже. --
+
+2026-05-23 (Аудит + Рефакторинг):
+ВЫПОЛНЕНО: Блок 1 (Security Hotfixes)
+  - Удалены SQL-дампы (1.4 МБ данных реальных пользователей) из репозитория
+  - AuthService.php: убран JWT fallback на md5(__DIR__). Теперь падает 500 без JWT_SECRET.
+  - .gitignore: добавлен явный запрет на *.sql и /migrations/*.sql
+
+ВЫПОЛНЕНО: Блок 2 (Актуализация контекста)
+  - BLUEPRINT.md полностью переписан — отражает реальную архитектуру (роли, таблицы, сервисы)
+  - .todo.json заменён — задачи техдолга вместо фантомных "Фаза 1"
+
+ВЫПОЛНЕНО: Блок 3 (Middleware)
+  - Созданы src/Middleware/AuthMiddleware.php и RoleMiddleware.php
+  - Router.php обновлён — поддержка middleware-цепочек
+  - index.php обновлён — все /admin/* и /manager/* маршруты защищены через Middleware
+  - AdminController.php: удалены checkAdmin() и checkAdminOrManager()
+
+ВЫПОЛНЕНО: Блок 4 (Расщепление CommunityChatController)
+  - Создан src/Services/Chat/ChatRoomService.php
+  - Создан src/Services/Chat/MessageService.php
+  - Создан src/Services/Chat/FileAttachmentService.php (MIME через finfo)
+  - Создан src/Services/Chat/AiBotService.php
+  - CommunityChatController.php переписан (~150 строк, делегирует сервисам)
+
+СЛЕДУЮЩИЙ ПРИОРИТЕТ: PHPUnit тесты, Server-Sent Events для чата.

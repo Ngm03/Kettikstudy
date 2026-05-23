@@ -1,0 +1,107 @@
+{
+  "last_updated": "2026-05-23",
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Удалить SQL-дампы из репозитория (kettikst_kettikstudy.sql, broldru_ansar.sql)",
+      "status": "done",
+      "priority": "critical"
+    },
+    {
+      "id": 2,
+      "title": "Убрать JWT fallback на md5 в AuthService.php",
+      "status": "done",
+      "priority": "critical"
+    },
+    {
+      "id": 3,
+      "title": "Обновить .gitignore — запрет SQL-дампов",
+      "status": "done",
+      "priority": "critical"
+    },
+    {
+      "id": 4,
+      "title": "Переписать BLUEPRINT.md под реальную архитектуру",
+      "status": "done",
+      "priority": "high"
+    },
+    {
+      "id": 5,
+      "title": "Создать AuthMiddleware.php (src/Middleware/)",
+      "status": "done",
+      "priority": "high"
+    },
+    {
+      "id": 6,
+      "title": "Создать RoleMiddleware.php (src/Middleware/)",
+      "status": "done",
+      "priority": "high"
+    },
+    {
+      "id": 7,
+      "title": "Обновить Router.php — поддержка middleware-цепочек",
+      "status": "done",
+      "priority": "high"
+    },
+    {
+      "id": 8,
+      "title": "Обновить index.php — навесить middleware на защищённые маршруты",
+      "status": "done",
+      "priority": "high"
+    },
+    {
+      "id": 9,
+      "title": "Удалить checkAdmin/checkAdminOrManager из AdminController",
+      "status": "done",
+      "priority": "medium"
+    },
+    {
+      "id": 10,
+      "title": "Создать Chat/ChatRoomService.php",
+      "status": "done",
+      "priority": "medium"
+    },
+    {
+      "id": 11,
+      "title": "Создать Chat/MessageService.php",
+      "status": "done",
+      "priority": "medium"
+    },
+    {
+      "id": 12,
+      "title": "Создать Chat/FileAttachmentService.php (MIME-проверка через finfo)",
+      "status": "done",
+      "priority": "medium"
+    },
+    {
+      "id": 13,
+      "title": "Создать Chat/AiBotService.php",
+      "status": "done",
+      "priority": "medium"
+    },
+    {
+      "id": 14,
+      "title": "Переписать CommunityChatController — тонкий контроллер",
+      "status": "done",
+      "priority": "medium"
+    },
+    {
+      "id": 15,
+      "title": "Внедрить PHPUnit для unit-тестов (AuthService, Chat-сервисы)",
+      "status": "pending",
+      "priority": "low"
+    },
+    {
+      "id": 16,
+      "title": "Заменить HTTP-polling чата на Server-Sent Events",
+      "status": "pending",
+      "priority": "low"
+    },
+    {
+      "id": 17,
+      "title": "Перейти с кастомного JWT на firebase/php-jwt (уже в composer.json)",
+      "status": "pending",
+      "priority": "low"
+    }
+  ]
+}

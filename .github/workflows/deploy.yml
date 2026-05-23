@@ -1,0 +1,35 @@
+﻿name: Deploy Kettik Study to PS.KZ
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  web-deploy:
+    name: Deploy to ps.kz
+    runs-on: ubuntu-latest
+    steps:
+      - name: Получение свежего кода
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Синхронизация файлов по FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /public_html/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            .env
+            .env.example
+            BLUEPRINT.md
+            GEMINI.md
+            .todo.json
+            .progress.txt
+            .vscode/**
