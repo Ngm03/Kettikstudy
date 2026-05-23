@@ -1,69 +1,134 @@
-<div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 mb-8 relative overflow-hidden shadow-sm border border-blue-100/50">
-    <div class="relative z-10 max-w-2xl">
-        <h2 class="text-3xl font-extrabold text-gray-900 mb-2"><?= __('man_hello') ?> <span id="welcomeName" class="text-blue-600"><?= __('man_top_manager') ?></span> 👋</h2>
-        <p class="text-lg text-gray-600"><?= __('man_welcome') ?></p>
+<style>
+    .md-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-bottom: 24px;
+    }
+    .md-stat-card {
+        background: #fff;
+        border: 1px solid var(--man-border);
+        border-radius: 16px;
+        padding: 24px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .md-stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+    .md-stat-icon {
+        width: 56px; height: 56px;
+        border-radius: 14px;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+    }
+    .md-stat-icon svg { width: 28px; height: 28px; }
+    
+    .md-stat-info { flex: 1; min-width: 0; }
+    .md-stat-num {
+        font-size: 2.2rem;
+        font-weight: 800;
+        line-height: 1;
+        color: var(--man-text);
+        margin-bottom: 6px;
+    }
+    .md-stat-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .icon-blue { background: #eff6ff; color: #3b82f6; }
+    .icon-green { background: #f0fdf4; color: #22c55e; }
+    .icon-amber { background: #fffbeb; color: #f59e0b; }
+
+    .md-banner {
+        background: linear-gradient(135deg, #1e293b, #0f172a);
+        border-radius: 20px;
+        padding: 32px;
+        color: #fff;
+        margin-bottom: 24px;
+        position: relative;
+        overflow: hidden;
+    }
+    .md-banner-content { position: relative; z-index: 2; max-width: 600px; }
+    .md-banner h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
+    .md-banner p { font-size: 1.05rem; color: #cbd5e1; line-height: 1.5; }
+    
+    .md-banner-bg {
+        position: absolute; right: 0; top: -50px;
+        opacity: 0.1; width: 300px; height: 300px;
+        color: #fff; z-index: 1;
+    }
+
+    @media (max-width: 900px) {
+        .md-grid { grid-template-columns: 1fr; gap: 12px; }
+        .md-banner { padding: 24px; }
+    }
+</style>
+
+<div class="md-banner">
+    <div class="md-banner-content">
+        <h2><?= __('man_hello') ?> <span id="welcomeName"><?= __('man_top_manager') ?></span> 👋</h2>
+        <p><?= __('man_welcome') ?></p>
     </div>
-    <!-- Decorative background elements -->
-    <div class="absolute -top-12 -right-12 w-64 h-64 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
-    <div class="absolute -bottom-12 right-20 w-64 h-64 bg-indigo-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+    <svg class="md-banner-bg" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zm0 18.5l-10-5V10l10 5 10-5v5.5l-10 5z"/></svg>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <!-- Card 1: Free Leads -->
-    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300">
-        <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center flex-shrink-0">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            </div>
-            <div>
-                <div class="text-3xl font-extrabold text-gray-900" id="statNewLeads">—</div>
-                <div class="text-xs font-bold text-gray-400 uppercase tracking-wide mt-1"><?= __('man_stat_free_leads') ?></div>
-            </div>
+<div class="md-grid">
+    <div class="md-stat-card">
+        <div class="md-stat-icon icon-amber">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <div class="md-stat-info">
+            <div class="md-stat-num" id="statNewLeads">—</div>
+            <div class="md-stat-label"><?= __('man_stat_free_leads') ?></div>
         </div>
     </div>
     
-    <!-- Card 2: My Leads -->
-    <div onclick="window.location.href='<?= BASE_URL ?>/manager/leads'" class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group">
-        <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-            </div>
-            <div>
-                <div class="text-3xl font-extrabold text-gray-900" id="statMyLeads">—</div>
-                <div class="text-xs font-bold text-gray-400 uppercase tracking-wide mt-1"><?= __('man_stat_my_leads') ?></div>
-            </div>
+    <div class="md-stat-card cursor-pointer" onclick="window.location.href='<?= BASE_URL ?>/manager/leads'" style="cursor: pointer;">
+        <div class="md-stat-icon icon-blue">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        </div>
+        <div class="md-stat-info">
+            <div class="md-stat-num" id="statMyLeads">—</div>
+            <div class="md-stat-label"><?= __('man_stat_my_leads') ?></div>
         </div>
     </div>
 
-    <!-- Card 3: My Students -->
-    <div onclick="window.location.href='<?= BASE_URL ?>/manager/students'" class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group">
-        <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
-            </div>
-            <div>
-                <div class="text-3xl font-extrabold text-gray-900" id="statMyStudents">—</div>
-                <div class="text-xs font-bold text-gray-400 uppercase tracking-wide mt-1"><?= __('man_stat_my_students') ?></div>
-            </div>
+    <div class="md-stat-card cursor-pointer" onclick="window.location.href='<?= BASE_URL ?>/manager/students'" style="cursor: pointer;">
+        <div class="md-stat-icon icon-green">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        </div>
+        <div class="md-stat-info">
+            <div class="md-stat-num" id="statMyStudents">—</div>
+            <div class="md-stat-label"><?= __('man_stat_my_students') ?></div>
         </div>
     </div>
 </div>
 
-
-<div class="md-stat-card" style="display: block; margin-bottom: 24px;">
-    <h3 style="margin-bottom: 16px; font-size: 1.2rem; color: var(--man-text);">⚡ Единая очередь задач (Action Queue)</h3>
-    <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-8">
+    <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-white">
+        <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+            <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            Единая очередь задач (Action Queue)
+        </h3>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
             <thead>
-                <tr style="border-bottom: 1px solid var(--man-border); color: #64748b; font-size: 0.85rem; text-transform: uppercase;">
-                    <th style="padding: 12px 8px;">Студент</th>
-                    <th style="padding: 12px 8px;">Тип / Сумма</th>
-                    <th style="padding: 12px 8px;">Файл</th>
-                    <th style="padding: 12px 8px;">Действия</th>
+                <tr class="bg-gray-50 border-b border-gray-100 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <th class="px-6 py-4">Студент</th>
+                    <th class="px-6 py-4 hidden sm:table-cell">Тип / Сумма</th>
+                    <th class="px-6 py-4 hidden md:table-cell">Файл</th>
+                    <th class="px-6 py-4 text-right">Действия</th>
                 </tr>
             </thead>
-            <tbody id="pendingReceiptsTable">
-                <tr><td colspan="4" style="padding: 16px 8px; text-align: center; color: #64748b;">Загрузка...</td></tr>
+            <tbody id="pendingReceiptsTable" class="divide-y divide-gray-100 bg-white">
+                <tr><td colspan="4" class="px-6 py-12 text-center text-sm text-gray-500">Загрузка задач...</td></tr>
             </tbody>
         </table>
     </div>
@@ -100,7 +165,7 @@ function loadActionQueue() {
             if (data.success && data.actions && data.actions.length > 0) {
                 data.actions.forEach(a => {
                     const tr = document.createElement('tr');
-                    tr.style.borderBottom = '1px solid var(--man-border)';
+                    tr.className = 'hover:bg-blue-50/30 transition-colors group';
                     
                     const date = new Date(a.date).toLocaleDateString('ru-RU', {hour: '2-digit', minute:'2-digit'});
                     
@@ -109,36 +174,60 @@ function loadActionQueue() {
                     let actionButtons = '';
                     
                     if (a.action_type === 'receipt') {
-                        metaInfo = `💰 Чек: <br><span style="font-weight:600">${a.meta || 'Не указано'}</span>`;
-                        fileLink = `<a href="${window.BASE_URL}/api/payments/view-receipt?id=${a.id}" target="_blank" style="color: #3b82f6; text-decoration: none; font-size: 0.85rem;">📂 Открыть чек</a>`;
+                        metaInfo = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100 text-xs font-medium"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>${a.meta || 'Чек'}</span>`;
+                        fileLink = `<a href="${window.BASE_URL}/api/payments/view-receipt?id=${a.id}" target="_blank" class="inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Открыть</a>`;
                         actionButtons = `
-                            <button onclick="approveAction('receipt', ${a.id})" style="background: #22c55e; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-right: 4px;">✅ Одобрить</button>
-                            <button onclick="rejectAction('receipt', ${a.id})" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">❌ Отклонить</button>
+                            <div class="flex items-center justify-end gap-2">
+                                <button onclick="approveAction('receipt', ${a.id})" class="p-2 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors tooltip" title="Одобрить">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                </button>
+                                <button onclick="rejectAction('receipt', ${a.id})" class="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors tooltip" title="Отклонить">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </button>
+                            </div>
                         `;
                     } else {
                         const typeLabels = { passport: 'Паспорт', transcript: 'Аттестат', certificate: 'Сертификат' };
                         const docType = typeLabels[a.item_type] || 'Документ';
-                        metaInfo = `📄 ${docType}`;
-                        fileLink = `<a href="${window.BASE_URL}/api/documents/view?id=${a.id}" target="_blank" style="color: #3b82f6; text-decoration: none; font-size: 0.85rem;">📂 Открыть док</a>`;
+                        metaInfo = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-600 border border-blue-100 text-xs font-medium"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>${docType}</span>`;
+                        fileLink = `<a href="${window.BASE_URL}/api/documents/view?id=${a.id}" target="_blank" class="inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>Открыть</a>`;
                         actionButtons = `
-                            <button onclick="approveAction('document', ${a.id})" style="background: #22c55e; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-right: 4px;">✅ Одобрить</button>
-                            <button onclick="rejectAction('document', ${a.id})" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">❌ Отклонить</button>
+                            <div class="flex items-center justify-end gap-2">
+                                <button onclick="approveAction('document', ${a.id})" class="p-2 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors tooltip" title="Одобрить">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                </button>
+                                <button onclick="rejectAction('document', ${a.id})" class="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors tooltip" title="Отклонить">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </button>
+                            </div>
                         `;
                     }
 
                     tr.innerHTML = `
-                        <td style="padding: 12px 8px; font-weight: 500;">
-                            <a href="${window.BASE_URL}/manager/student?id=${a.student_id}" style="color: inherit; text-decoration: none;">${a.student_name}</a>
-                            <div style="font-size: 0.75rem; color: #64748b; font-weight: normal;">${date}</div>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="ml-0">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        <a href="${window.BASE_URL}/manager/student?id=${a.student_id}" class="hover:text-blue-600 transition-colors">${a.student_name}</a>
+                                    </div>
+                                    <div class="text-xs text-gray-500 mt-0.5">${date}</div>
+                                </div>
+                            </div>
                         </td>
-                        <td style="padding: 12px 8px; font-size: 0.9rem;">${metaInfo}</td>
-                        <td style="padding: 12px 8px;">${fileLink}</td>
-                        <td style="padding: 12px 8px;">${actionButtons}</td>
+                        <td class="px-6 py-4 whitespace-nowrap hidden sm:table-cell">
+                            ${metaInfo}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap hidden md:table-cell">
+                            ${fileLink}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            ${actionButtons}
+                        </td>
                     `;
                     tbody.appendChild(tr);
                 });
             } else {
-                tbody.innerHTML = '<tr><td colspan="4" style="padding: 16px 8px; text-align: center; color: #64748b;">✅ Очередь задач пуста!</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-12 text-center text-sm font-medium text-emerald-600 bg-emerald-50/50"><div class="flex flex-col items-center justify-center gap-2"><svg class="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span>Очередь задач пуста! Отличная работа.</span></div></td></tr>';
             }
         });
 }
