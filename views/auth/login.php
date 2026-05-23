@@ -26,7 +26,7 @@
         
         <div class="flex justify-center mb-8">
             <a href="<?= BASE_URL ?>/" class="flex items-center gap-2 decoration-transparent">
-                <img src="<?= BASE_URL ?>/assets/img/logo.PNG" alt="Kettik Study" class="h-10 w-auto">
+                <img src="<?= BASE_URL ?>/assets/img/logo.png" alt="Kettik Study" class="h-10 w-auto">
                 <span class="text-xl font-bold text-blue-900 tracking-tight">Kettik Study</span>
             </a>
         </div>

@@ -13,7 +13,7 @@
 
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <img src="<?= BASE_URL ?>/assets/img/logo.PNG" alt="Logo" style="height: 40px; width: auto; border-radius: 8px;">
+            <img src="<?= BASE_URL ?>/assets/img/logo.png" alt="Logo" style="height: 40px; width: auto; border-radius: 8px;">
             <span style="font-weight: 700; font-size: 1.1rem; color: #111827;">Kettik Study</span>
         </div>
         

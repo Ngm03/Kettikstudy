@@ -379,7 +379,7 @@ if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
 
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-logo">
-            <img src="<?= BASE_URL ?>/assets/img/logo.PNG" alt="Kettik Study">
+            <img src="<?= BASE_URL ?>/assets/img/logo.png" alt="Kettik Study">
             <div class="sidebar-logo-text">
                 <strong>Kettik Admin</strong>
                 <span>Management Panel</span>

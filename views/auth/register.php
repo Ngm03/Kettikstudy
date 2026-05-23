@@ -237,7 +237,7 @@
     <div class="auth-main">
         <div class="auth-card">
             <a href="<?= BASE_URL ?>/" class="auth-logo">
-                <img src="<?= BASE_URL ?>/assets/img/logo.PNG" alt="Kettik Study">
+                <img src="<?= BASE_URL ?>/assets/img/logo.png" alt="Kettik Study">
                 <span>Kettik Study</span>
             </a>
 
