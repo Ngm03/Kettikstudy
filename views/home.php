@@ -895,192 +895,124 @@ $currentUser = $authService->getUserFromCookie();
 
 
 
-    <section id="process" class="py-24 relative overflow-hidden" style="background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #f8fafc 100%);">
-        <div class="absolute inset-0 opacity-40" style="background-image: radial-gradient(circle at 1px 1px, rgba(99,102,241,0.07) 1px, transparent 0); background-size: 32px 32px;"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-20" data-aos="fade-up">
+        <section id="process" class="py-24 bg-gray-50 relative overflow-hidden">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
                 <span class="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold mb-4"><?= __('process_subtitle') ?></span>
                 <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900"><?= __('process_title') ?></h2>
                 <p class="text-gray-500 mt-4 text-lg max-w-2xl mx-auto"><?= __('process_desc') ?></p>
             </div>
 
-            <div class="relative">
-                <div class="hidden lg:block absolute left-1/2 top-0 bottom-0 w-0.5 -translate-x-1/2">
-                    <div class="w-full h-full bg-gradient-to-b from-blue-300 via-indigo-300 via-purple-300 to-emerald-300 rounded-full"></div>
-                </div>
-
-                <div class="relative lg:grid lg:grid-cols-2 lg:gap-16 mb-12 lg:mb-16" data-aos="fade-up">
-                    <div class="hidden lg:flex absolute left-1/2 top-8 -translate-x-1/2 z-20">
-                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-blue-500/30 ring-4 ring-white">01</div>
+            <div class="mt-12">
+                <!-- Фаза 1 -->
+                <div class="relative pl-12 pb-12 last:pb-0" data-aos="fade-up" data-aos-delay="0">
+                    <div class="absolute left-[23px] top-10 bottom-0 w-0.5 bg-gray-200"></div>
+                    <div class="absolute left-0 top-0 w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-blue-600/20 z-10">
+                        01
                     </div>
-                    
-                    <div class="lg:text-right lg:pr-8">
-                        <div class="flex items-center gap-3 mb-3 lg:justify-end">
-                            <div class="lg:hidden w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-lg">01</div>
-                            <span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full"><?= __('phase_1_steps') ?></span>
+                    <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300">
+                        <div class="mb-4">
+                            <span class="text-blue-600 font-semibold text-sm tracking-wide uppercase"><?= __('phase_1_steps') ?></span>
+                            <h3 class="text-2xl font-bold text-gray-900 mt-1"><?= __('phase_1_title') ?></h3>
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-2"><?= __('phase_1_title') ?></h3>
-                        <p class="text-gray-500 text-sm mb-4"><?= __('phase_1_desc') ?></p>
-                    </div>
-                    
-                    <div class="lg:pl-8 mt-4 lg:mt-0">
-                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-xl hover:border-blue-200 transition-all duration-300 space-y-4">
-                            <div class="flex items-start gap-3">
-                                <div class="w-7 h-7 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-semibold text-gray-900"><?= __('step_1_title') ?></h4>
-                                    <p class="text-xs text-gray-500 mt-0.5"><?= __('step_1_desc') ?></p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <div class="w-7 h-7 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-semibold text-gray-900"><?= __('step_2_title') ?></h4>
-                                    <p class="text-xs text-gray-500 mt-0.5"><?= __('step_2_desc') ?></p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <div class="w-7 h-7 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-semibold text-gray-900"><?= __('step_3_title') ?></h4>
-                                    <p class="text-xs text-gray-500 mt-0.5"><?= __('step_3_desc') ?></p>
-                                </div>
-                            </div>
-                        </div>
+                        <p class="text-gray-500 mb-6 leading-relaxed"><?= __('phase_1_desc') ?></p>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3 text-gray-600 text-sm">
+                                <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><span class="font-semibold text-gray-800"><?= __('step_1_title') ?>:</span> <?= __('step_1_desc') ?></div>
+                            </li>
+                            <li class="flex items-start gap-3 text-gray-600 text-sm">
+                                <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><span class="font-semibold text-gray-800"><?= __('step_2_title') ?>:</span> <?= __('step_2_desc') ?></div>
+                            </li>
+                            <li class="flex items-start gap-3 text-gray-600 text-sm">
+                                <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><span class="font-semibold text-gray-800"><?= __('step_3_title') ?>:</span> <?= __('step_3_desc') ?></div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
-                <div class="relative lg:grid lg:grid-cols-2 lg:gap-16 mb-12 lg:mb-16" data-aos="fade-up" data-aos-delay="100">
-                    <div class="hidden lg:flex absolute left-1/2 top-8 -translate-x-1/2 z-20">
-                        <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-indigo-500/30 ring-4 ring-white">02</div>
+                <!-- Фаза 2 -->
+                <div class="relative pl-12 pb-12 last:pb-0" data-aos="fade-up" data-aos-delay="100">
+                    <div class="absolute left-[23px] top-10 bottom-0 w-0.5 bg-gray-200"></div>
+                    <div class="absolute left-0 top-0 w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-blue-600/20 z-10">
+                        02
                     </div>
-                    
-                    <div class="lg:pr-8 order-2 lg:order-1 mt-4 lg:mt-0">
-                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-xl hover:border-indigo-200 transition-all duration-300 space-y-4">
-                            <div class="flex items-start gap-3">
-                                <div class="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-semibold text-gray-900"><?= __('step_4_title') ?></h4>
-                                    <p class="text-xs text-gray-500 mt-0.5"><?= __('step_4_desc') ?></p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <div class="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-semibold text-gray-900"><?= __('step_5_title') ?></h4>
-                                    <p class="text-xs text-gray-500 mt-0.5"><?= __('step_5_desc') ?></p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <div class="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-semibold text-gray-900"><?= __('step_6_title') ?></h4>
-                                    <p class="text-xs text-gray-500 mt-0.5"><?= __('step_6_desc') ?></p>
-                                </div>
-                            </div>
+                    <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300">
+                        <div class="mb-4">
+                            <span class="text-blue-600 font-semibold text-sm tracking-wide uppercase"><?= __('phase_2_steps') ?></span>
+                            <h3 class="text-2xl font-bold text-gray-900 mt-1"><?= __('phase_2_title') ?></h3>
                         </div>
-                    </div>
-                    
-                    <div class="lg:pl-8 order-1 lg:order-2">
-                        <div class="flex items-center gap-3 mb-3">
-                            <div class="lg:hidden w-10 h-10 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-lg">02</div>
-                            <span class="px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-full"><?= __('phase_2_steps') ?></span>
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-2"><?= __('phase_2_title') ?></h3>
-                        <p class="text-gray-500 text-sm mb-4"><?= __('phase_2_desc') ?></p>
+                        <p class="text-gray-500 mb-6 leading-relaxed"><?= __('phase_2_desc') ?></p>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3 text-gray-600 text-sm">
+                                <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><span class="font-semibold text-gray-800"><?= __('step_4_title') ?>:</span> <?= __('step_4_desc') ?></div>
+                            </li>
+                            <li class="flex items-start gap-3 text-gray-600 text-sm">
+                                <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><span class="font-semibold text-gray-800"><?= __('step_5_title') ?>:</span> <?= __('step_5_desc') ?></div>
+                            </li>
+                            <li class="flex items-start gap-3 text-gray-600 text-sm">
+                                <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><span class="font-semibold text-gray-800"><?= __('step_6_title') ?>:</span> <?= __('step_6_desc') ?></div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
-                <div class="relative lg:grid lg:grid-cols-2 lg:gap-16 mb-12 lg:mb-16" data-aos="fade-up" data-aos-delay="200">
-                    <div class="hidden lg:flex absolute left-1/2 top-8 -translate-x-1/2 z-20">
-                        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-purple-500/30 ring-4 ring-white">03</div>
+                <!-- Фаза 3 -->
+                <div class="relative pl-12 pb-12 last:pb-0" data-aos="fade-up" data-aos-delay="200">
+                    <div class="absolute left-[23px] top-10 bottom-0 w-0.5 bg-gray-200"></div>
+                    <div class="absolute left-0 top-0 w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-blue-600/20 z-10">
+                        03
                     </div>
-                    
-                    <div class="lg:text-right lg:pr-8">
-                        <div class="flex items-center gap-3 mb-3 lg:justify-end">
-                            <div class="lg:hidden w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-lg">03</div>
-                            <span class="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full"><?= __('phase_3_steps') ?></span>
+                    <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300">
+                        <div class="mb-4">
+                            <span class="text-blue-600 font-semibold text-sm tracking-wide uppercase"><?= __('phase_3_steps') ?></span>
+                            <h3 class="text-2xl font-bold text-gray-900 mt-1"><?= __('phase_3_title') ?></h3>
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-2"><?= __('phase_3_title') ?></h3>
-                        <p class="text-gray-500 text-sm mb-4"><?= __('phase_3_desc') ?></p>
-                    </div>
-                    
-                    <div class="lg:pl-8 mt-4 lg:mt-0">
-                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-xl hover:border-purple-200 transition-all duration-300 space-y-4">
-                            <div class="flex items-start gap-3">
-                                <div class="w-7 h-7 bg-purple-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path></svg>
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-semibold text-gray-900"><?= __('step_7_title') ?></h4>
-                                    <p class="text-xs text-gray-500 mt-0.5"><?= __('step_7_desc') ?></p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <div class="w-7 h-7 bg-purple-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-semibold text-gray-900"><?= __('step_8_title') ?></h4>
-                                    <p class="text-xs text-gray-500 mt-0.5"><?= __('step_8_desc') ?></p>
-                                </div>
-                            </div>
-                        </div>
+                        <p class="text-gray-500 mb-6 leading-relaxed"><?= __('phase_3_desc') ?></p>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3 text-gray-600 text-sm">
+                                <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><span class="font-semibold text-gray-800"><?= __('step_7_title') ?>:</span> <?= __('step_7_desc') ?></div>
+                            </li>
+                            <li class="flex items-start gap-3 text-gray-600 text-sm">
+                                <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><span class="font-semibold text-gray-800"><?= __('step_8_title') ?>:</span> <?= __('step_8_desc') ?></div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
-                <div class="relative lg:grid lg:grid-cols-2 lg:gap-16" data-aos="fade-up" data-aos-delay="300">
-                    <div class="hidden lg:flex absolute left-1/2 top-8 -translate-x-1/2 z-20">
-                        <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-emerald-500/30 ring-4 ring-white">04</div>
+                <!-- Фаза 4 -->
+                <div class="relative pl-12 pb-0 last:pb-0" data-aos="fade-up" data-aos-delay="300">
+                    <div class="absolute left-0 top-0 w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-blue-600/20 z-10">
+                        04
                     </div>
-                    
-                    <div class="lg:pr-8 order-2 lg:order-1 mt-4 lg:mt-0">
-                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-xl hover:border-emerald-200 transition-all duration-300 space-y-4">
-                            <div class="flex items-start gap-3">
-                                <div class="w-7 h-7 bg-emerald-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-semibold text-gray-900"><?= __('step_9_title') ?></h4>
-                                    <p class="text-xs text-gray-500 mt-0.5"><?= __('step_9_desc') ?></p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-3 pt-3 border-t border-gray-50">
-                                <div class="w-7 h-7 bg-emerald-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-semibold text-gray-900"><?= __('curator_on_site') ?></h4>
-                                    <p class="text-xs text-gray-500 mt-0.5"><?= __('curator_desc') ?></p>
-                                </div>
-                            </div>
+                    <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300">
+                        <div class="mb-4">
+                            <span class="text-blue-600 font-semibold text-sm tracking-wide uppercase"><?= __('phase_4_steps') ?></span>
+                            <h3 class="text-2xl font-bold text-gray-900 mt-1"><?= __('phase_4_title') ?></h3>
                         </div>
-                    </div>
-                    
-                    <div class="lg:pl-8 order-1 lg:order-2">
-                        <div class="flex items-center gap-3 mb-3">
-                            <div class="lg:hidden w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-lg">04</div>
-                            <span class="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full"><?= __('phase_4_steps') ?></span>
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-2"><?= __('phase_4_title') ?></h3>
-                        <p class="text-gray-500 text-sm mb-4"><?= __('phase_4_desc') ?></p>
+                        <p class="text-gray-500 mb-6 leading-relaxed"><?= __('phase_4_desc') ?></p>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3 text-gray-600 text-sm">
+                                <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><span class="font-semibold text-gray-800"><?= __('step_9_title') ?>:</span> <?= __('step_9_desc') ?></div>
+                            </li>
+                            <li class="flex items-start gap-3 text-gray-600 text-sm">
+                                <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><span class="font-semibold text-gray-800"><?= __('curator_on_site') ?>:</span> <?= __('curator_desc') ?></div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
 
+            <!-- Кнопки действия внизу таймлайна -->
             <div class="text-center mt-16" data-aos="fade-up">
                 <a href="https://wa.me/48506304046" target="_blank" class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-2xl hover:from-blue-500 hover:to-indigo-500 transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 hover:-translate-y-0.5">
                     <?= __('start_free_consult') ?>
@@ -1090,6 +1022,7 @@ $currentUser = $authService->getUserFromCookie();
             </div>
         </div>
     </section>
+
 
     <section id="universities" class="py-24 bg-gray-50 overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center" data-aos="fade-up">
