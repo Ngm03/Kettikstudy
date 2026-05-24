@@ -386,11 +386,13 @@
                 WhatsApp
             </a>`;
         }
-        const viewBtn = `<a href="<?= BASE_URL ?>/admin/student?id=${s.id}" class="btn-view"><?= __('admin_btn_view') ?></a>`;
+        const isNew = (s.lead_status === 'new' || !s.lead_status);
+        const btnText = isNew ? '<?= __('admin_btn_take') ?>' : 'Запрос обработан';
+        const btnStyle = isNew ? '' : 'style="background:#10b981; border-color:#10b981;"';
         
         const isUrgent = String(s.is_urgent) === 'true' || String(s.is_urgent) === '1' || s.lead_status === 'urgent';
         const takeBtn = isUrgent
-            ? `<button onclick="takeLead(${s.id})" class="btn-take"><?= __('admin_btn_take') ?></button>`
+            ? `<button onclick="takeLead(${s.id})" class="btn-take" ${btnStyle}>${btnText}</button>`
             : '';
         return `${takeBtn}${wa}${viewBtn}`;
     }
@@ -488,14 +490,20 @@
     }
 
     function takeLead(id) {
-        if (!confirm("<?= __('admin_confirm_take') ?>")) return;
         const s = allStudents.find(x => x.id == id);
+        const isNew = (s && (s.lead_status === 'new' || !s.lead_status));
+        
+        if (isNew) {
+            if (!confirm("<?= __('admin_confirm_take') ?>")) return;
+        } else {
+            if (!confirm("Подтвердите, что запрос обработан")) return;
+        }
         
         fetch('<?= BASE_URL ?>/api/admin/clear-urgent', {
             method: 'POST',
             body: JSON.stringify({ id })
         }).then(r => r.json()).then(data => {
-            if (s && (s.lead_status === 'new' || s.lead_status === 'urgent' || !s.lead_status)) {
+            if (isNew || s.lead_status === 'urgent') {
                 updateStatus(id, 'processing');
             } else {
                 loadStudents();
