@@ -57,7 +57,8 @@ class ScheduleController
         $stmt->execute([$userId]);
         $user = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        if (!$user || $user['role'] !== 'admin') {
+        $roleStr = strtolower($user['role'] ?? '');
+        if (!$user || !str_contains($roleStr, 'admin')) {
             $this->jsonResponse(['error' => 'Admin only'], 403);
             return;
         }

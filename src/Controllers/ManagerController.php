@@ -27,7 +27,10 @@ class ManagerController
 
         $authService = new \App\Services\AuthService();
         $decoded = $authService->validateToken($token);
-        if (!$decoded || ($decoded['role'] ?? '') !== 'admin') {
+        $roleStr = strtolower(trim($decoded['role'] ?? ''));
+        $userRoles = array_map('trim', explode(',', $roleStr));
+
+        if (!$decoded || !in_array('admin', $userRoles, true)) {
             http_response_code(403);
             echo json_encode(['error' => 'Access Denied: Admin only']);
             exit;

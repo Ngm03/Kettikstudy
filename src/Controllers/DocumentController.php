@@ -266,7 +266,8 @@ class DocumentController
             return;
         }
 
-        if ($role !== 'admin' && $doc['user_id'] != $userId) {
+        $roleStr = strtolower($role ?? '');
+        if (!str_contains($roleStr, 'admin') && $doc['user_id'] != $userId) {
             http_response_code(403);
             echo 'Access Denied';
             return;

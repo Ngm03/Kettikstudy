@@ -30,15 +30,24 @@ class RoleMiddleware
      */
     public function handle(array $decodedToken): void
     {
-        $role = strtolower(trim($decodedToken['role'] ?? ''));
+        $roleStr = strtolower(trim($decodedToken['role'] ?? ''));
+        $userRoles = array_map('trim', explode(',', $roleStr));
 
         // Приводим все разрешённые роли к нижнему регистру и обрезаем пробелы для максимальной надежности
         $allowed = array_map(function ($r) {
             return strtolower(trim($r));
         }, $this->allowedRoles);
 
-        if (!in_array($role, $allowed, true)) {
-            $this->deny($role);
+        $hasAccess = false;
+        foreach ($userRoles as $r) {
+            if (in_array($r, $allowed, true)) {
+                $hasAccess = true;
+                break;
+            }
+        }
+
+        if (!$hasAccess) {
+            $this->deny($roleStr);
         }
     }
 

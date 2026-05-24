@@ -343,10 +343,11 @@ class AdminController
         }
 
         $decoded = $this->authService->validateToken($token);
-        if (!$decoded || ($decoded['role'] ?? '') !== 'admin') {
+        $role = strtolower($decoded['role'] ?? '');
+        if (!$decoded || !str_contains($role, 'admin')) {
             http_response_code(403);
-            echo json_encode(['error' => 'Access Denied']);
-            return;
+            echo json_encode(['error' => 'Access Denied: Admin only']);
+            exit;
         }
         
         header('Content-Type: application/json');
@@ -472,7 +473,8 @@ class AdminController
         header('Content-Type: application/json');
         
         $user = $this->authService->getUserFromCookie();
-        if (!$user || $user['role'] !== 'admin') {
+        $role = strtolower($user['role'] ?? '');
+        if (!$user || !str_contains($role, 'admin')) {
             http_response_code(403);
             echo json_encode(['error' => 'Access Denied']);
             return;

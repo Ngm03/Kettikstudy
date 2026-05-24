@@ -24,7 +24,8 @@ class AnalyticsController
             exit;
         }
         $user = $this->authService->user();
-        if ($user['role'] !== 'admin') {
+        $roleStr = strtolower($user['role'] ?? '');
+        if (!str_contains($roleStr, 'admin')) {
             http_response_code(403);
             echo json_encode(['error' => 'Forbidden']);
             exit;
