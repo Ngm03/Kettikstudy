@@ -11,6 +11,7 @@ $lang = $_COOKIE['lang'] ?? 'ru';
     <meta name="csrf-token" content="<?= \App\Core\Csrf::token() ?>">
     <script>window.BASE_URL = '<?= BASE_URL ?>';</script>
     <script src="<?= BASE_URL ?>/assets/js/csrf.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
             --man-sidebar-bg: #0f172a;
