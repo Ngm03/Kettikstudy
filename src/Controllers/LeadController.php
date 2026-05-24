@@ -44,14 +44,14 @@ class LeadController
             $lead = $stmt->fetch();
 
             if ($lead) {
-                $stmt = $this->db->prepare("UPDATE study_leads SET status = 'urgent', updated_at = NOW() WHERE id = ?");
+                $stmt = $this->db->prepare("UPDATE study_leads SET details = JSON_SET(COALESCE(details, '{}'), '$.is_urgent', true), updated_at = NOW() WHERE id = ?");
                 $stmt->execute([$lead['id']]);
             } else {
                 $managerModel = new \App\Models\Manager();
                 $manager = $managerModel->getRandomActive();
                 $managerId = $manager ? $manager['id'] : null;
 
-                $stmt = $this->db->prepare("INSERT INTO study_leads (user_id, status, score, details, manager_id) VALUES (?, 'urgent', 0, '{}', ?)");
+                $stmt = $this->db->prepare("INSERT INTO study_leads (user_id, status, score, details, manager_id) VALUES (?, 'new', 0, '{\"is_urgent\":true}', ?)");
                 $stmt->execute([$userId, $managerId]);
 
                 if ($managerId) {

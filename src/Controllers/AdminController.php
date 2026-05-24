@@ -146,6 +146,7 @@ class AdminController
                     u.id, u.full_name, u.email, u.phone, u.created_at,
                     (SELECT status FROM study_leads WHERE user_id = u.id ORDER BY updated_at DESC LIMIT 1) as lead_status,
                     (SELECT score FROM study_leads WHERE user_id = u.id ORDER BY updated_at DESC LIMIT 1) as lead_score,
+                    (SELECT JSON_UNQUOTE(JSON_EXTRACT(details, '$.is_urgent')) FROM study_leads WHERE user_id = u.id ORDER BY updated_at DESC LIMIT 1) as is_urgent,
                     (SELECT updated_at FROM study_leads WHERE user_id = u.id ORDER BY updated_at DESC LIMIT 1) as last_interaction
                 FROM study_users u
                 WHERE u.role = 'student' 
@@ -318,6 +319,18 @@ class AdminController
             http_response_code(500);
             echo json_encode(['error' => 'Internal server error', 'success' => false]);
         }
+    }
+
+    public function clearUrgent()
+    {
+        header('Content-Type: application/json');
+        $input = json_decode(file_get_contents('php://input'), true);
+        $studentId = $input['id'] ?? null;
+        if ($studentId) {
+            $stmt = $this->db->prepare("UPDATE study_leads SET details = JSON_REMOVE(details, '$.is_urgent') WHERE user_id = ?");
+            $stmt->execute([$studentId]);
+        }
+        echo json_encode(['success' => true]);
     }
 
     public function updateChatRoom()

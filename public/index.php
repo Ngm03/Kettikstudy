@@ -234,6 +234,8 @@ $router->get('/api/admin/fix-db', function() {
     echo "Fixed DB ENUM issue!";
 });
 
+$router->post('/api/admin/clear-urgent',     [\App\Controllers\AdminController::class, 'clearUrgent'],        ['auth', 'role:admin,manager']);
+
 // Управление чеками об оплате (Менеджер/Админ)
 $router->get('/api/admin/receipts/pending',  [\App\Controllers\PaymentController::class, 'pendingReceipts'], ['auth', 'role:admin,manager']);
 $router->post('/api/admin/receipts/approve', [\App\Controllers\PaymentController::class, 'approveReceipt'],  ['auth', 'role:admin,manager']);

@@ -363,7 +363,10 @@
                 (s.email && s.email.toLowerCase().includes(q)) ||
                 (s.phone && s.phone.includes(q));
             if (!matchSearch) return false;
-            if (currentFilter === 'urgent') return s.lead_status === 'urgent';
+            
+            const isUrgent = String(s.is_urgent) === 'true' || String(s.is_urgent) === '1' || s.lead_status === 'urgent';
+            if (currentFilter === 'urgent') return isUrgent;
+            
             if (currentFilter === 'hot') return s.lead_score >= 70;
             return true;
         });
@@ -384,7 +387,9 @@
             </a>`;
         }
         const viewBtn = `<a href="<?= BASE_URL ?>/admin/student?id=${s.id}" class="btn-view"><?= __('admin_btn_view') ?></a>`;
-        const takeBtn = s.lead_status === 'urgent'
+        
+        const isUrgent = String(s.is_urgent) === 'true' || String(s.is_urgent) === '1' || s.lead_status === 'urgent';
+        const takeBtn = isUrgent
             ? `<button onclick="takeLead(${s.id})" class="btn-take"><?= __('admin_btn_take') ?></button>`
             : '';
         return `${takeBtn}${wa}${viewBtn}`;
@@ -411,7 +416,7 @@
         }
 
         filtered.forEach(s => {
-            const isUrgent = s.lead_status === 'urgent';
+            const isUrgent = String(s.is_urgent) === 'true' || String(s.is_urgent) === '1' || s.lead_status === 'urgent';
             const date = new Date(s.created_at).toLocaleDateString('ru-RU');
             const score = s.lead_score ? (s.lead_score >= 70 ? `🔥 ${s.lead_score}` : s.lead_score) : '—';
 
@@ -484,7 +489,18 @@
 
     function takeLead(id) {
         if (!confirm("<?= __('admin_confirm_take') ?>")) return;
-        updateStatus(id, 'processing');
+        const s = allStudents.find(x => x.id == id);
+        
+        fetch('<?= BASE_URL ?>/api/admin/clear-urgent', {
+            method: 'POST',
+            body: JSON.stringify({ id })
+        }).then(r => r.json()).then(data => {
+            if (s && (s.lead_status === 'new' || s.lead_status === 'urgent' || !s.lead_status)) {
+                updateStatus(id, 'processing');
+            } else {
+                loadStudents();
+            }
+        }).catch(e => loadStudents());
     }
 
     function loadStudents() {
@@ -495,7 +511,7 @@
                 allStudents = data.students;
 
                 const total    = allStudents.length;
-                const urgent   = allStudents.filter(s => s.lead_status === 'urgent').length;
+                const urgent   = allStudents.filter(s => String(s.is_urgent) === 'true' || String(s.is_urgent) === '1' || s.lead_status === 'urgent').length;
                 const hot      = allStudents.filter(s => s.lead_score >= 70).length;
                 const enrolled = allStudents.filter(s => s.lead_status === 'enrolled').length;
 
