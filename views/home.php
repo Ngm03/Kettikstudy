@@ -422,7 +422,7 @@ $currentUser = $authService->getUserFromCookie();
                 <!-- Фотография -->
                 <div class="relative hidden lg:block" data-aos="fade-left" data-aos-duration="1000">
                     <div class="absolute inset-0 bg-blue-600 translate-x-4 translate-y-4 rounded-2xl opacity-10"></div>
-                    <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Студенты в Польше" class="relative z-10 rounded-2xl shadow-2xl object-cover w-full h-[450px]" loading="eager">
+                    <img src="<?= BASE_URL ?>/assets/img/hero-students.jpg" alt="Студенты в Польше" class="relative z-10 rounded-2xl shadow-2xl object-cover w-full h-[450px]" loading="eager">
                 </div>
             </div>
         </div>
