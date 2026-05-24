@@ -37,10 +37,8 @@ if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
 
         .admin-shell {
             display: flex;
-            height: 100vh;
+            min-height: 100vh;
             width: 100%;
-            max-width: 100vw;
-            overflow: hidden;
         }
 
         .sidebar {
@@ -50,8 +48,11 @@ if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
             flex-direction: column;
             flex-shrink: 0;
             height: 100vh;
-            overflow: hidden;
-            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
             z-index: 50;
             transition: transform var(--transition);
         }
@@ -229,11 +230,11 @@ if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
 
         .main-area {
             flex: 1;
+            margin-left: var(--sidebar-w);
             display: flex;
             flex-direction: column;
             min-width: 0;
-            min-height: 0;
-            overflow: hidden;
+            min-height: 100vh;
         }
 
         .topbar {
@@ -346,17 +347,14 @@ if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
 
         .page-content {
             flex: 1;
-            min-height: 0;
-            height: calc(100vh - 64px);
             overflow-y: auto;
             overflow-x: hidden;
             padding: 24px;
+            min-height: calc(100vh - 64px);
         }
 
         @media (max-width: 768px) {
             .sidebar {
-                position: fixed;
-                top: 0; left: 0; bottom: 0;
                 transform: translateX(-100%);
                 box-shadow: 4px 0 30px rgba(0,0,0,0.3);
             }
@@ -364,12 +362,13 @@ if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
             .sidebar-close-btn { display: flex; align-items: center; justify-content: center; }
             .topbar-hamburger { display: flex; }
             .topbar { padding: 0 16px; }
-            .page-content { padding: 16px; height: calc(100vh - 64px); }
+            .main-area { margin-left: 0; }
+            .page-content { padding: 16px; }
             .notif-dropdown { width: calc(100vw - 32px); right: -16px; }
         }
 
         @media (min-width: 769px) {
-            .main-area { margin-left: 0; }
+            .main-area { margin-left: var(--sidebar-w); }
         }
     </style>
 </head>
