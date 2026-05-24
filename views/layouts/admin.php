@@ -10,10 +10,10 @@ if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel — Kettik Study</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/dashboard.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/dashboard.css?v=<?= time() ?>">
     <meta name="csrf-token" content="<?= \App\Core\Csrf::token() ?>">
     <script>window.BASE_URL = '<?= BASE_URL ?>';</script>
-    <script src="<?= BASE_URL ?>/assets/js/csrf.js"></script>
+    <script src="<?= BASE_URL ?>/assets/js/csrf.js?v=<?= time() ?>"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -561,10 +561,10 @@ if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
 
 <?php if ($page === 'analytics'): ?>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="<?= BASE_URL ?>/assets/js/analytics.js"></script>
+    <script src="<?= BASE_URL ?>/assets/js/analytics.js?v=<?= time() ?>"></script>
 <?php endif; ?>
 
-<script src="<?= BASE_URL ?>/assets/js/notifications.js"></script>
+<script src="<?= BASE_URL ?>/assets/js/notifications.js?v=<?= time() ?>"></script>
 <?php include __DIR__ . '/admin_mobile_js.php'; ?>
 </body>
 </html>
