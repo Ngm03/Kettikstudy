@@ -106,7 +106,7 @@ function renderStudents(list) {
                         <a href="${window.BASE_URL}/manager/student?id=${s.id}" class="p-2.5 rounded-lg bg-gray-50 text-gray-500 hover:text-blue-600 hover:bg-blue-100 transition-colors tooltip" title="<?= __('man_btn_view_profile') ?>">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                         </a>
-                        <button onclick="startPrivateChat(${s.id})" class="p-2.5 rounded-lg bg-gray-50 text-gray-500 hover:text-indigo-600 hover:bg-indigo-100 transition-colors tooltip" title="<?= __('man_btn_write_msg') ?>">
+                        <button onclick="contactStudent('${s.phone || ''}', '${s.email || ''}')" class="p-2.5 rounded-lg bg-gray-50 text-gray-500 hover:text-green-600 hover:bg-green-100 transition-colors tooltip" title="<?= __('man_btn_write_msg') ?>">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
                         </button>
                     </div>
@@ -126,26 +126,15 @@ function filterStudents() {
     renderStudents(filtered);
 }
 
-function startPrivateChat(studentId) {
-    if (typeof showLoader === 'function') showLoader();
-    fetch(`${window.BASE_URL}/api/chat/start-private`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({student_id: studentId})
-    })
-    .then(res => res.json())
-    .then(data => {
-        if(data.success) {
-            window.location.href = `${window.BASE_URL}/manager/chat?room_id=${data.room_id}`;
-        } else {
-            alert('<?= __('man_err_create_chat') ?>' + (data.error || '<?= __('man_err_unknown') ?>'));
-        }
-    })
-    .catch(err => {
-        console.error(err);
-        alert('<?= __('man_err_request') ?>');
-    })
-    .finally(() => { if (typeof hideLoader === 'function') hideLoader(); });
+function contactStudent(phone, email) {
+    if (phone && phone.trim() !== '') {
+        const cleanPhone = phone.replace(/[^\d]/g, '');
+        window.open(`https://wa.me/${cleanPhone}`, '_blank');
+    } else if (email && email.trim() !== '') {
+        window.open(`mailto:${email}`, '_blank');
+    } else {
+        alert('У студента нет ни телефона, ни email.');
+    }
 }
 
 document.addEventListener('DOMContentLoaded', loadStudents);
