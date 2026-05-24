@@ -150,7 +150,7 @@ class ManagerPanelController
         }
 
         try {
-            $stmt = $this->db->prepare("UPDATE study_leads SET status = ? WHERE id = ? AND manager_id = ?");
+            $stmt = $this->db->prepare("UPDATE study_leads SET status = ?, updated_at = NOW() WHERE id = ? AND manager_id = ?");
             $stmt->execute([$status, $leadId, $this->managerId]);
             echo json_encode(['success' => true]);
         } catch (\Exception $e) {
