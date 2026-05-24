@@ -372,112 +372,144 @@
 </style>
 
 <script>
-function loadLogs() {
+async function loadLogs() {
+    console.log('[Logs] loadLogs() initiated');
+    console.log('[Logs] window.BASE_URL value:', window.BASE_URL);
+
     const tableBody = document.getElementById('logs-list');
     const mobileCards = document.getElementById('mobileCards');
 
     tableBody.innerHTML = `<tr><td colspan="3" style="text-align: center; padding: 3rem; color: #64748b;"><svg class="animate-spin inline mr-2 text-gray-400" width="20" height="20" fill="none" viewBox="0 0 24 24" style="animation: spin 1.2s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px;"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" style="opacity: 0.25;"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" style="opacity: 0.75;"></path></svg><?= __('updating_list') ?></td></tr>`;
     mobileCards.innerHTML = `<div style="text-align: center; padding: 2rem; color: #64748b;"><?= __('updating_list') ?></div>`;
 
-    fetch(`${window.BASE_URL}/api/admin/logs`)
-        .then(res => res.json())
-        .then(data => {
-            if (!data.logs || data.logs.length === 0) {
-                const emptyMsg = `<tr><td colspan="3" style="text-align: center; padding: 3rem; color: #64748b;">Лог-файл пуст. Ошибок не обнаружено.</td></tr>`;
-                tableBody.innerHTML = emptyMsg;
-                mobileCards.innerHTML = `<div style="text-align: center; padding: 3rem; color: #64748b;">Лог-файл пуст. Ошибок не обнаружено.</div>`;
-                
-                document.getElementById('error-count').textContent = '0';
-                document.getElementById('warning-count').textContent = '0';
-                document.getElementById('total-count').textContent = '0';
-                return;
-            }
+    try {
+        const url = `${window.BASE_URL}/api/admin/logs`;
+        console.log(`[Logs] Fetching GET from: ${url}`);
+        const res = await fetch(url);
+        console.log(`[Logs] Fetch response status: ${res.status}`);
+
+        const text = await res.text();
+        console.log(`[Logs] Raw Response Text (first 200 chars):`, text.substring(0, 200));
+
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (parseError) {
+            console.error('[Logs] Failed to parse JSON response. Raw output was likely HTML. Error:', parseError);
+            throw parseError;
+        }
+
+        console.log('[Logs] Loaded logs payload:', data);
+        if (!data.logs || data.logs.length === 0) {
+            console.log('[Logs] Log file is empty or no logs found.');
+            const emptyMsg = `<tr><td colspan="3" style="text-align: center; padding: 3rem; color: #64748b;">Лог-файл пуст. Ошибок не обнаружено.</td></tr>`;
+            tableBody.innerHTML = emptyMsg;
+            mobileCards.innerHTML = `<div style="text-align: center; padding: 3rem; color: #64748b;">Лог-файл пуст. Ошибок не обнаружено.</div>`;
             
-            let tableHtml = '';
-            let cardsHtml = '';
-            let errs = 0, warns = 0;
+            document.getElementById('error-count').textContent = '0';
+            document.getElementById('warning-count').textContent = '0';
+            document.getElementById('total-count').textContent = '0';
+            return;
+        }
+        
+        let tableHtml = '';
+        let cardsHtml = '';
+        let errs = 0, warns = 0;
 
-            data.logs.forEach(log => {
-                let badgeClass = 'ad-badge-blue';
-                let badgeLabel = 'INFO';
-                let rowClass = '';
-                let cardClass = 'card-info';
-                let msgClass = '';
+        data.logs.forEach(log => {
+            let badgeClass = 'ad-badge-blue';
+            let badgeLabel = 'INFO';
+            let rowClass = '';
+            let cardClass = 'card-info';
+            let msgClass = '';
 
-                if (log.level === 'error') {
-                    badgeClass = 'ad-badge-red';
-                    badgeLabel = 'ERROR';
-                    rowClass = 'row-error';
-                    cardClass = 'card-error';
-                    msgClass = 'text-red-msg';
-                    errs++;
-                } else if (log.level === 'warning') {
-                    badgeClass = 'ad-badge-yellow';
-                    badgeLabel = 'WARN';
-                    rowClass = 'row-warning';
-                    cardClass = 'card-warning';
-                    warns++;
-                }
+            if (log.level === 'error') {
+                badgeClass = 'ad-badge-red';
+                badgeLabel = 'ERROR';
+                rowClass = 'row-error';
+                cardClass = 'card-error';
+                msgClass = 'text-red-msg';
+                errs++;
+            } else if (log.level === 'warning') {
+                badgeClass = 'ad-badge-yellow';
+                badgeLabel = 'WARN';
+                rowClass = 'row-warning';
+                cardClass = 'card-warning';
+                warns++;
+            }
 
-                const actionBadge = `<span class="ad-badge ${badgeClass}">${badgeLabel}</span>`;
+            const actionBadge = `<span class="ad-badge ${badgeClass}">${badgeLabel}</span>`;
 
-                tableHtml += `
-                    <tr class="${rowClass}">
-                        <td style="padding: 12px 16px; vertical-align: middle;">${actionBadge}</td>
-                        <td class="timestamp-cell" style="padding: 12px 16px; vertical-align: middle;">${log.timestamp}</td>
-                        <td class="message-cell ${msgClass}" style="padding: 12px 16px;">${escapeHtml(log.message)}</td>
-                    </tr>
-                `;
+            tableHtml += `
+                <tr class="${rowClass}">
+                    <td style="padding: 12px 16px; vertical-align: middle;">${actionBadge}</td>
+                    <td class="timestamp-cell" style="padding: 12px 16px; vertical-align: middle;">${log.timestamp}</td>
+                    <td class="message-cell ${msgClass}" style="padding: 12px 16px;">${escapeHtml(log.message)}</td>
+                </tr>
+            `;
 
-                cardsHtml += `
-                    <div class="ad-card ${cardClass}">
-                        <div class="ad-card-header">
-                            <div>${actionBadge}</div>
-                            <div class="timestamp-cell" style="font-size: 0.75rem;">${log.timestamp}</div>
-                        </div>
-                        <div class="message-cell ${msgClass}" style="font-size: 0.8rem; line-height: 1.4; background: rgba(0,0,0,0.02); padding: 0.6rem; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
-                            ${escapeHtml(log.message)}
-                        </div>
+            cardsHtml += `
+                <div class="ad-card ${cardClass}">
+                    <div class="ad-card-header">
+                        <div>${actionBadge}</div>
+                        <div class="timestamp-cell" style="font-size: 0.75rem;">${log.timestamp}</div>
                     </div>
-                `;
-            });
-
-            tableBody.innerHTML = tableHtml;
-            mobileCards.innerHTML = cardsHtml;
-
-            document.getElementById('error-count').textContent = errs;
-            document.getElementById('warning-count').textContent = warns;
-            document.getElementById('total-count').textContent = data.logs.length;
-        })
-        .catch(e => {
-            console.error(e);
-            tableBody.innerHTML = `<tr><td colspan="3" style="text-align: center; padding: 3rem; color: #ef4444;"><?= __('load_error') ?></td></tr>`;
-            mobileCards.innerHTML = `<div style="text-align: center; padding: 3rem; color: #ef4444;"><?= __('load_error') ?></div>`;
+                    <div class="message-cell ${msgClass}" style="font-size: 0.8rem; line-height: 1.4; background: rgba(0,0,0,0.02); padding: 0.6rem; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
+                        ${escapeHtml(log.message)}
+                    </div>
+                </div>
+            `;
         });
+
+        tableBody.innerHTML = tableHtml;
+        mobileCards.innerHTML = cardsHtml;
+
+        document.getElementById('error-count').textContent = errs;
+        document.getElementById('warning-count').textContent = warns;
+        document.getElementById('total-count').textContent = data.logs.length;
+        console.log('[Logs] Rendering completed successfully');
+
+    } catch (e) {
+        console.error('[Logs] loadLogs() fatal exception caught:', e);
+        tableBody.innerHTML = `<tr><td colspan="3" style="text-align: center; padding: 3rem; color: #ef4444;"><?= __('load_error') ?></td></tr>`;
+        mobileCards.innerHTML = `<div style="text-align: center; padding: 3rem; color: #ef4444;"><?= __('load_error') ?></div>`;
+    }
 }
 
-function clearLogs() {
+async function clearLogs() {
     if (!confirm('Вы действительно хотите полностью очистить лог-файл сервера? Это действие сотрет всю историю ошибок.')) {
         return;
     }
 
     const toast = document.getElementById('toast');
+    console.log('[Logs] clearLogs() initiated');
     
-    fetch(`${window.BASE_URL}/api/admin/logs/clear`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
-    })
-    .then(res => res.json())
-    .then(data => {
+    try {
+        const url = `${window.BASE_URL}/api/admin/logs/clear`;
+        console.log(`[Logs] Fetching POST to: ${url}`);
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        console.log(`[Logs] Clear response status: ${res.status}`);
+        
+        const text = await res.text();
+        console.log(`[Logs] Raw response text:`, text);
+        
+        let data = JSON.parse(text);
         if (data.success) {
+            console.log('[Logs] Clear succeeded');
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
             loadLogs();
         } else {
+            console.error('[Logs] Clear failed on server:', data.error);
             alert('Не удалось очистить логи: ' + (data.error || 'ошибка сервера'));
         }
-    })
-    .catch(() => alert('Ошибка соединения при очистке логов'));
+    } catch (e) {
+        console.error('[Logs] clearLogs() exception:', e);
+        alert('Ошибка соединения при очистке логов');
+    }
 }
 
 function escapeHtml(text) {

@@ -457,7 +457,7 @@ function updateStats() {
     document.getElementById('stat-rejected').textContent = rejected;
 }
 
-function updateStatus(id, status) {
+async function updateStatus(id, status) {
     let reason = null;
     if (status === 'rejected') {
         reason = prompt('<?= __('admin_docs_prompt_reject') ?>');
@@ -466,41 +466,71 @@ function updateStatus(id, status) {
          if(!confirm('<?= __('admin_docs_confirm_approve') ?>')) return;
     }
 
-    fetch(`${window.BASE_URL}/api/admin/doc-status`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, status, reason })
-    })
-    .then(res => res.json())
-    .then(data => {
+    console.log(`[Documents] updateStatus() initiated for ID: ${id}, status: ${status}, reason: ${reason}`);
+    try {
+        const url = `${window.BASE_URL}/api/admin/doc-status`;
+        console.log(`[Documents] Fetching POST to: ${url}`);
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, status, reason })
+        });
+        console.log(`[Documents] Update status response code: ${res.status}`);
+
+        const text = await res.text();
+        console.log(`[Documents] Raw response text:`, text);
+
+        let data = JSON.parse(text);
         if(data.success) {
+            console.log('[Documents] Status update succeeded');
             const doc = allDocs.find(d => d.id == id);
             if(doc) doc.status = status;
             updateStats();
             filterTable();
         } else {
+            console.error('[Documents] Status update failed on server:', data.error);
             alert('<?= __('admin_docs_err_update') ?>' + (data.error || '<?= __('admin_docs_err_unknown') ?>'));
         }
-    })
-    .catch(() => alert('<?= __('admin_docs_err_net_update') ?>'));
+    } catch (e) {
+        console.error('[Documents] updateStatus() exception caught:', e);
+        alert('<?= __('admin_docs_err_net_update') ?>');
+    }
 }
 
-function loadDocs() {
-    fetch(`${window.BASE_URL}/api/admin/documents`)
-        .then(res => res.json())
-        .then(data => {
-            allDocs = data.documents || [];
-            updateStats();
-            filterTable();
-        })
-        .catch(err => {
-            const errHtml = `<div class="ad-empty" style="color:#ef4444;">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                <p><?= __('admin_docs_err_load_title') ?></p>
-            </div>`;
-            document.getElementById('ad-tbody').innerHTML = `<tr><td colspan="6">${errHtml}</td></tr>`;
-            document.getElementById('ad-mobile-cards').innerHTML = errHtml;
-        });
+async function loadDocs() {
+    console.log('[Documents] loadDocs() initiated');
+    console.log('[Documents] window.BASE_URL value:', window.BASE_URL);
+    try {
+        const url = `${window.BASE_URL}/api/admin/documents`;
+        console.log(`[Documents] Fetching GET from: ${url}`);
+        const res = await fetch(url);
+        console.log(`[Documents] Fetch response status: ${res.status}`);
+
+        const text = await res.text();
+        console.log(`[Documents] Raw Response Text (first 200 chars):`, text.substring(0, 200));
+
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (parseError) {
+            console.error('[Documents] Failed to parse JSON response. Raw output was likely HTML. Error:', parseError);
+            throw parseError;
+        }
+
+        console.log('[Documents] Loaded documents payload:', data);
+        allDocs = data.documents || [];
+        updateStats();
+        filterTable();
+        console.log('[Documents] Rendering/filtering completed successfully');
+    } catch (err) {
+        console.error('[Documents] loadDocs() fatal exception caught:', err);
+        const errHtml = `<div class="ad-empty" style="color:#ef4444;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            <p><?= __('admin_docs_err_load_title') ?></p>
+        </div>`;
+        document.getElementById('ad-tbody').innerHTML = `<tr><td colspan="6">${errHtml}</td></tr>`;
+        document.getElementById('ad-mobile-cards').innerHTML = errHtml;
+    }
 }
 
 if (document.readyState === 'loading') {

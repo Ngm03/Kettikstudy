@@ -336,23 +336,28 @@ const showSaveError = () => {
 }
 
 const autoSave = async (key, value) => {
+    console.log(`[Settings] Attempting to auto-save: ${key} = ${value}`);
     showSaving();
     try {
         const settings = { [key]: value };
-        const res = await fetch(`${window.BASE_URL}/api/admin/settings`, {
+        const url = `${window.BASE_URL}/api/admin/settings`;
+        console.log(`[Settings] POST to: ${url}`, settings);
+        const res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ settings })
         });
+        console.log(`[Settings] Save response status: ${res.status}`);
         const data = await res.json();
+        console.log(`[Settings] Save response payload:`, data);
         if (data.success) {
             showSaved();
         } else {
-            console.error('Save failed');
+            console.error('[Settings] Save failed on server side:', data.error);
             showSaveError();
         }
     } catch (e) {
-        console.error('Network error', e);
+        console.error('[Settings] Auto-save network/JS exception caught:', e);
         showSaveError();
     }
 };
@@ -360,13 +365,31 @@ const autoSave = async (key, value) => {
 const debouncedSave = debounce(autoSave, 1000);
 
 async function loadSettings() {
+    console.log('[Settings] loadSettings() initiated');
+    console.log('[Settings] window.BASE_URL value:', window.BASE_URL);
     try {
-        const res = await fetch(`${window.BASE_URL}/api/admin/settings`);
-        const data = await res.json();
+        const url = `${window.BASE_URL}/api/admin/settings`;
+        console.log(`[Settings] Fetching GET from: ${url}`);
+        const res = await fetch(url);
+        console.log(`[Settings] Fetch response status: ${res.status}`);
+        
+        const text = await res.text();
+        console.log(`[Settings] Raw Response Text (first 200 chars):`, text.substring(0, 200));
+        
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (parseError) {
+            console.error('[Settings] Failed to parse JSON response. Raw output was likely HTML. Error:', parseError);
+            throw parseError;
+        }
+
+        console.log('[Settings] Loaded settings payload:', data);
         if (data.settings) {
             settingFields.forEach(key => {
                 const el = document.getElementById(key);
                 if (el) {
+                    console.log(`[Settings] Populating field #${key} with value:`, data.settings[key]);
                     if (el.type === 'checkbox') {
                         el.checked = data.settings[key] === '1';
                         el.addEventListener('change', (e) => {
@@ -378,14 +401,17 @@ async function loadSettings() {
                             debouncedSave(key, e.target.value);
                         });
                     }
+                } else {
+                    console.warn(`[Settings] Target element #${key} not found in the DOM!`);
                 }
             });
+        } else {
+            console.warn('[Settings] No settings key found in response data!');
         }
     } catch (e) {
-        console.error('Failed to load settings:', e);
+        console.error('[Settings] loadSettings() fatal exception caught:', e);
     }
 }
-
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', loadSettings);
 } else {
