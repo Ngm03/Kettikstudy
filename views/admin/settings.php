@@ -29,7 +29,7 @@
                 <div class="field-control">
                     <div style="position: relative; width: 100%;">
                         <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8;">✉️</span>
-                        <input type="email" id="platform_email" class="ad-input input-with-icon" placeholder="info@kettik.kz" style="padding-left: 38px;">
+                        <input type="email" id="company_email" class="ad-input input-with-icon" placeholder="info@kettik.kz" style="padding-left: 38px;">
                     </div>
                 </div>
             </div>
@@ -286,7 +286,7 @@ input:checked + .switch-slider:before {
 
 <script>
 const settingFields = [
-    'platform_email', 'maintenance_mode', 'terms_url'
+    'company_email', 'maintenance_mode', 'terms_url'
 ];
 
 function debounce(func, wait) {

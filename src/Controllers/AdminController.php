@@ -630,6 +630,20 @@ class AdminController
         header('Content-Type: application/json');
 
         $settingModel = new \App\Models\Setting();
+
+        // Seed default values for required keys if they don't exist yet
+        $defaults = [
+            'maintenance_mode' => '0',
+            'terms_url'        => '',
+            'company_email'    => '',
+        ];
+        foreach ($defaults as $key => $defaultVal) {
+            $existing = $settingModel->get($key);
+            if ($existing === null) {
+                $settingModel->set($key, $defaultVal);
+            }
+        }
+
         $settings = $settingModel->getAll();
 
         echo json_encode(['settings' => $settings]);
