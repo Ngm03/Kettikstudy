@@ -2,6 +2,29 @@ let trafficChartInstance = null;
 let directionsChartInstance = null;
 let isLoading = false;
 
+const statusLabels = {
+    new: 'Новый',
+    hot: 'Горячий',
+    urgent: 'Срочный 🔴',
+    processing: 'В работе',
+    qualified: 'Квалифицирован',
+    documents: 'Документы',
+    visa: 'Виза',
+    enrolled: 'Зачислен ✓',
+    lost: 'Проигран'
+};
+
+const statusColors = {
+    new:        { bg:'#dbeafe', text:'#1e40af' },
+    hot:        { bg:'#fee2e2', text:'#991b1b' },
+    urgent:     { bg:'#ef4444', text:'#ffffff' },
+    processing: { bg:'#fef9c3', text:'#92400e' },
+    qualified:  { bg:'#e0e7ff', text:'#3730a3' },
+    documents:  { bg:'#fce7f3', text:'#9d174d' },
+    visa:       { bg:'#ede9fe', text:'#5b21b6' },
+    enrolled:   { bg:'#dcfce7', text:'#166534' },
+    lost:       { bg:'#f3f4f6', text:'#6b7280' },
+};
 
 async function loadAnalytics() {
     if (isLoading) return;
@@ -20,44 +43,35 @@ async function loadAnalytics() {
 
         if (!data.success) return;
 
-
+        // 1. Заполняем виджеты
         document.getElementById('visitors-count').textContent = data.today.visitors;
         document.getElementById('leads-count').textContent = data.today.leads;
         document.getElementById('qualified-count').textContent = data.today.qualified;
         document.getElementById('conversion-rate').textContent = data.today.conversion + '%';
 
-
-        const updateDiff = (current, yesterday, elementId, labelId) => {
+        // 2. Рассчитываем и выводим динамику (разницу с предыдущим периодом)
+        const updateDiff = (current, yesterday, elementId) => {
             const diff = current - yesterday;
             const element = document.getElementById(elementId);
-            const label = document.getElementById(labelId);
 
-            if (!element || !label) return;
+            if (!element) return;
 
-            document.getElementById(labelId).textContent = yesterday;
-
-            let badgeClass = 'diff-neutral';
             let icon = '';
-            let text = 'Вчера: ' + yesterday;
-
             if (diff > 0) {
-                badgeClass = 'diff-success';
                 icon = '▲ ';
-                element.innerHTML = `<span class="diff-badge" style="background:#ecfdf5; color:#059669;">${icon}+${diff} (vs ${yesterday})</span>`;
+                element.innerHTML = `<span class="diff-badge" style="background:#ecfdf5; color:#059669; font-weight:700; padding:2px 8px; border-radius:6px; font-size:0.75rem;">${icon}+${diff} (vs пред. 30 дней)</span>`;
             } else if (diff < 0) {
-                badgeClass = 'diff-danger';
                 icon = '▼ ';
-                element.innerHTML = `<span class="diff-badge" style="background:#fef2f2; color:#dc2626;">${icon}${diff} (vs ${yesterday})</span>`;
+                element.innerHTML = `<span class="diff-badge" style="background:#fef2f2; color:#dc2626; font-weight:700; padding:2px 8px; border-radius:6px; font-size:0.75rem;">${icon}${diff} (vs pred. 30 dnej)</span>`;
             } else {
-                element.innerHTML = `<span class="diff-badge diff-neutral">Вчера: ${yesterday}</span>`;
+                element.innerHTML = `<span class="diff-badge" style="background:#f1f5f9; color:#64748b; font-weight:600; padding:2px 8px; border-radius:6px; font-size:0.75rem;">Без изменений</span>`;
             }
         };
 
-        updateDiff(data.today.visitors, data.yesterday.visitors, 'visitors-diff', 'visitors-yesterday');
-        updateDiff(data.today.leads, data.yesterday.leads, 'leads-diff', 'leads-yesterday');
-        updateDiff(data.today.qualified, data.yesterday.qualified, 'qualified-diff', 'qualified-yesterday');
+        updateDiff(data.today.leads, data.yesterday.leads, 'leads-diff');
+        updateDiff(data.today.qualified, data.yesterday.qualified, 'qualified-diff');
 
-
+        // Очищаем старые графики перед перерисовкой
         if (trafficChartInstance) {
             trafficChartInstance.destroy();
         }
@@ -65,57 +79,56 @@ async function loadAnalytics() {
             directionsChartInstance.destroy();
         }
 
-
+        // 3. Круговой график: Распределение по статусам воронки (Pipeline Funnel)
         const trafficCtx = document.getElementById('trafficChart').getContext('2d');
-        const trafficGradient = trafficCtx.createLinearGradient(0, 0, 0, 400);
 
-        const trafficLabels = data.traffic_sources.map(s => {
-            let label = s.source || 'Прямой заход';
-            if (label === 'Direct') label = 'Прямой заход';
-            return label;
+        const funnelLabels = data.pipeline_funnel.map(f => {
+            const normalizedStatus = strtolowerTrim(f.status);
+            return statusLabels[normalizedStatus] || f.status;
         });
-        const trafficData = data.traffic_sources.map(s => s.count);
-
+        const funnelData = data.pipeline_funnel.map(f => f.count);
 
         const palette = [
-            '#6366f1',
-            '#8b5cf6',
-            '#ec4899',
-            '#10b981',
-            '#f59e0b',
-            '#3b82f6',
+            '#3b82f6', // blue
+            '#10b981', // green
+            '#f59e0b', // amber
+            '#ef4444', // red
+            '#8b5cf6', // purple
+            '#ec4899', // pink
+            '#64748b', // slate
+            '#6366f1', // indigo
         ];
 
         trafficChartInstance = new Chart(trafficCtx, {
             type: 'doughnut',
             data: {
-                labels: trafficLabels,
+                labels: funnelLabels,
                 datasets: [{
-                    data: trafficData,
+                    data: funnelData,
                     backgroundColor: palette,
                     borderWidth: 0,
-                    hoverOffset: 15,
+                    hoverOffset: 12,
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: '75%',
+                cutout: '70%',
                 plugins: {
                     legend: {
                         position: 'right',
                         labels: {
                             usePointStyle: true,
-                            padding: 20,
-                            font: { family: "'Inter', sans-serif", size: 12 },
+                            padding: 16,
+                            font: { family: "'Inter', sans-serif", size: 12, weight: '500' },
                             color: '#64748b'
                         }
                     },
                     tooltip: {
-                        backgroundColor: 'rgba(30, 41, 59, 0.9)',
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
                         padding: 12,
                         cornerRadius: 8,
-                        titleFont: { family: "'Inter', sans-serif", size: 13 },
+                        titleFont: { family: "'Inter', sans-serif", size: 13, weight: '700' },
                         bodyFont: { family: "'Inter', sans-serif", size: 13 },
                         displayColors: true,
                         usePointStyle: true,
@@ -124,23 +137,23 @@ async function loadAnalytics() {
             }
         });
 
-
+        // 4. Горизонтальный столбчатый график: Нагрузка менеджеров (Manager Workload)
         const dirCtx = document.getElementById('directionsChart').getContext('2d');
 
         const dirGradient = dirCtx.createLinearGradient(0, 0, 400, 0);
-        dirGradient.addColorStop(0, '#6366f1');
-        dirGradient.addColorStop(1, '#a855f7');
+        dirGradient.addColorStop(0, '#3b82f6');
+        dirGradient.addColorStop(1, '#8b5cf6');
 
-        const directionLabels = data.top_directions.map(d => d.direction || 'Не указано');
-        const directionData = data.top_directions.map(d => d.count);
+        const managerLabels = data.manager_workload.map(m => m.manager_name || 'Не назначен');
+        const managerData = data.manager_workload.map(m => m.count);
 
         directionsChartInstance = new Chart(dirCtx, {
             type: 'bar',
             data: {
-                labels: directionLabels,
+                labels: managerLabels,
                 datasets: [{
-                    label: 'Лиды',
-                    data: directionData,
+                    label: 'Студенты',
+                    data: managerData,
                     backgroundColor: dirGradient,
                     borderRadius: 8,
                     barPercentage: 0.6,
@@ -154,93 +167,106 @@ async function loadAnalytics() {
                 plugins: {
                     legend: { display: false },
                     tooltip: {
-                        backgroundColor: 'rgba(30, 41, 59, 0.9)',
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
                         padding: 12,
                         cornerRadius: 8,
-                        titleFont: { family: "'Inter', sans-serif" },
-                        bodyFont: { family: "'Inter', sans-serif" }
+                        titleFont: { family: "'Inter', sans-serif", size: 13, weight: '700' },
+                        bodyFont: { family: "'Inter', sans-serif", size: 13 }
                     }
                 },
                 scales: {
                     x: {
                         grid: { display: false, drawBorder: false },
-                        ticks: { display: false }
+                        ticks: {
+                            font: { family: "'Inter', sans-serif", size: 11 },
+                            color: '#64748b',
+                            stepSize: 1
+                        }
                     },
                     y: {
                         grid: { display: false, drawBorder: false },
                         ticks: {
-                            font: { family: "'Inter', sans-serif", size: 12, weight: '500' },
-                            color: '#64748b'
+                            font: { family: "'Inter', sans-serif", size: 12, weight: '600' },
+                            color: '#0f172a'
                         }
                     }
                 }
             }
         });
 
+        // 5. Заполнение таблицы последних регистраций студентов
         const tbody = document.getElementById('visitorsTableBody');
         tbody.innerHTML = '';
-        if (data.recent_visits && data.recent_visits.length > 0) {
-            data.recent_visits.forEach(v => {
+        
+        if (data.recent_registrations && data.recent_registrations.length > 0) {
+            data.recent_registrations.forEach(r => {
                 const tr = document.createElement('tr');
-                tr.style.borderBottom = '1px solid #e5e7eb';
+                tr.style.borderBottom = '1px solid #f1f5f9';
 
-                let deviceIcon = '💻';
-                let deviceName = 'ПК';
+                const date = new Date(r.created_at).toLocaleString('ru-RU', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
 
-                if (v.device_type === 'mobile') {
-                    deviceIcon = '📱';
-                    deviceName = 'Смартфон';
-                } else if (v.device_type === 'tablet') {
-                    deviceIcon = '📟';
-                    deviceName = 'Планшет';
-                }
-
-                let sourceName = v.utm_source || 'Прямой заход';
-                if (sourceName === 'Direct') sourceName = 'Прямой заход';
-
-                const date = new Date(v.created_at).toLocaleString('ru-RU');
+                const normalizedStatus = strtolowerTrim(r.lead_status);
+                const st = statusColors[normalizedStatus] || { bg: '#f3f4f6', text: '#374151' };
+                const label = statusLabels[normalizedStatus] || r.lead_status;
+                const statusBadge = `<span class="sbadge" style="background:${st.bg}; color:${st.text}; font-weight:700; padding:4px 10px; border-radius:20px;">${label}</span>`;
 
                 tr.innerHTML = `
-                    <td style="font-weight:600;color:#334155;">${v.ip_address || 'Скрыт'}</td>
-                    <td><span class="source-badge">${sourceName}</span></td>
-                    <td><span class="device-badge">${deviceIcon} ${deviceName}</span></td>
-                    <td style="text-align:center;font-weight:bold;">${v.page_views}</td>
-                    <td style="text-align:right;color:#94a3b8;font-size:0.85rem;">${date}</td>
+                    <td>
+                        <div style="font-weight:700; color:#0f172a;">${r.full_name}</div>
+                        <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">${r.email || 'Нет email'}</div>
+                    </td>
+                    <td style="color:#334155; font-weight:500;">${r.phone || 'Нет телефона'}</td>
+                    <td style="color:#0f172a; font-weight:600;">👤 ${r.manager_name || 'Не назначен'}</td>
+                    <td>${statusBadge}</td>
+                    <td style="text-align:right; color:#64748b; font-weight:500; font-size:0.85rem;">${date}</td>
                 `;
                 tbody.appendChild(tr);
             });
         } else {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:3rem;color:#94a3b8;">Нет данных за последнее время</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:3rem; color:#94a3b8;">Нет зарегистрированных студентов за последнее время</td></tr>';
         }
 
+        // 6. Карточки для мобильных устройств
         const mobileList = document.getElementById('visitorsCards');
         if (mobileList) {
             mobileList.innerHTML = '';
-            if (data.recent_visits && data.recent_visits.length > 0) {
-                data.recent_visits.forEach(v => {
-                    let dIcon = '💻', dName = 'ПК';
-                    if (v.device_type === 'mobile') { dIcon = '📱'; dName = 'Смартфон'; }
-                    else if (v.device_type === 'tablet') { dIcon = '📟'; dName = 'Планшет'; }
-                    let src = v.utm_source || 'Прямой заход';
-                    if (src === 'Direct') src = 'Прямой заход';
-                    const dt = new Date(v.created_at).toLocaleString('ru-RU');
+            if (data.recent_registrations && data.recent_registrations.length > 0) {
+                data.recent_registrations.forEach(r => {
+                    const dt = new Date(r.created_at).toLocaleString('ru-RU', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+
+                    const normalizedStatus = strtolowerTrim(r.lead_status);
+                    const st = statusColors[normalizedStatus] || { bg: '#f3f4f6', text: '#374151' };
+                    const label = statusLabels[normalizedStatus] || r.lead_status;
+                    const statusBadge = `<span class="sbadge" style="background:${st.bg}; color:${st.text}; font-weight:700; padding:3px 8px; border-radius:20px; font-size:0.7rem;">${label}</span>`;
+
                     const card = document.createElement('div');
                     card.className = 'activity-card';
                     card.innerHTML = `
                         <div class="activity-card-top">
-                            <span class="activity-card-ip">${v.ip_address || 'Скрыт'}</span>
+                            <span class="activity-card-name">${r.full_name}</span>
                             <span class="activity-card-time">${dt}</span>
                         </div>
-                        <div class="activity-card-row">
-                            <span class="source-badge">${src}</span>
-                            <span class="device-badge">${dIcon} ${dName}</span>
-                            <span style="font-size:0.75rem;color:#64748b;margin-left:auto;">👁 ${v.page_views}</span>
+                        <div style="font-size:0.75rem; color:#64748b; margin-top:-4px;">${r.email || 'Нет email'}</div>
+                        <div style="font-size:0.85rem; color:#334155; margin-top:2px;">📞 ${r.phone || 'Нет телефона'}</div>
+                        <div class="activity-card-row" style="margin-top:6px;">
+                            👤 <span style="font-size:0.8rem; font-weight:600; color:#0f172a;">${r.manager_name || 'Не назначен'}</span>
+                            <span style="margin-left:auto;">${statusBadge}</span>
                         </div>
                     `;
                     mobileList.appendChild(card);
                 });
             } else {
-                mobileList.innerHTML = '<div style="padding:30px;text-align:center;color:#94a3b8;font-size:0.875rem;">Нет данных</div>';
+                mobileList.innerHTML = '<div style="padding:30px; text-align:center; color:#94a3b8; font-size:0.875rem;">Нет данных</div>';
             }
         }
 
@@ -249,6 +275,12 @@ async function loadAnalytics() {
     } finally {
         isLoading = false;
     }
+}
+
+// Помощник для безопасной очистки и приведения к нижнему регистру
+function strtolowerTrim(str) {
+    if (typeof str !== 'string') return '';
+    return str.toLowerCase().trim();
 }
 
 if (document.readyState === 'loading') {

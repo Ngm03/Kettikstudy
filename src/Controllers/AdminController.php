@@ -125,11 +125,6 @@ class AdminController
         require __DIR__ . '/../../views/layouts/admin.php';
     }
 
-    public function communityPage()
-    {
-        $page = 'community';
-        require __DIR__ . '/../../views/layouts/admin.php';
-    }
 
     public function pricesPage()
     {

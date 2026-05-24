@@ -143,11 +143,7 @@ $router->post('/api/tasks',    [\App\Controllers\TaskController::class,     'han
 $router->post('/api/schedule', [\App\Controllers\ScheduleController::class, 'create'], ['auth']);
 
 // Community (список городов, прайсы)
-$router->get('/api/community/data',          [\App\Controllers\CommunityController::class, 'getData'],     ['auth']);
-$router->get('/api/community/prices',        [\App\Controllers\CommunityController::class, 'getPrices'],   ['auth']);
-$router->post('/api/community/prices',       [\App\Controllers\CommunityController::class, 'addPrice'],    ['auth']);
-$router->post('/api/community/prices/delete', [\App\Controllers\CommunityController::class, 'deletePrice'], ['auth']);
-$router->get('/api/community/market-search', [\App\Controllers\CommunityController::class, 'searchMarket'], ['auth']);
+
 
 $router->get('/api/cities/list', [\App\Controllers\CityController::class, 'listCities'], ['auth']);
 
@@ -191,7 +187,6 @@ $router->get('/admin', function () {
 }, ['auth', 'role:admin']);
 
 $router->get('/admin/dashboard',      [\App\Controllers\AdminController::class, 'dashboard'],      ['auth', 'role:admin']);
-$router->get('/admin/community',      [\App\Controllers\AdminController::class, 'communityPage'],  ['auth', 'role:admin']);
 $router->get('/admin/prices',         [\App\Controllers\AdminController::class, 'pricesPage'],     ['auth', 'role:admin']);
 $router->get('/admin/student',        [\App\Controllers\AdminController::class, 'studentPage'],    ['auth', 'role:admin']);
 $router->get('/admin/documents',      [\App\Controllers\AdminController::class, 'documentsPage'],  ['auth', 'role:admin']);
