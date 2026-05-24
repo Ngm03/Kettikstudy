@@ -183,7 +183,7 @@
         position: fixed; inset: 0;
         background: rgba(15,23,42,0.6);
         backdrop-filter: blur(4px);
-        z-index: 1000;
+        z-index: 9999 !important;
         display: flex; align-items: center; justify-content: center;
         padding: 20px;
         opacity: 0; visibility: hidden;
@@ -346,9 +346,9 @@
         <div class="am-modal-body">
             <form id="managerForm" onsubmit="submitManager(event)" enctype="multipart/form-data">
                 <div class="am-form-group" style="margin-bottom: 24px;">
-                    <label class="am-form-label"><?= __('global_select_user') ?? 'Выберите пользователя' ?></label>
+                    <label class="am-form-label"><?= ($translatedSelect = __('global_select_user')) === 'global_select_user' ? 'Выберите пользователя' : $translatedSelect ?></label>
                     <select name="user_id" required class="am-form-input">
-                        <option value="">-- Выберите студента --</option>
+                        <option value=""><?= ($translatedOpt = __('global_select_user')) === 'global_select_user' ? '-- Выберите пользователя --' : '-- ' . $translatedOpt . ' --' ?></option>
                         <?php if(!empty($students)): foreach($students as $st): ?>
                             <option value="<?= $st['id'] ?>">
                                 <?= htmlspecialchars($st['full_name'] ?: $st['email']) ?>

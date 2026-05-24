@@ -198,7 +198,6 @@ $router->get('/admin/dashboard',      [\App\Controllers\AdminController::class, 
 $router->get('/admin/prices',         [\App\Controllers\AdminController::class, 'pricesPage'],     ['auth', 'role:admin']);
 $router->get('/admin/student',        [\App\Controllers\AdminController::class, 'studentPage'],    ['auth', 'role:admin']);
 $router->get('/admin/documents',      [\App\Controllers\AdminController::class, 'documentsPage'],  ['auth', 'role:admin']);
-$router->get('/admin/notifications',  [\App\Controllers\AdminController::class, 'notificationsPage'], ['auth', 'role:admin']);
 $router->get('/admin/logs',           [\App\Controllers\AdminController::class, 'logsPage'],       ['auth', 'role:admin']);
 $router->get('/admin/settings',       [\App\Controllers\AdminController::class, 'settingsPage'],   ['auth', 'role:admin']);
 
@@ -235,8 +234,6 @@ $router->post('/api/admin/receipts/approve', [\App\Controllers\PaymentController
 $router->post('/api/admin/receipts/reject',  [\App\Controllers\PaymentController::class, 'rejectReceipt'],   ['auth', 'role:admin,manager']);
 $router->post('/api/admin/update-details',   [\App\Controllers\AdminController::class, 'updateStudentDetails'], ['auth', 'role:admin,manager']);
 $router->get('/api/admin/documents',         [\App\Controllers\AdminController::class, 'getAllDocuments'],     ['auth', 'role:admin,manager']);
-$router->post('/api/admin/broadcast',        [\App\Controllers\AdminController::class, 'sendBroadcast'],      ['auth', 'role:admin']);
-$router->get('/api/admin/broadcast-history', [\App\Controllers\AdminController::class, 'getBroadcastHistory'], ['auth', 'role:admin']);
 $router->get('/api/admin/settings',          [\App\Controllers\AdminController::class, 'getSettings'],        ['auth', 'role:admin']);
 $router->post('/api/admin/settings',         [\App\Controllers\AdminController::class, 'updateSettings'],     ['auth', 'role:admin']);
 $router->post('/api/admin/chat-rooms',       [\App\Controllers\AdminController::class, 'updateChatRoom'],     ['auth', 'role:admin']);

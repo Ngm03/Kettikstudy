@@ -177,16 +177,39 @@
     }
 </style>
 
+<!-- Глобальный объект для передачи локализованных строк в Chart.js -->
+<script>
+window.I18N_ANALYTICS = {
+    status_new: '<?= __('status_new') ?>',
+    status_hot: '<?= __('status_hot') ?>',
+    status_urgent: '<?= __('status_urgent') ?>',
+    status_processing: '<?= __('status_processing') ?>',
+    status_qualified: '<?= __('status_qualified') ?>',
+    status_documents: '<?= __('status_documents') ?>',
+    status_visa: '<?= __('status_visa') ?>',
+    status_enrolled: '<?= __('status_enrolled') ?>',
+    status_lost: '<?= __('status_lost') ?>',
+    students: '<?= __('an_badge_students') ?>',
+    unassigned: '<?= __('unassigned') ?>',
+    no_email: '<?= __('no_email') ?>',
+    no_phone: '<?= __('no_phone') ?>',
+    no_students: '<?= __('no_students') ?>',
+    vs_prev_30_days: '<?= __('vs_prev_30_days') ?>',
+    no_changes: '<?= __('no_changes') ?>',
+    loading: '<?= __('loading') ?>'
+};
+</script>
+
 <div class="an-page">
 
     <div class="an-topbar">
         <div class="an-topbar-title">
-            <h2>Бизнес-Аналитика</h2>
-            <p>Основные показатели воронки продаж, эффективности работы менеджеров и регистраций</p>
+            <h2><?= __('an_title') ?></h2>
+            <p><?= __('an_subtitle') ?></p>
         </div>
         <button onclick="refreshAnalytics(this)" class="an-refresh-btn">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            Обновить данные
+            <?= __('refresh_btn') ?>
         </button>
     </div>
 
@@ -197,14 +220,14 @@
                 <div class="an-stat-icon icon-blue">
                     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                 </div>
-                <span class="an-stat-badge" style="background:#eff6ff;color:#2563eb;">Студенты</span>
+                <span class="an-stat-badge" style="background:#eff6ff;color:#2563eb;"><?= __('an_badge_students') ?></span>
             </div>
             <div>
                 <div class="an-stat-num" id="visitors-count">—</div>
-                <div class="an-stat-label">Всего студентов</div>
+                <div class="an-stat-label"><?= __('an_total_students') ?></div>
             </div>
             <div class="an-stat-sub" id="visitors-diff">
-                <span class="diff-badge" style="background:#f1f5f9; color:#64748b;">Активная база</span>
+                <span class="diff-badge" style="background:#f1f5f9; color:#64748b; font-weight: 600; font-size: 0.75rem;"><?= __('an_active_base') ?></span>
             </div>
         </div>
 
@@ -214,14 +237,14 @@
                 <div class="an-stat-icon icon-green">
                     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                 </div>
-                <span class="an-stat-badge" style="background:#f0fdf4;color:#16a34a;">30 дней</span>
+                <span class="an-stat-badge" style="background:#f0fdf4;color:#16a34a;"><?= __('an_badge_30_days') ?></span>
             </div>
             <div>
                 <div class="an-stat-num" id="leads-count">—</div>
-                <div class="an-stat-label">Новые лиды</div>
+                <div class="an-stat-label"><?= __('an_new_leads') ?></div>
             </div>
             <div class="an-stat-sub" id="leads-diff">
-                <span class="diff-badge" style="background:#f1f5f9; color:#64748b;">Загрузка воронки</span>
+                <span class="diff-badge" style="background:#f1f5f9; color:#64748b; font-weight: 600; font-size: 0.75rem;"><?= __('an_funnel_loading') ?></span>
             </div>
         </div>
 
@@ -235,10 +258,10 @@
             </div>
             <div>
                 <div class="an-stat-num" id="qualified-count">—</div>
-                <div class="an-stat-label">Горячие лиды</div>
+                <div class="an-stat-label"><?= __('an_hot_leads') ?></div>
             </div>
             <div class="an-stat-sub" id="qualified-diff">
-                <span class="diff-badge" style="background:#fffbeb; color:#d97706;">Интерес >= 70%</span>
+                <span class="diff-badge" style="background:#fffbeb; color:#d97706; font-weight: 600; font-size: 0.75rem;"><?= __('an_interest_70') ?></span>
             </div>
         </div>
 
@@ -252,10 +275,10 @@
             </div>
             <div>
                 <div class="an-stat-num" id="conversion-rate">—</div>
-                <div class="an-stat-label">Конверсия в Поступление</div>
+                <div class="an-stat-label"><?= __('an_conversion_to_enrollment') ?></div>
             </div>
             <div class="an-stat-sub">
-                <span class="diff-badge" style="background:#f5f3ff; color:#7c3aed;">Доля поступивших</span>
+                <span class="diff-badge" style="background:#f5f3ff; color:#7c3aed; font-weight: 600; font-size: 0.75rem;"><?= __('an_share_enrolled') ?></span>
             </div>
         </div>
     </div>
@@ -264,8 +287,8 @@
         <!-- 1. Воронка лидов -->
         <div class="an-chart-card">
             <div class="an-chart-header">
-                <h3>Воронка статусов</h3>
-                <span>Распределение заявок по стадиям воронки</span>
+                <h3><?= __('an_chart_funnel_title') ?></h3>
+                <span><?= __('an_chart_funnel_desc') ?></span>
             </div>
             <div class="an-chart-body">
                 <canvas id="trafficChart" style="max-height:100%;"></canvas>
@@ -275,8 +298,8 @@
         <!-- 2. Нагрузка менеджеров -->
         <div class="an-chart-card">
             <div class="an-chart-header">
-                <h3>Распределение нагрузки</h3>
-                <span>Количество студентов, привязанных к менеджерам</span>
+                <h3><?= __('an_chart_load_title') ?></h3>
+                <span><?= __('an_chart_load_desc') ?></span>
             </div>
             <div class="an-chart-body">
                 <canvas id="directionsChart" style="max-height:100%;"></canvas>
@@ -287,7 +310,7 @@
     <!-- 3. Таблица последних регистраций -->
     <div class="an-table-card">
         <div class="an-table-header">
-            <h3>Последние зарегистрированные студенты</h3>
+            <h3><?= __('an_recent_students_title') ?></h3>
             <div class="live-pill"><span class="live-dot"></span> LIVE</div>
         </div>
 
@@ -295,15 +318,15 @@
             <table class="an-table">
                 <thead>
                     <tr>
-                        <th>Студент</th>
-                        <th>Телефон</th>
-                        <th>Менеджер</th>
-                        <th>Статус в воронке</th>
-                        <th style="text-align:right">Дата регистрации</th>
+                        <th><?= __('an_th_student') ?></th>
+                        <th><?= __('an_th_phone') ?></th>
+                        <th><?= __('an_th_manager') ?></th>
+                        <th><?= __('an_th_status') ?></th>
+                        <th style="text-align:right"><?= __('an_th_reg_date') ?></th>
                     </tr>
                 </thead>
                 <tbody id="visitorsTableBody">
-                    <tr><td colspan="5" style="text-align:center;padding:40px;color:#94a3b8;font-size:0.875rem;">Загрузка данных...</td></tr>
+                    <tr><td colspan="5" style="text-align:center;padding:40px;color:#94a3b8;font-size:0.875rem;"><?= __('loading') ?></td></tr>
                 </tbody>
             </table>
         </div>

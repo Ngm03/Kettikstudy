@@ -2,16 +2,17 @@ let trafficChartInstance = null;
 let directionsChartInstance = null;
 let isLoading = false;
 
+// Чтение локализованных строк из глобального конфигурационного объекта
 const statusLabels = {
-    new: 'Новый',
-    hot: 'Горячий',
-    urgent: 'Срочный 🔴',
-    processing: 'В работе',
-    qualified: 'Квалифицирован',
-    documents: 'Документы',
-    visa: 'Виза',
-    enrolled: 'Зачислен ✓',
-    lost: 'Проигран'
+    new: window.I18N_ANALYTICS?.status_new || 'Новый',
+    hot: window.I18N_ANALYTICS?.status_hot || 'Горячий',
+    urgent: window.I18N_ANALYTICS?.status_urgent || 'Срочный 🔴',
+    processing: window.I18N_ANALYTICS?.status_processing || 'В работе',
+    qualified: window.I18N_ANALYTICS?.status_qualified || 'Квалифицирован',
+    documents: window.I18N_ANALYTICS?.status_documents || 'Документы',
+    visa: window.I18N_ANALYTICS?.status_visa || 'Виза',
+    enrolled: window.I18N_ANALYTICS?.status_enrolled || 'Зачислен ✓',
+    lost: window.I18N_ANALYTICS?.status_lost || 'Проигран'
 };
 
 const statusColors = {
@@ -59,12 +60,12 @@ async function loadAnalytics() {
             let icon = '';
             if (diff > 0) {
                 icon = '▲ ';
-                element.innerHTML = `<span class="diff-badge" style="background:#ecfdf5; color:#059669; font-weight:700; padding:2px 8px; border-radius:6px; font-size:0.75rem;">${icon}+${diff} (vs пред. 30 дней)</span>`;
+                element.innerHTML = `<span class="diff-badge" style="background:#ecfdf5; color:#059669; font-weight:700; padding:2px 8px; border-radius:6px; font-size:0.75rem;">${icon}+${diff} (${window.I18N_ANALYTICS?.vs_prev_30_days || 'vs пред. 30 дней'})</span>`;
             } else if (diff < 0) {
                 icon = '▼ ';
-                element.innerHTML = `<span class="diff-badge" style="background:#fef2f2; color:#dc2626; font-weight:700; padding:2px 8px; border-radius:6px; font-size:0.75rem;">${icon}${diff} (vs pred. 30 dnej)</span>`;
+                element.innerHTML = `<span class="diff-badge" style="background:#fef2f2; color:#dc2626; font-weight:700; padding:2px 8px; border-radius:6px; font-size:0.75rem;">${icon}${diff} (${window.I18N_ANALYTICS?.vs_prev_30_days || 'vs пред. 30 дней'})</span>`;
             } else {
-                element.innerHTML = `<span class="diff-badge" style="background:#f1f5f9; color:#64748b; font-weight:600; padding:2px 8px; border-radius:6px; font-size:0.75rem;">Без изменений</span>`;
+                element.innerHTML = `<span class="diff-badge" style="background:#f1f5f9; color:#64748b; font-weight:600; padding:2px 8px; border-radius:6px; font-size:0.75rem;">${window.I18N_ANALYTICS?.no_changes || 'Без изменений'}</span>`;
             }
         };
 
@@ -144,7 +145,7 @@ async function loadAnalytics() {
         dirGradient.addColorStop(0, '#3b82f6');
         dirGradient.addColorStop(1, '#8b5cf6');
 
-        const managerLabels = data.manager_workload.map(m => m.manager_name || 'Не назначен');
+        const managerLabels = data.manager_workload.map(m => m.manager_name || (window.I18N_ANALYTICS?.unassigned || 'Не назначен'));
         const managerData = data.manager_workload.map(m => m.count);
 
         directionsChartInstance = new Chart(dirCtx, {
@@ -152,7 +153,7 @@ async function loadAnalytics() {
             data: {
                 labels: managerLabels,
                 datasets: [{
-                    label: 'Студенты',
+                    label: window.I18N_ANALYTICS?.students || 'Студенты',
                     data: managerData,
                     backgroundColor: dirGradient,
                     borderRadius: 8,
@@ -203,7 +204,7 @@ async function loadAnalytics() {
                 const tr = document.createElement('tr');
                 tr.style.borderBottom = '1px solid #f1f5f9';
 
-                const date = new Date(r.created_at).toLocaleString('ru-RU', {
+                const date = new Date(r.created_at).toLocaleString(document.documentElement.lang === 'kk' ? 'kk-KZ' : 'ru-RU', {
                     day: '2-digit',
                     month: '2-digit',
                     year: 'numeric',
@@ -219,17 +220,17 @@ async function loadAnalytics() {
                 tr.innerHTML = `
                     <td>
                         <div style="font-weight:700; color:#0f172a;">${r.full_name}</div>
-                        <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">${r.email || 'Нет email'}</div>
+                        <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">${r.email || (window.I18N_ANALYTICS?.no_email || 'Нет email')}</div>
                     </td>
-                    <td style="color:#334155; font-weight:500;">${r.phone || 'Нет телефона'}</td>
-                    <td style="color:#0f172a; font-weight:600;">👤 ${r.manager_name || 'Не назначен'}</td>
+                    <td style="color:#334155; font-weight:500;">${r.phone || (window.I18N_ANALYTICS?.no_phone || 'Нет телефона')}</td>
+                    <td style="color:#0f172a; font-weight:600;">👤 ${r.manager_name || (window.I18N_ANALYTICS?.unassigned || 'Не назначен')}</td>
                     <td>${statusBadge}</td>
                     <td style="text-align:right; color:#64748b; font-weight:500; font-size:0.85rem;">${date}</td>
                 `;
                 tbody.appendChild(tr);
             });
         } else {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:3rem; color:#94a3b8;">Нет зарегистрированных студентов за последнее время</td></tr>';
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:3rem; color:#94a3b8;">${window.I18N_ANALYTICS?.no_students || 'Нет зарегистрированных студентов за последнее время'}</td></tr>`;
         }
 
         // 6. Карточки для мобильных устройств
@@ -238,7 +239,7 @@ async function loadAnalytics() {
             mobileList.innerHTML = '';
             if (data.recent_registrations && data.recent_registrations.length > 0) {
                 data.recent_registrations.forEach(r => {
-                    const dt = new Date(r.created_at).toLocaleString('ru-RU', {
+                    const dt = new Date(r.created_at).toLocaleString(document.documentElement.lang === 'kk' ? 'kk-KZ' : 'ru-RU', {
                         day: '2-digit',
                         month: '2-digit',
                         year: 'numeric'
@@ -256,17 +257,17 @@ async function loadAnalytics() {
                             <span class="activity-card-name">${r.full_name}</span>
                             <span class="activity-card-time">${dt}</span>
                         </div>
-                        <div style="font-size:0.75rem; color:#64748b; margin-top:-4px;">${r.email || 'Нет email'}</div>
-                        <div style="font-size:0.85rem; color:#334155; margin-top:2px;">📞 ${r.phone || 'Нет телефона'}</div>
+                        <div style="font-size:0.75rem; color:#64748b; margin-top:-4px;">${r.email || (window.I18N_ANALYTICS?.no_email || 'Нет email')}</div>
+                        <div style="font-size:0.85rem; color:#334155; margin-top:2px;">📞 ${r.phone || (window.I18N_ANALYTICS?.no_phone || 'Нет телефона')}</div>
                         <div class="activity-card-row" style="margin-top:6px;">
-                            👤 <span style="font-size:0.8rem; font-weight:600; color:#0f172a;">${r.manager_name || 'Не назначен'}</span>
+                            👤 <span style="font-size:0.8rem; font-weight:600; color:#0f172a;">${r.manager_name || (window.I18N_ANALYTICS?.unassigned || 'Не назначен')}</span>
                             <span style="margin-left:auto;">${statusBadge}</span>
                         </div>
                     `;
                     mobileList.appendChild(card);
                 });
             } else {
-                mobileList.innerHTML = '<div style="padding:30px; text-align:center; color:#94a3b8; font-size:0.875rem;">Нет данных</div>';
+                mobileList.innerHTML = `<div style="padding:30px; text-align:center; color:#94a3b8; font-size:0.875rem;">${window.I18N_ANALYTICS?.no_students || 'Нет данных'}</div>`;
             }
         }
 
