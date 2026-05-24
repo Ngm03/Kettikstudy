@@ -41,7 +41,6 @@ if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
             width: 100%;
             max-width: 100vw;
             overflow: hidden;
-            overflow-x: hidden;
         }
 
         .sidebar {
@@ -232,8 +231,9 @@ if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
             flex: 1;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
             min-width: 0;
+            min-height: 0;
+            overflow: hidden;
         }
 
         .topbar {
@@ -346,6 +346,8 @@ if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
 
         .page-content {
             flex: 1;
+            min-height: 0;
+            height: calc(100vh - 64px);
             overflow-y: auto;
             overflow-x: hidden;
             padding: 24px;
@@ -362,7 +364,7 @@ if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
             .sidebar-close-btn { display: flex; align-items: center; justify-content: center; }
             .topbar-hamburger { display: flex; }
             .topbar { padding: 0 16px; }
-            .page-content { padding: 16px; }
+            .page-content { padding: 16px; height: calc(100vh - 64px); }
             .notif-dropdown { width: calc(100vw - 32px); right: -16px; }
         }
 
