@@ -295,7 +295,17 @@
     }
 
     function requestCall() {
-        alert('<?= __('call_requested') ?>');
+        fetch('<?= BASE_URL ?>/api/leads/request-call', {
+            method: 'POST'
+        }).then(r => r.json()).then(data => {
+            if (data.success) {
+                alert('<?= __('call_requested') ?>');
+            } else {
+                alert('Ошибка. Попробуйте еще раз.');
+            }
+        }).catch(e => {
+            alert('Ошибка. Попробуйте еще раз.');
+        });
     }
 
     function checkReceiptStatus() {
