@@ -1,8 +1,8 @@
 <div class="ad-settings-wrapper">
     <div class="ad-header">
         <div class="ad-header-left">
-            <h1 class="ad-page-title"><?= __('settings_title') ?></h1>
-            <p class="ad-page-subtitle"><?= __('settings_subtitle') ?></p>
+            <h1 class="ad-page-title">Настройки Платформы</h1>
+            <p class="ad-page-subtitle">Управление глобальными параметрами платформы. Все изменения сохраняются автоматически.</p>
         </div>
         <div id="saveStatus" class="ad-save-status">
             <svg class="ad-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
@@ -10,103 +10,59 @@
         </div>
     </div>
 
-
+    <!-- Основная секция настроек -->
     <div class="ad-section">
         <div class="ad-section-header">
             <h2 class="ad-section-title">
-                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                <?= __('settings_sec_company') ?>
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #0052FF; width:20px; height:20px; display:inline-block; vertical-align:middle; margin-right:6px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+                Глобальные параметры продукта
             </h2>
         </div>
-        <div class="ad-grid">
-            <div class="ad-input-group">
-                <label class="ad-label"><?= __('settings_lbl_comp_name') ?></label>
-                <input type="text" id="company_name" class="ad-input" placeholder="Kettik Study">
+        
+        <div class="ad-settings-content">
+            <!-- 1. Контактный email -->
+            <div class="setting-field-card">
+                <div class="field-info">
+                    <span class="field-title">Контактный email платформы</span>
+                    <p class="field-desc">Используется для отправки системных писем, уведомлений и обратной связи пользователей.</p>
+                </div>
+                <div class="field-control">
+                    <div style="position: relative; width: 100%;">
+                        <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8;">✉️</span>
+                        <input type="email" id="platform_email" class="ad-input input-with-icon" placeholder="info@kettik.kz" style="padding-left: 38px;">
+                    </div>
+                </div>
             </div>
-            <div class="ad-input-group">
-                <label class="ad-label"><?= __('settings_lbl_website') ?></label>
-                <input type="text" id="company_website" class="ad-input" placeholder="kettik.kz">
+
+            <!-- 2. Режим технических работ -->
+            <div class="setting-field-card">
+                <div class="field-info">
+                    <span class="field-title">Режим технических работ (Maintenance Mode)</span>
+                    <p class="field-desc">При включении публичная часть сайта блокируется, и студенты увидят страницу обслуживания.</p>
+                </div>
+                <div class="field-control">
+                    <label class="switch-container">
+                        <input type="checkbox" id="maintenance_mode">
+                        <span class="switch-slider"></span>
+                    </label>
+                </div>
             </div>
-            <div class="ad-input-group full-width">
-                <label class="ad-label"><?= __('settings_lbl_desc') ?></label>
-                <textarea id="company_description" rows="2" class="ad-textarea" placeholder="<?= __('settings_ph_desc') ?>"></textarea>
-            </div>
-            <div class="ad-input-group full-width">
-                <label class="ad-label"><?= __('settings_lbl_address') ?></label>
-                <textarea id="company_address" rows="3" class="ad-textarea" placeholder="<?= __('settings_ph_address') ?>"></textarea>
-            </div>
-            <div class="ad-input-group">
-                <label class="ad-label">Email</label>
-                <input type="email" id="company_email" class="ad-input" placeholder="info@kettik.kz">
+
+            <!-- 3. URL Пользовательского соглашения -->
+            <div class="setting-field-card">
+                <div class="field-info">
+                    <span class="field-title">URL пользовательского соглашения</span>
+                    <p class="field-desc">Адрес веб-страницы или PDF-файла с правилами пользования платформой и офертой.</p>
+                </div>
+                <div class="field-control">
+                    <div style="position: relative; width: 100%;">
+                        <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8;">🔗</span>
+                        <input type="url" id="terms_url" class="ad-input input-with-icon" placeholder="https://kettik.kz/terms" style="padding-left: 38px;">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-
-    <div class="ad-section">
-        <div class="ad-section-header">
-            <h2 class="ad-section-title">
-                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                <?= __('settings_sec_contacts') ?>
-            </h2>
-        </div>
-        <div class="ad-grid">
-            <div class="ad-input-group">
-                <label class="ad-label"><?= __('settings_lbl_phone') ?></label>
-                <input type="text" id="company_phone" class="ad-input" placeholder="+7 701 631 41 21">
-            </div>
-            <div class="ad-input-group">
-                <label class="ad-label">WhatsApp</label>
-                <input type="text" id="company_whatsapp" class="ad-input" placeholder="+77016314121">
-            </div>
-            <div class="ad-input-group">
-                <label class="ad-label">Instagram</label>
-                <input type="text" id="company_instagram" class="ad-input" placeholder="@kettik.study">
-            </div>
-            <div class="ad-input-group">
-                <label class="ad-label">Telegram</label>
-                <input type="text" id="company_telegram" class="ad-input" placeholder="@kettik_study">
-            </div>
-            <div class="ad-input-group full-width">
-                <label class="ad-label">YouTube</label>
-                <input type="text" id="company_youtube" class="ad-input" placeholder="<?= __('settings_ph_youtube') ?>">
-            </div>
-        </div>
-    </div>
-
-
-    <div class="ad-section">
-        <div class="ad-section-header">
-            <h2 class="ad-section-title">
-                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                <?= __('settings_sec_ai') ?>
-            </h2>
-        </div>
-        <div class="ad-grid">
-            <div class="ad-input-group">
-                <label class="ad-label"><?= __('settings_lbl_bot_name') ?></label>
-                <input type="text" id="ai_bot_name" class="ad-input" placeholder="<?= __('settings_ph_bot_name') ?>">
-            </div>
-        </div>
-    </div>
-
-
-    <div class="ad-section">
-        <div class="ad-section-header">
-            <h2 class="ad-section-title">
-                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                <?= __('settings_sec_community') ?>
-            </h2>
-        </div>
-        <div class="ad-grid" style="grid-template-columns: 1fr;">
-            <div class="ad-input-group">
-                <label class="ad-label"><?= __('settings_lbl_censored') ?></label>
-                <textarea id="chat_censored_words" rows="3" class="ad-textarea" placeholder="<?= __('settings_ph_censored') ?>"></textarea>
-                <p class="ad-help-text"><?= __('settings_hint_censored') ?></p>
-            </div>
-        </div>
-    </div>
-
 
     <div id="toast" class="ad-toast">
         <svg class="ad-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
@@ -116,7 +72,7 @@
 
 <style>
 .ad-settings-wrapper {
-    max-width: 1000px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 1rem;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -154,25 +110,27 @@
     background: #ecfdf5;
     padding: 0.5rem 1rem;
     border-radius: 20px;
-    font-weight: 600;
-    font-size: 0.875rem;
+    font-weight: 700;
+    font-size: 0.825rem;
+    border: 1px solid #d1fae5;
 }
 .ad-save-status.show {
     opacity: 1;
 }
 .ad-save-status .ad-icon {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
 }
 .ad-save-status.saving {
-    color: #64748b;
-    background: #f1f5f9;
+    color: #475569;
+    background: #f8fafc;
+    border-color: #e2e8f0;
 }
 
 .ad-section {
     background: white;
     border-radius: 16px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.025);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -2px rgba(0, 0, 0, 0.02);
     border: 1px solid rgba(226, 232, 240, 0.8);
     overflow: hidden;
     margin-bottom: 1.5rem;
@@ -180,61 +138,115 @@
 .ad-section-header {
     background: #f8fafc;
     border-bottom: 1px solid #e2e8f0;
-    padding: 1rem 1.5rem;
+    padding: 1.25rem 1.5rem;
 }
 .ad-section-title {
     font-size: 1.125rem;
-    font-weight: 600;
+    font-weight: 700;
     color: #1e293b;
     margin: 0;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-}
-.ad-section-title svg {
-    color: #0052FF;
 }
 
-.ad-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    padding: 1.5rem;
+.ad-settings-content {
+    padding: 0.5rem 1.5rem;
 }
-.ad-input-group {
+
+.setting-field-card {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #f1f5f9;
+    gap: 2rem;
 }
-.ad-input-group.full-width {
-    grid-column: 1 / -1;
+.setting-field-card:last-child {
+    border-bottom: none;
 }
-.ad-label {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #475569;
-    margin-bottom: 0.5rem;
+
+.field-info {
+    flex: 1;
+    min-width: 0;
 }
-.ad-input, .ad-textarea {
+.field-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1e293b;
+    display: block;
+    margin-bottom: 0.25rem;
+}
+.field-desc {
+    font-size: 0.82rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.field-control {
+    width: 320px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.ad-input {
     width: 100%;
     padding: 0.75rem 1rem;
-    border: 1px solid #cbd5e1;
+    border: 1.5px solid #cbd5e1;
     border-radius: 10px;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     color: #334155;
     background: #f8fafc;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s;
     box-sizing: border-box;
 }
-.ad-input:focus, .ad-textarea:focus {
+.ad-input:focus {
     outline: none;
     border-color: #0052FF;
     background: #ffffff;
     box-shadow: 0 0 0 4px rgba(0, 82, 255, 0.1);
 }
-.ad-help-text {
-    font-size: 0.8rem;
-    color: #94a3b8;
-    margin: 0.5rem 0 0 0;
+
+/* Beautiful custom toggle switch */
+.switch-container {
+    position: relative;
+    display: inline-block;
+    width: 56px;
+    height: 30px;
+}
+.switch-container input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #cbd5e1;
+    transition: .3s;
+    border-radius: 34px;
+}
+.switch-slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+input:checked + .switch-slider {
+    background-color: #10b981;
+}
+input:focus + .switch-slider {
+    box-shadow: 0 0 1px #10b981;
+}
+input:checked + .switch-slider:before {
+    transform: translateX(26px);
 }
 
 .ad-toast {
@@ -253,7 +265,7 @@
     opacity: 0;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 50;
-    font-weight: 500;
+    font-weight: 600;
 }
 .ad-toast.show {
     transform: translateY(0);
@@ -267,20 +279,14 @@
 @media (max-width: 768px) {
     .ad-settings-wrapper { padding: 0.75rem; }
     .ad-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
-    .ad-grid { grid-template-columns: 1fr; gap: 1rem; padding: 1.25rem; }
-    .ad-save-status { 
-        align-self: flex-start; 
-        font-size: 0.8rem; 
-        padding: 0.4rem 0.8rem; 
-    }
+    .setting-field-card { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1.25rem 0; }
+    .field-control { width: 100%; justify-content: flex-start; }
 }
 </style>
 
 <script>
 const settingFields = [
-    'company_name', 'company_description', 'company_email', 'company_phone',
-    'company_whatsapp', 'company_website', 'company_instagram', 'company_telegram',
-    'company_youtube', 'company_address', 'ai_bot_name', 'chat_censored_words'
+    'platform_email', 'maintenance_mode', 'terms_url'
 ];
 
 function debounce(func, wait) {
@@ -298,7 +304,7 @@ const showSaving = () => {
     saveStatus.classList.remove('show');
     setTimeout(() => {
         saveStatus.classList.add('saving');
-        saveStatus.innerHTML = '<svg class="ad-icon animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg><span class="ad-save-text"><?= __('settings_saving') ?></span>';
+        saveStatus.innerHTML = '<svg class="ad-icon animate-spin" fill="none" viewBox="0 0 24 24" style="animation: spin 1s linear infinite; width:16px; height:16px; display:inline-block; vertical-align:middle; margin-right:6px;"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" style="opacity:0.25;"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" style="opacity:0.75;"></path></svg><span class="ad-save-text"><?= __('settings_saving') ?></span>';
         saveStatus.classList.add('show');
     }, 150);
 };
@@ -307,7 +313,7 @@ const showSaved = () => {
     saveStatus.classList.remove('show');
     setTimeout(() => {
         saveStatus.classList.remove('saving');
-        saveStatus.innerHTML = '<svg class="ad-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="ad-save-text"><?= __('settings_saved') ?></span>';
+        saveStatus.innerHTML = '<svg class="ad-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px; height:16px; display:inline-block; vertical-align:middle; margin-right:6px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="ad-save-text"><?= __('settings_saved') ?></span>';
         saveStatus.classList.add('show');
         
         toastInfo.classList.add('show');
@@ -323,7 +329,7 @@ const showSaveError = () => {
     saveStatus.classList.remove('show');
     setTimeout(() => {
         saveStatus.classList.remove('saving');
-        saveStatus.innerHTML = '<svg class="ad-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span class="ad-save-text text-red-600"><?= __('settings_error') ?></span>';
+        saveStatus.innerHTML = '<svg class="ad-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px; height:16px; display:inline-block; vertical-align:middle; margin-right:6px; color:#dc2626;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span class="ad-save-text" style="color:#dc2626;"><?= __('settings_error') ?></span>';
         saveStatus.classList.add('show');
         setTimeout(() => saveStatus.classList.remove('show'), 3000);
     }, 150);
@@ -361,10 +367,17 @@ async function loadSettings() {
             settingFields.forEach(key => {
                 const el = document.getElementById(key);
                 if (el) {
-                    if (data.settings[key]) el.value = data.settings[key];
-                    el.addEventListener('input', (e) => {
-                        debouncedSave(key, e.target.value);
-                    });
+                    if (el.type === 'checkbox') {
+                        el.checked = data.settings[key] === '1';
+                        el.addEventListener('change', (e) => {
+                            autoSave(key, e.target.checked ? '1' : '0');
+                        });
+                    } else {
+                        el.value = data.settings[key] || '';
+                        el.addEventListener('input', (e) => {
+                            debouncedSave(key, e.target.value);
+                        });
+                    }
                 }
             });
         }

@@ -418,7 +418,7 @@ select {
         <h1><?= __('prices_comparison') ?></h1>
         <p><?= __('prices_subtitle') ?></p>
     </div>
-    <button onclick="openPriceModal()" class="btn-primary" style="display:flex; align-items:center; gap:8px;">
+    <button onclick="openPriceModal()" class="btn-primary" style="display:none; align-items:center; gap:8px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
         <?= __('add_data') ?>
     </button>
@@ -958,50 +958,10 @@ select {
     }
 
     function loadPrices() {
-        fetch('<?= BASE_URL ?>/api/community/prices')
-            .then(res => {
-                 if (res.status === 403) {
-                    alert('<?= __('access_restricted_residents') ?>');
-                    window.location.href = '<?= BASE_URL ?>/dashboard';
-                    return null;
-                }
-                return res.json();
-            })
-            .then(data => {
-                const tbody = document.getElementById('prices-table-body');
-                tbody.innerHTML = '';
-                
-                if (!data || !data.prices || data.prices.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:3rem; color:var(--text-muted);"><?= __('db_empty_fill_first') ?></td></tr>';
-                    return;
-                }
-                
-                const categoryLabels = {
-                    'food': '<?= __('cat_food') ?>', 'transport': '<?= __('cat_transport') ?>', 'housing': '<?= __('cat_housing') ?>',
-                    'services': '<?= __('cat_services') ?>', 'entertainment': '<?= __('cat_entertainment') ?>', 'other': '<?= __('cat_other') ?>'
-                };
-
-                data.prices.forEach(item => {
-                    const row = document.createElement('tr');
-                    const date = new Date(item.created_at).toLocaleDateString('ru-RU', {day: 'numeric', month: 'short'});
-                    const catLabel = categoryLabels[item.category] || item.category;
-                    
-                    row.innerHTML = `
-                        <td data-label="Наименование">
-                            <div class="item-name">${escapeHtml(item.item_name)}</div>
-                            <div class="item-date">${date}</div>
-                        </td>
-                        <td data-label="<?= __('category') ?>"><span class="category-badge">${escapeHtml(catLabel)}</span></td>
-                        <td data-label="<?= __('cost_pln') ?>" class="item-price">${escapeHtml(item.price)} PLN</td>
-                        <td data-label="<?= __('note') ?>"><div style="font-size:0.9rem; color:#475569; line-height:1.4;">${item.comment ? escapeHtml(item.comment) : '<span style="color:#cbd5e1;">Нет данных</span>'}</div></td>
-                        <td data-label="<?= __('author_report') ?>">
-                            <div style="font-weight:500; font-size:0.9rem;">${escapeHtml(item.author)}</div>
-                        </td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            })
-            .catch(err => console.error('Data Sync Error:', err));
+        const tbody = document.getElementById('prices-table-body');
+        if (tbody) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:3rem; color:var(--text-muted); font-size:0.95rem;">Раздел "Сообщество" временно на обслуживании. Добавление пользовательских отчетов недоступно.</td></tr>';
+        }
     }
 
     const modal = document.getElementById('price-modal');
@@ -1014,35 +974,7 @@ select {
 
     function submitPrice(e) {
         e.preventDefault();
-        const form = e.target;
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
-
-        const btn = form.querySelector('button[type="submit"]');
-        const originalText = btn.textContent;
-        btn.textContent = '<?= __('processing') ?>';
-        btn.disabled = true;
-
-        fetch('<?= BASE_URL ?>/api/community/prices', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        })
-        .then(res => res.json())
-        .then(res => {
-            if (res.success) {
-                closePriceModal();
-                form.reset();
-                loadPrices();
-            } else {
-                alert('<?= __('system_failure') ?>' + (res.error || '<?= __('package_rejected') ?>'));
-            }
-        })
-        .catch(() => alert('<?= __('connection_channel_error') ?>'))
-        .finally(() => {
-            btn.textContent = originalText;
-            btn.disabled = false;
-        });
+        alert('Раздел временно на обслуживании');
     }
 
     document.addEventListener('DOMContentLoaded', function() {

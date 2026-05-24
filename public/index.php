@@ -20,6 +20,14 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->safeLoad();
 
+// Configure local error logging directory and file
+$logDir = __DIR__ . '/../logs';
+if (!is_dir($logDir)) {
+    mkdir($logDir, 0755, true);
+}
+ini_set('log_errors', 1);
+ini_set('error_log', $logDir . '/app.log');
+
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
@@ -216,6 +224,7 @@ $router->get('/api/admin/students',          [\App\Controllers\AdminController::
 $router->get('/api/admin/student-details',   [\App\Controllers\AdminController::class, 'getStudentDetails'],  ['auth', 'role:admin,manager']);
 $router->post('/api/admin/lead-status',      [\App\Controllers\AdminController::class, 'updateStatus'],       ['auth', 'role:admin,manager']);
 $router->get('/api/admin/logs',              [\App\Controllers\AdminController::class, 'getLogs'],             ['auth', 'role:admin']);
+$router->post('/api/admin/logs/clear',          [\App\Controllers\AdminController::class, 'clearLogs'],           ['auth', 'role:admin']);
 $router->get('/api/admin/download-pdf',      [\App\Controllers\AdminController::class, 'downloadPdf'],        ['auth', 'role:admin,manager']);
 $router->post('/api/admin/doc-status',       [\App\Controllers\AdminController::class, 'updateDocStatus'],    ['auth', 'role:admin,manager']);
 $router->post('/api/admin/student-notes',    [\App\Controllers\AdminController::class, 'updateStudentNotes'], ['auth', 'role:admin,manager']);

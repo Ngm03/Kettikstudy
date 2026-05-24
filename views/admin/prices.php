@@ -424,24 +424,7 @@ function escHtml(str) {
 }
 
 function confirmDelete(id, name) {
-    if (!confirm(`Удалить запись «${name}»? Это действие необратимо.`)) return;
-
-    fetch(`${window.BASE_URL}/api/community/prices/delete`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id })
-    })
-    .then(r => r.json())
-    .then(data => {
-        if (data.success) {
-            allPrices = allPrices.filter(p => p.id !== id);
-            filterTable();
-            updateStats();
-        } else {
-            alert('<?= __('prices_err_unknown') ?>' + (data.error || 'Неизвестная'));
-        }
-    })
-    .catch(() => alert('<?= __('prices_err_net') ?>'));
+    console.log('Delete disabled: Community section removed');
 }
 
 function updateStats() {
@@ -466,22 +449,10 @@ function updateStats() {
 }
 
 function loadPrices() {
-    fetch(`${window.BASE_URL}/api/community/prices`)
-        .then(r => r.json())
-        .then(data => {
-            allPrices = data.prices || [];
-            updateStats();
-            filterTable();
-            document.getElementById('ap-count-badge').textContent = `${allPrices.length} из ${allPrices.length}`;
-        })
-        .catch(err => {
-            const errHtml = `<div class="ap-empty" style="color:#ef4444;">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                <p><?= __('prices_err_load') ?></p>
-            </div>`;
-            document.getElementById('ap-tbody').innerHTML = `<tr><td colspan="9">${errHtml}</td></tr>`;
-            document.getElementById('ap-mobile-cards').innerHTML = errHtml;
-        });
+    allPrices = [];
+    updateStats();
+    filterTable();
+    document.getElementById('ap-count-badge').textContent = `0 из 0`;
 }
 
 document.addEventListener('DOMContentLoaded', loadPrices);

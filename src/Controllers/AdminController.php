@@ -389,17 +389,97 @@ class AdminController
     public function getLogs()
     {
         header('Content-Type: application/json');
+        
+        $logPath = __DIR__ . '/../../logs/app.log';
+        if (!file_exists($logPath)) {
+            echo json_encode(['logs' => []]);
+            return;
+        }
 
-        $stmt = $this->db->query("
-            SELECT l.*, u.full_name as admin_name 
-            FROM study_admin_logs l
-            JOIN study_users u ON l.admin_id = u.id
-            ORDER BY l.created_at DESC
-            LIMIT 50
-        ");
-        $logs = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $fileSize = filesize($logPath);
+        if ($fileSize > 10 * 1024 * 1024) { // 10MB limit
+            $f = fopen($logPath, 'r+');
+            if ($f) {
+                ftruncate($f, 0);
+                fclose($f);
+            }
+            echo json_encode(['logs' => []]);
+            return;
+        }
 
-        echo json_encode(['logs' => $logs]);
+        $lines = file($logPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        if ($lines === false) {
+            echo json_encode(['logs' => []]);
+            return;
+        }
+
+        $lines = array_slice($lines, -150);
+        $parsedLogs = [];
+
+        foreach ($lines as $line) {
+            $timestamp = '';
+            $message = $line;
+            
+            if (strpos($line, '[') === 0 && ($pos = strpos($line, ']')) !== false) {
+                $timestamp = substr($line, 1, $pos - 1);
+                $message = trim(substr($line, $pos + 1));
+            }
+
+            $message = str_replace(PHP_EOL, ' ', $message);
+
+            $level = 'info';
+            $lowerMessage = strtolower($message);
+            
+            if (strpos($lowerMessage, 'fatal') !== false || 
+                strpos($lowerMessage, 'error') !== false || 
+                strpos($lowerMessage, 'exception') !== false || 
+                strpos($lowerMessage, 'db error') !== false ||
+                strpos($lowerMessage, 'app error') !== false) {
+                $level = 'error';
+            } elseif (strpos($lowerMessage, 'warning') !== false || 
+                      strpos($lowerMessage, 'notice') !== false || 
+                      strpos($lowerMessage, 'deprecated') !== false) {
+                $level = 'warning';
+            }
+
+            $parsedLogs[] = [
+                'timestamp' => $timestamp ?: date('Y-m-d H:i:s'),
+                'level'     => $level,
+                'message'   => $message
+            ];
+        }
+
+        $parsedLogs = array_reverse($parsedLogs);
+
+        echo json_encode(['logs' => $parsedLogs]);
+    }
+
+    public function clearLogs()
+    {
+        header('Content-Type: application/json');
+        
+        $user = $this->authService->getUserFromCookie();
+        if (!$user || $user['role'] !== 'admin') {
+            http_response_code(403);
+            echo json_encode(['error' => 'Access Denied']);
+            return;
+        }
+
+        $logPath = __DIR__ . '/../../logs/app.log';
+        if (file_exists($logPath)) {
+            $f = fopen($logPath, 'r+');
+            if ($f) {
+                ftruncate($f, 0);
+                fclose($f);
+            } else {
+                unlink($logPath);
+            }
+        }
+
+        $adminId = $user['sub'];
+        $this->logger->log($adminId, 'clear_logs', null, "System error logs cleared");
+
+        echo json_encode(['success' => true]);
     }
 
 

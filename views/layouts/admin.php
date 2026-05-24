@@ -457,11 +457,6 @@ if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
         </nav>
 
         <div class="sidebar-footer">
-            <button onclick="enableNotifications()" class="sidebar-push-btn">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-                Push-уведомления
-                <span id="notificationStatusSmall" style="font-size:10px; margin-left:auto; opacity:0.5;"></span>
-            </button>
             <div class="sidebar-user-card">
                 <div class="user-avatar">A</div>
                 <div style="flex:1; min-width:0;">
@@ -566,23 +561,6 @@ if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
             .then(() => window.location.href = '<?= BASE_URL ?>/login');
     }
 
-    function enableNotifications() {
-        const statusEl = document.getElementById('notificationStatusSmall');
-        if (!('Notification' in window)) {
-            if (statusEl) statusEl.textContent = 'Не поддерживается';
-            return;
-        }
-        Notification.requestPermission().then(permission => {
-            if (permission === 'granted') {
-                if (statusEl) statusEl.textContent = '✓ Вкл';
-                window.location.reload();
-            }
-        });
-    }
-    if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-        const s = document.getElementById('notificationStatusSmall');
-        if (s) s.textContent = '✓ Вкл';
-    }
 </script>
 
 <?php if ($page === 'analytics'): ?>
@@ -591,7 +569,6 @@ if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
 <?php endif; ?>
 
 <script src="<?= BASE_URL ?>/assets/js/notifications.js"></script>
-<?php include __DIR__ . '/../admin/push-subscribe.php'; ?>
 <?php include __DIR__ . '/admin_mobile_js.php'; ?>
 </body>
 </html>
