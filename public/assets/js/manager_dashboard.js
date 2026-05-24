@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize Dashboard
     loadStats();
-    loadUrgentTasks();
+    loadDailyTasks();
     loadActionQueue();
 });
 
@@ -37,57 +37,93 @@ function loadStats() {
 }
 
 // ============================================
-// 2. URGENT TASKS
+// 2. DAILY TASKS (Push Model)
 // ============================================
-function loadUrgentTasks() {
-    fetch(`${window.BASE_URL}/api/manager/urgent-leads`)
+function loadDailyTasks() {
+    fetch(`${window.BASE_URL}/api/manager/daily-tasks`)
         .then(res => res.json())
         .then(data => {
-            const container = document.getElementById('urgentTasksContainer');
+            const container = document.getElementById('dailyTasksContainer');
             if(!container) return;
 
-            if (data.success && data.leads && data.leads.length > 0) {
-                container.innerHTML = data.leads.map(lead => renderUrgentCard(lead)).join('');
-            } else {
-                container.innerHTML = `
-                    <div class="col-span-full py-8 text-center text-sm font-medium text-gray-500 bg-gray-50 rounded-xl border border-dashed border-gray-200 flex flex-col items-center justify-center gap-2">
-                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                        <span>Нет срочных задач на сегодня. Отличная работа!</span>
-                    </div>
-                `;
+            if (data.success && data.tasks) {
+                // Update badges
+                document.getElementById('badgeP1').textContent = `${data.counts.p1} горящих`;
+                document.getElementById('badgeP2').textContent = `${data.counts.p2} follow-up`;
+
+                let html = '';
+                // Render Priority 1
+                data.tasks.priority_1.forEach(t => { html += renderTaskCard(t, 'p1'); });
+                // Render Priority 2
+                data.tasks.priority_2.forEach(t => { html += renderTaskCard(t, 'p2'); });
+                // Render Priority 3
+                data.tasks.priority_3.forEach(t => { html += renderTaskCard(t, 'p3'); });
+
+                if (html === '') {
+                    container.innerHTML = `
+                        <div class="col-span-full py-12 text-center text-sm font-medium text-gray-500 bg-gray-50 rounded-xl border border-dashed border-gray-200 flex flex-col items-center justify-center gap-2">
+                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span>Нет активных задач на сегодня. Отличная работа!</span>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">${html}</div>`;
+                }
             }
         })
         .catch(console.error);
 }
 
-function renderUrgentCard(lead) {
-    const cleanPhone = lead.phone ? lead.phone.replace(/[^0-9]/g, '') : '';
+function renderTaskCard(task, priority) {
+    const cleanPhone = task.phone ? task.phone.replace(/[^0-9]/g, '') : '';
     const waLink = `https://wa.me/${cleanPhone}`;
-    const date = new Date(lead.created_at).toLocaleDateString('ru-RU', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'});
+    
+    let styleObj = {
+        border: 'border-blue-100', bg: 'bg-white', tagBg: 'bg-blue-100', tagText: 'text-blue-700',
+        iconColor: 'text-blue-500'
+    };
+
+    if (priority === 'p1') {
+        styleObj = {
+            border: 'border-red-500', bg: 'bg-red-50', tagBg: 'bg-red-200', tagText: 'text-red-900',
+            iconColor: 'text-red-600'
+        };
+    } else if (priority === 'p2') {
+        styleObj = {
+            border: 'border-amber-300', bg: 'bg-amber-50', tagBg: 'bg-amber-200', tagText: 'text-amber-900',
+            iconColor: 'text-amber-600'
+        };
+    }
 
     return `
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-red-100 hover:shadow-md hover:border-red-300 transition-all duration-300 relative group">
+        <div class="${styleObj.bg} rounded-2xl p-5 shadow-sm border ${styleObj.border} hover:shadow-md transition-all duration-300 relative group flex flex-col">
+            ${priority === 'p1' ? `
             <div class="absolute -top-3 -right-3 flex">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-6 w-6 bg-red-500 text-white items-center justify-center text-xs">
+                <span class="relative inline-flex rounded-full h-6 w-6 bg-red-600 text-white items-center justify-center text-xs">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </span>
-            </div>
+            </div>` : ''}
+            
             <div class="flex justify-between items-start mb-3">
-                <div class="font-bold text-gray-900 truncate pr-4">${lead.name || 'Без имени'}</div>
-                <div class="text-[0.7rem] font-medium text-gray-400 bg-gray-50 px-2 py-0.5 rounded-md border border-gray-100">${date}</div>
-            </div>
-            <div class="flex items-center gap-2 text-xs font-medium text-gray-600 mb-4">
-                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                ${lead.phone || 'Нет телефона'}
+                <div class="font-bold text-gray-900 truncate pr-4">${task.full_name || 'Без имени'}</div>
+                <div class="text-[0.65rem] font-bold ${styleObj.tagText} ${styleObj.tagBg} px-2 py-0.5 rounded-md border border-white/20 whitespace-nowrap">${task.task_title}</div>
             </div>
             
-            <div class="flex gap-2 mt-auto">
-                <a href="${waLink}" target="_blank" class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/50 transition-colors">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M11.996 0C5.372 0 0 5.372 0 11.996c0 2.128.56 4.133 1.545 5.908L.044 24l6.23-1.636c1.713.905 3.655 1.417 5.722 1.417 6.623 0 11.995-5.372 11.995-11.995S18.619 0 11.996 0zm0 21.602c-1.801 0-3.522-.464-5.068-1.341l-.364-.207-3.765.986.996-3.666-.226-.358a9.827 9.827 0 01-1.423-5.174c0-5.42 4.41-9.83 9.83-9.83s9.829 4.41 9.829 9.83-4.41 9.83-9.83 9.83zm5.395-7.38c-.296-.148-1.751-.865-2.023-.965-.272-.098-.47-.148-.667.148-.198.297-.766.965-.94 1.163-.173.197-.346.222-.643.074-1.68-.838-2.903-1.928-3.99-3.708-.196-.322.285-.302.85-.929.073-.082.037-.148 0-.223-.037-.074-.667-1.609-.915-2.203-.242-.58-.487-.502-.667-.512-.173-.008-.372-.01-.568-.01-.198 0-.52.074-.792.371-.272.297-1.037 1.015-1.037 2.476s1.062 2.871 1.21 3.069c.148.198 2.093 3.194 5.074 4.482 2.046.885 2.76.744 3.28.625.68-.155 1.751-.715 1.998-1.408.248-.693.248-1.287.173-1.408-.073-.122-.272-.196-.568-.344z"/></svg> 
+            <div class="text-sm text-gray-700 mb-4 font-medium flex-1">
+                ${task.action_required}
+            </div>
+
+            <div class="flex items-center gap-2 text-xs font-medium text-gray-600 mb-4">
+                <svg class="w-4 h-4 ${styleObj.iconColor}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                ${task.phone || 'Нет телефона'}
+            </div>
+            
+            <div class="flex gap-2 mt-auto pt-4 border-t border-black/5">
+                <a href="${waLink}" target="_blank" class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-bold text-white bg-[#25D366] hover:bg-[#1ebe57] shadow-sm transition-colors">
+                    WhatsApp
                 </a>
-                <button class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors" onclick="openStatusModal(${lead.id}, '${lead.status}')">
-                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                <button class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-bold text-gray-700 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm transition-colors" onclick="openStatusModal(${task.lead_id}, '${task.status}')">
                     Статус
                 </button>
             </div>
@@ -268,7 +304,7 @@ window.saveStatus = function() {
     .then(data => {
         if(data.success) {
             closeStatusModal();
-            loadUrgentTasks();
+            loadDailyTasks();
             loadStats();
         } else {
             alert('Ошибка: ' + (data.error || 'Неизвестная ошибка'));

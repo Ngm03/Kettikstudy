@@ -13,3 +13,4 @@ $router->post('/api/manager/leads/status',     [\App\Controllers\ManagerPanelCon
 $router->get('/api/manager/students',          [\App\Controllers\ManagerPanelController::class, 'getStudents'],       ['auth', 'role:admin,manager']);
 $router->get('/api/manager/urgent-leads',      [\App\Controllers\ManagerPanelController::class, 'getUrgentLeads'],    ['auth', 'role:admin,manager']);
 $router->get('/api/manager/action-queue',      [\App\Controllers\ManagerPanelController::class, 'getActionQueue'],    ['auth', 'role:admin,manager']);
+$router->get('/api/manager/daily-tasks',       [\App\Controllers\ManagerTaskController::class, 'getDailyTasks'],      ['auth', 'role:admin,manager']);

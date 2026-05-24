@@ -111,40 +111,21 @@
 </div>
 
 <div class="mb-8">
-    <div class="px-1 mb-4 flex items-center justify-between">
-        <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
-            <svg class="w-5 h-5 text-red-500 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            Внимание / Срочные задачи
+    <div class="px-1 mb-6 flex items-center justify-between">
+        <h3 class="text-xl font-black text-gray-900 flex items-center gap-3">
+            <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+            Рабочий стол: Задачи на сегодня
         </h3>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="urgentTasksContainer">
-        <div class="col-span-full py-8 text-center text-sm font-medium text-gray-500 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-            Загрузка срочных задач...
+        <div class="flex gap-2">
+            <span class="px-3 py-1 bg-red-100 text-red-700 font-bold rounded-full text-xs" id="badgeP1">0 горящих</span>
+            <span class="px-3 py-1 bg-amber-100 text-amber-700 font-bold rounded-full text-xs" id="badgeP2">0 follow-up</span>
         </div>
     </div>
-</div>
-
-<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-8">
-    <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-white">
-        <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
-            <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            Единая очередь задач (Action Queue)
-        </h3>
-    </div>
-    <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-gray-50 border-b border-gray-100 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    <th class="px-6 py-4">Студент</th>
-                    <th class="px-6 py-4 hidden sm:table-cell">Тип / Сумма</th>
-                    <th class="px-6 py-4 hidden md:table-cell">Файл</th>
-                    <th class="px-6 py-4 text-right">Действия</th>
-                </tr>
-            </thead>
-            <tbody id="pendingReceiptsTable" class="divide-y divide-gray-100 bg-white">
-                <tr><td colspan="4" class="px-6 py-12 text-center text-sm text-gray-500">Загрузка задач...</td></tr>
-            </tbody>
-        </table>
+    
+    <div id="dailyTasksContainer" class="flex flex-col gap-4">
+        <div class="py-12 text-center text-sm font-medium text-gray-500 bg-white rounded-2xl border border-dashed border-gray-200">
+            Загрузка списка задач...
+        </div>
     </div>
 </div>
 
@@ -158,6 +139,8 @@
         <select id="statusSelect" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-gray-700 mb-6 transition-all">
             <option value="new"><?= __('man_status_new') ?></option>
             <option value="contacted"><?= __('man_status_contacted') ?></option>
+            <option value="contract">На этапе договора / Ждет счет</option>
+            <option value="ready_to_pay">Готов к оплате</option>
             <option value="converted"><?= __('man_status_converted') ?></option>
             <option value="rejected"><?= __('man_status_rejected') ?></option>
         </select>

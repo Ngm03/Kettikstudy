@@ -54,6 +54,8 @@
         <select id="statusSelect" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-gray-700 mb-6 transition-all">
             <option value="new"><?= __('man_status_new') ?></option>
             <option value="contacted"><?= __('man_status_contacted') ?></option>
+            <option value="contract">На этапе договора / Ждет счет</option>
+            <option value="ready_to_pay">Готов к оплате</option>
             <option value="converted"><?= __('man_status_converted') ?></option>
             <option value="rejected"><?= __('man_status_rejected') ?></option>
         </select>
@@ -153,7 +155,7 @@ function renderBoard() {
         if (lead.manager_id === null || lead.status === 'new') {
             listNew.insertAdjacentHTML('beforeend', cardHtml);
             cNew++;
-        } else if (lead.status === 'contacted') {
+        } else if (['contacted', 'contract', 'ready_to_pay'].includes(lead.status)) {
             listContacted.insertAdjacentHTML('beforeend', cardHtml);
             cCont++;
         } else {
