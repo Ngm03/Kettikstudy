@@ -36,19 +36,19 @@ class AuthController
 
         if (empty($email) || empty($password)) {
             http_response_code(400);
-            echo json_encode(['error' => __('error_email_password_required')]);
+            echo json_encode(['error' => 'Email and password are required']);
             return;
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             http_response_code(400);
-            echo json_encode(['error' => __('error_invalid_email')]);
+            echo json_encode(['error' => 'Invalid email format']);
             return;
         }
 
         if (mb_strlen($password) < 6) {
             http_response_code(400);
-            echo json_encode(['error' => __('error_password_min_length')]);
+            echo json_encode(['error' => 'Password must be at least 6 characters']);
             return;
         }
 
@@ -56,7 +56,7 @@ class AuthController
         $stmt->execute([$email]);
         if ($stmt->fetch()) {
             http_response_code(409);
-            echo json_encode(['error' => __('error_user_exists')]);
+            echo json_encode(['error' => 'User already exists']);
             return;
         }
 
@@ -80,10 +80,10 @@ class AuthController
             } catch (\Exception $e) {
             }
 
-            echo json_encode(['success' => true, 'message' => __('register_success')]);
+            echo json_encode(['success' => true, 'message' => 'User registered successfully']);
         } else {
             http_response_code(500);
-            echo json_encode(['error' => __('error_registration_failed')]);
+            echo json_encode(['error' => 'Registration failed']);
         }
     }
 
@@ -98,7 +98,7 @@ class AuthController
 
         if (empty($email) || empty($password)) {
             http_response_code(400);
-            echo json_encode(['error' => __('error_email_password_required')]);
+            echo json_encode(['error' => 'Email and password are required']);
             return;
         }
 
@@ -125,7 +125,7 @@ class AuthController
             ]]);
         } else {
             http_response_code(401);
-            echo json_encode(['error' => __('invalid_credentials')]);
+            echo json_encode(['error' => 'Invalid credentials']);
         }
     }
 

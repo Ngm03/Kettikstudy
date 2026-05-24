@@ -768,12 +768,5 @@
     "man_btn_write_msg": "Хабарлама жазу",
     "man_err_create_chat": "Чат құру қатесі: ",
     "man_err_unknown": "Белгісіз қате",
-    "man_err_request": "Сұранысты орындау кезіндегі қате",
-    "invalid_credentials": "Қателі пароль немесе email",
-    "error_email_password_required": "Email мен парольді көрсету міндетті",
-    "error_invalid_email": "Қателі email форматы",
-    "error_password_min_length": "Пароль кемінде 6 таңбадан тұруы керек",
-    "error_user_exists": "Бұндай email-мен пайдаланушы тіркелген",
-    "register_success": "Тіркелу сәтті аяқталды",
-    "error_registration_failed": "Тіркелу қатесі. Кейінірек өтініз"
+    "man_err_request": "Сұранысты орындау кезіндегі қате"
 }

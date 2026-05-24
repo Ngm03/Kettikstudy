@@ -64,3 +64,26 @@
   - RoleMiddleware уже был внедрен ранее и корректно защищает маршруты в public/index.php.
 
 СЛЕДУЮЩИЙ ПРИОРИТЕТ: Шаг 5 (Рефакторинг UI/UX - P2) по указанию бизнеса.
+
+2026-05-24 (Визуальные и логические баги):
+ВЫПОЛНЕНО: Bug Fix Session
+  - views/home.php: Восстановлена Hero-секция. Исправлена сломанная структура HTML
+    (блок статистики + закрывающие теги от удалённой старой dark-hero секции висели
+    снаружи </section>). Статистика вынесена в отдельную section с тёмным градиентом
+    (from-slate-900 via-blue-950 to-indigo-950), карточки получили корректные Tailwind-классы.
+    Изображение в hero восстановлено с корректным alt-атрибутом и loading="eager".
+  - views/layouts/dashboard.php: Исправлен порядок загрузки Tailwind CSS —
+    перемещён в начало <head> перед кастомными CSS-файлами, чтобы preflight
+    не перезаписывал правила dashboard.css.
+  - public/assets/css/dashboard.css: Усилены ограничения размеров SVG-иконок в навигации
+    (min-width, max-width, flex-shrink: 0) для предотвращения растяжения.
+  - src/Controllers/AuthController.php: Все хардкодные английские тексты ошибок
+    (Invalid credentials, Email and password are required, Invalid email format,
+    Password must be at least 6 characters, User already exists, Registration failed)
+    обёрнуты в __() для полной локализации.
+  - lang/ru.json: Добавлены 7 новых ключей локализации (invalid_credentials,
+    error_email_password_required, error_invalid_email, error_password_min_length,
+    error_user_exists, register_success, error_registration_failed).
+  - lang/kk.json: То же самое на казахском языке.
+  - Все файлы прошли php -l и json_decode валидацию без ошибок.
+  - Бэкапы: home.php.bak2, dashboard.php.bak, AuthController.php.bak, ru.json.bak, kk.json.bak.

@@ -768,12 +768,5 @@
     "man_btn_write_msg": "Написать сообщение",
     "man_err_create_chat": "Ошибка создания чата: ",
     "man_err_unknown": "Неизвестная ошибка",
-    "man_err_request": "Ошибка при выполнении запроса",
-    "invalid_credentials": "Неверный пароль или email",
-    "error_email_password_required": "Необходимо указать email и пароль",
-    "error_invalid_email": "Неверный формат email",
-    "error_password_min_length": "Пароль должен содержать не менее 6 символов",
-    "error_user_exists": "Пользователь с таким email уже зарегистрирован",
-    "register_success": "Регистрация успешно завершена",
-    "error_registration_failed": "Ошибка регистрации. Попробуйте позже"
+    "man_err_request": "Ошибка при выполнении запроса"
 }
