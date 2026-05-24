@@ -228,6 +228,12 @@ $router->get('/api/admin/download-pdf',      [\App\Controllers\AdminController::
 $router->post('/api/admin/doc-status',       [\App\Controllers\AdminController::class, 'updateDocStatus'],    ['auth', 'role:admin,manager']);
 $router->post('/api/admin/student-notes',    [\App\Controllers\AdminController::class, 'updateStudentNotes'], ['auth', 'role:admin,manager']);
 
+$router->get('/api/admin/fix-db', function() {
+    $db = \App\Core\Database::getInstance()->getConnection();
+    $db->exec("ALTER TABLE study_leads MODIFY COLUMN status VARCHAR(50) NOT NULL DEFAULT 'new'");
+    echo "Fixed DB ENUM issue!";
+});
+
 // Управление чеками об оплате (Менеджер/Админ)
 $router->get('/api/admin/receipts/pending',  [\App\Controllers\PaymentController::class, 'pendingReceipts'], ['auth', 'role:admin,manager']);
 $router->post('/api/admin/receipts/approve', [\App\Controllers\PaymentController::class, 'approveReceipt'],  ['auth', 'role:admin,manager']);
