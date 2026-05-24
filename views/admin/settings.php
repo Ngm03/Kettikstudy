@@ -339,7 +339,7 @@ const autoSave = async (key, value) => {
     showSaving();
     try {
         const settings = { [key]: value };
-        const res = await fetch(`${BASE_URL}/api/admin/settings`, {
+        const res = await fetch(`${window.BASE_URL}/api/admin/settings`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ settings })
@@ -361,7 +361,7 @@ const debouncedSave = debounce(autoSave, 1000);
 
 async function loadSettings() {
     try {
-        const res = await fetch(`${BASE_URL}/api/admin/settings`);
+        const res = await fetch(`${window.BASE_URL}/api/admin/settings`);
         const data = await res.json();
         if (data.settings) {
             settingFields.forEach(key => {

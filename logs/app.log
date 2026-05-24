@@ -1,0 +1,41 @@
+[24-May-2026 12:32:12 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\Users\negme\.gemini\antigravity-ide\brain\03ee0b09-b1b3-44f6-895a-7205a6262d99\scratch\test_api_request.php:24) in C:\xampp\htdocs\study\public\index.php on line 34
+[24-May-2026 12:32:12 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\Users\negme\.gemini\antigravity-ide\brain\03ee0b09-b1b3-44f6-895a-7205a6262d99\scratch\test_api_request.php:24) in C:\xampp\htdocs\study\public\index.php on line 35
+[24-May-2026 12:32:12 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\Users\negme\.gemini\antigravity-ide\brain\03ee0b09-b1b3-44f6-895a-7205a6262d99\scratch\test_api_request.php:24) in C:\xampp\htdocs\study\public\index.php on line 36
+[24-May-2026 12:32:12 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\Users\negme\.gemini\antigravity-ide\brain\03ee0b09-b1b3-44f6-895a-7205a6262d99\scratch\test_api_request.php:24) in C:\xampp\htdocs\study\public\index.php on line 37
+[24-May-2026 12:32:16 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] Подключение не установлено, т.к. конечный компьютер отверг запрос на подключение
+[24-May-2026 12:32:16 Europe/Berlin] APP ERROR: Service temporarily unavailable
+#0 C:\xampp\htdocs\study\src\Core\Database.php(36): App\Core\Database->__construct()
+#1 C:\xampp\htdocs\study\src\Middleware\AuthMiddleware.php(23): App\Core\Database::getInstance()
+#2 C:\xampp\htdocs\study\src\Core\Router.php(97): App\Middleware\AuthMiddleware->__construct()
+#3 C:\xampp\htdocs\study\public\index.php(248): App\Core\Router->dispatch('/api/admin/docu...', 'GET')
+#4 C:\Users\negme\.gemini\antigravity-ide\brain\03ee0b09-b1b3-44f6-895a-7205a6262d99\scratch\test_api_request.php(45): require('C:\\xampp\\htdocs...')
+#5 {main}
+[24-May-2026 12:32:16 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\Users\negme\.gemini\antigravity-ide\brain\03ee0b09-b1b3-44f6-895a-7205a6262d99\scratch\test_api_request.php:24) in C:\xampp\htdocs\study\public\index.php on line 252
+[24-May-2026 12:32:16 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\Users\negme\.gemini\antigravity-ide\brain\03ee0b09-b1b3-44f6-895a-7205a6262d99\scratch\test_api_request.php:24) in C:\xampp\htdocs\study\public\index.php on line 34
+[24-May-2026 12:32:16 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\Users\negme\.gemini\antigravity-ide\brain\03ee0b09-b1b3-44f6-895a-7205a6262d99\scratch\test_api_request.php:24) in C:\xampp\htdocs\study\public\index.php on line 35
+[24-May-2026 12:32:16 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\Users\negme\.gemini\antigravity-ide\brain\03ee0b09-b1b3-44f6-895a-7205a6262d99\scratch\test_api_request.php:24) in C:\xampp\htdocs\study\public\index.php on line 36
+[24-May-2026 12:32:16 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\Users\negme\.gemini\antigravity-ide\brain\03ee0b09-b1b3-44f6-895a-7205a6262d99\scratch\test_api_request.php:24) in C:\xampp\htdocs\study\public\index.php on line 37
+[24-May-2026 12:32:16 Europe/Berlin] PHP Warning:  Constant BASE_URL already defined in C:\xampp\htdocs\study\public\index.php on line 57
+[24-May-2026 12:32:20 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] Подключение не установлено, т.к. конечный компьютер отверг запрос на подключение
+[24-May-2026 12:32:20 Europe/Berlin] APP ERROR: Service temporarily unavailable
+#0 C:\xampp\htdocs\study\src\Core\Database.php(36): App\Core\Database->__construct()
+#1 C:\xampp\htdocs\study\src\Middleware\AuthMiddleware.php(23): App\Core\Database::getInstance()
+#2 C:\xampp\htdocs\study\src\Core\Router.php(97): App\Middleware\AuthMiddleware->__construct()
+#3 C:\xampp\htdocs\study\public\index.php(248): App\Core\Router->dispatch('/api/admin/logs', 'GET')
+#4 C:\Users\negme\.gemini\antigravity-ide\brain\03ee0b09-b1b3-44f6-895a-7205a6262d99\scratch\test_api_request.php(45): require('C:\\xampp\\htdocs...')
+#5 {main}
+[24-May-2026 12:32:20 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\Users\negme\.gemini\antigravity-ide\brain\03ee0b09-b1b3-44f6-895a-7205a6262d99\scratch\test_api_request.php:24) in C:\xampp\htdocs\study\public\index.php on line 252
+[24-May-2026 12:32:20 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\Users\negme\.gemini\antigravity-ide\brain\03ee0b09-b1b3-44f6-895a-7205a6262d99\scratch\test_api_request.php:24) in C:\xampp\htdocs\study\public\index.php on line 34
+[24-May-2026 12:32:20 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\Users\negme\.gemini\antigravity-ide\brain\03ee0b09-b1b3-44f6-895a-7205a6262d99\scratch\test_api_request.php:24) in C:\xampp\htdocs\study\public\index.php on line 35
+[24-May-2026 12:32:20 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\Users\negme\.gemini\antigravity-ide\brain\03ee0b09-b1b3-44f6-895a-7205a6262d99\scratch\test_api_request.php:24) in C:\xampp\htdocs\study\public\index.php on line 36
+[24-May-2026 12:32:20 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\Users\negme\.gemini\antigravity-ide\brain\03ee0b09-b1b3-44f6-895a-7205a6262d99\scratch\test_api_request.php:24) in C:\xampp\htdocs\study\public\index.php on line 37
+[24-May-2026 12:32:20 Europe/Berlin] PHP Warning:  Constant BASE_URL already defined in C:\xampp\htdocs\study\public\index.php on line 57
+[24-May-2026 12:32:24 Europe/Berlin] Database connection failed: SQLSTATE[HY000] [2002] Подключение не установлено, т.к. конечный компьютер отверг запрос на подключение
+[24-May-2026 12:32:24 Europe/Berlin] APP ERROR: Service temporarily unavailable
+#0 C:\xampp\htdocs\study\src\Core\Database.php(36): App\Core\Database->__construct()
+#1 C:\xampp\htdocs\study\src\Middleware\AuthMiddleware.php(23): App\Core\Database::getInstance()
+#2 C:\xampp\htdocs\study\src\Core\Router.php(97): App\Middleware\AuthMiddleware->__construct()
+#3 C:\xampp\htdocs\study\public\index.php(248): App\Core\Router->dispatch('/api/admin/sett...', 'GET')
+#4 C:\Users\negme\.gemini\antigravity-ide\brain\03ee0b09-b1b3-44f6-895a-7205a6262d99\scratch\test_api_request.php(45): require('C:\\xampp\\htdocs...')
+#5 {main}
+[24-May-2026 12:32:24 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\Users\negme\.gemini\antigravity-ide\brain\03ee0b09-b1b3-44f6-895a-7205a6262d99\scratch\test_api_request.php:24) in C:\xampp\htdocs\study\public\index.php on line 252

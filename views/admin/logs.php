@@ -379,7 +379,7 @@ function loadLogs() {
     tableBody.innerHTML = `<tr><td colspan="3" style="text-align: center; padding: 3rem; color: #64748b;"><svg class="animate-spin inline mr-2 text-gray-400" width="20" height="20" fill="none" viewBox="0 0 24 24" style="animation: spin 1.2s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px;"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" style="opacity: 0.25;"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" style="opacity: 0.75;"></path></svg><?= __('updating_list') ?></td></tr>`;
     mobileCards.innerHTML = `<div style="text-align: center; padding: 2rem; color: #64748b;"><?= __('updating_list') ?></div>`;
 
-    fetch('<?= BASE_URL ?>/api/admin/logs')
+    fetch(`${window.BASE_URL}/api/admin/logs`)
         .then(res => res.json())
         .then(data => {
             if (!data.logs || data.logs.length === 0) {
@@ -463,7 +463,7 @@ function clearLogs() {
 
     const toast = document.getElementById('toast');
     
-    fetch('<?= BASE_URL ?>/api/admin/logs/clear', {
+    fetch(`${window.BASE_URL}/api/admin/logs/clear`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
     })
