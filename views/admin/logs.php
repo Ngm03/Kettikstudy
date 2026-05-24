@@ -490,5 +490,9 @@ function escapeHtml(text) {
          .replace(/'/g, "&#039;");
 }
 
-document.addEventListener('DOMContentLoaded', loadLogs);
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadLogs);
+} else {
+    loadLogs();
+}
 </script>

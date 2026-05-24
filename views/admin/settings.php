@@ -386,5 +386,9 @@ async function loadSettings() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', loadSettings);
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadSettings);
+} else {
+    loadSettings();
+}
 </script>

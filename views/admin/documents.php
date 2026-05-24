@@ -503,5 +503,9 @@ function loadDocs() {
         });
 }
 
-document.addEventListener('DOMContentLoaded', loadDocs);
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadDocs);
+} else {
+    loadDocs();
+}
 </script>

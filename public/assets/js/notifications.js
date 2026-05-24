@@ -59,7 +59,7 @@ window.handleNotificationClick = async function (id, url) {
     let notificationCount = 0;
 
     function init() {
-        if (Notification.permission === 'default') {
+        if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
             Notification.requestPermission();
         }
 
@@ -139,7 +139,7 @@ window.handleNotificationClick = async function (id, url) {
     }
 
     function showBrowserNotification(notification) {
-        if (Notification.permission !== 'granted') return;
+        if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
 
         playNotificationSound();
 
