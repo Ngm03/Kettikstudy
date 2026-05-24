@@ -68,20 +68,34 @@ class AuthController
             $manager = $managerModel->getRandomActive();
             $managerId = $manager ? $manager['id'] : null;
         } catch (\Exception $e) {
+            error_log('Registration Random Manager Fetch Error: ' . $e->getMessage());
         }
 
-        $stmt = $this->db->prepare("INSERT INTO study_users (email, password, full_name, role, manager_id) VALUES (?, ?, ?, 'student', ?)");
-        if ($stmt->execute([$email, $hashedPassword, $name, $managerId])) {
+        try {
+            $this->db->beginTransaction();
+
+            $stmt = $this->db->prepare("INSERT INTO study_users (email, password, full_name, role, manager_id) VALUES (?, ?, ?, 'student', ?)");
+            $stmt->execute([$email, $hashedPassword, $name, $managerId]);
             $userId = $this->db->lastInsertId();
 
-            try {
-                $leadStmt = $this->db->prepare("INSERT INTO study_leads (user_id, status, manager_id, score, details) VALUES (?, 'new', ?, 0, '{}')");
-                $leadStmt->execute([$userId, $managerId]);
-            } catch (\Exception $e) {
-            }
+            $leadStmt = $this->db->prepare("INSERT INTO study_leads (user_id, status, manager_id, score, details) VALUES (?, 'new', ?, 0, '{}')");
+            $leadStmt->execute([$userId, $managerId]);
+
+            $this->db->commit();
 
             echo json_encode(['success' => true, 'message' => __('register_success')]);
-        } else {
+        } catch (\PDOException $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            error_log('Registration DB Error: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+            http_response_code(500);
+            echo json_encode(['error' => __('error_registration_failed')]);
+        } catch (\Exception $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            error_log('Registration Error: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
             http_response_code(500);
             echo json_encode(['error' => __('error_registration_failed')]);
         }
