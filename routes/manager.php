@@ -11,4 +11,5 @@ $router->get('/api/manager/leads',             [\App\Controllers\ManagerPanelCon
 $router->post('/api/manager/leads/claim',      [\App\Controllers\ManagerPanelController::class, 'claimLead'],         ['auth', 'role:admin,manager']);
 $router->post('/api/manager/leads/status',     [\App\Controllers\ManagerPanelController::class, 'updateLeadStatus'],  ['auth', 'role:admin,manager']);
 $router->get('/api/manager/students',          [\App\Controllers\ManagerPanelController::class, 'getStudents'],       ['auth', 'role:admin,manager']);
+$router->get('/api/manager/urgent-leads',      [\App\Controllers\ManagerPanelController::class, 'getUrgentLeads'],    ['auth', 'role:admin,manager']);
 $router->get('/api/manager/action-queue',      [\App\Controllers\ManagerPanelController::class, 'getActionQueue'],    ['auth', 'role:admin,manager']);

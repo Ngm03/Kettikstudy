@@ -182,6 +182,26 @@ class ManagerPanelController
         }
     }
 
+    public function getUrgentLeads()
+    {
+        header('Content-Type: application/json');
+        try {
+            $stmt = $this->db->prepare("
+                SELECT id, name, phone, city, notes, status, created_at, manager_id 
+                FROM study_leads 
+                WHERE manager_id = ? AND JSON_EXTRACT(details, '$.is_urgent') = true AND status != 'converted'
+                ORDER BY created_at DESC
+            ");
+            $stmt->execute([$this->managerId]);
+            $leads = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+            echo json_encode(['success' => true, 'leads' => $leads]);
+        } catch (\Exception $e) {
+            http_response_code(500);
+            echo json_encode(['error' => 'Internal server error']);
+        }
+    }
+
     public function getActionQueue()
     {
         header('Content-Type: application/json');
