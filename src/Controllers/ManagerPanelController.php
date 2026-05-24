@@ -15,24 +15,11 @@ class ManagerPanelController
     {
         $this->db = Database::getInstance()->getConnection();
         $this->authService = new AuthService();
-        $this->checkAuth();
-    }
-
-    private function checkAuth()
-    {
-        $user = $this->authService->getUserFromCookie();
-        if (!$user) {
-            header('Location: ' . BASE_URL . '/login');
-            exit;
-        }
         
-        if ($user['role'] !== 'manager' && $user['role'] !== 'admin') {
-            http_response_code(403);
-            echo 'Access Denied: Managers or Admins only';
-            exit;
+        $user = $this->authService->getUserFromCookie();
+        if ($user) {
+            $this->managerId = $user['sub'];
         }
-
-        $this->managerId = $user['sub'];
     }
 
     public function dashboard()
