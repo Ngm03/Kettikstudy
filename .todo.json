@@ -88,19 +88,19 @@
     {
       "id": 15,
       "title": "Внедрить PHPUnit для unit-тестов (AuthService, Chat-сервисы)",
-      "status": "pending",
+      "status": "done",
       "priority": "low"
     },
     {
       "id": 16,
       "title": "Заменить HTTP-polling чата на Server-Sent Events",
-      "status": "pending",
+      "status": "done",
       "priority": "low"
     },
     {
       "id": 17,
       "title": "Перейти с кастомного JWT на firebase/php-jwt (уже в composer.json)",
-      "status": "pending",
+      "status": "done",
       "priority": "low"
     }
   ]

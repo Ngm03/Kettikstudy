@@ -42,22 +42,15 @@ class ChatController
             }
 
             if (!$tokenData) {
-                http_response_code(401);
-                echo json_encode(['error' => 'Unauthorized. Please login to chat.']);
-                return;
-            }
-
-            $userId = $tokenData['sub'];
-            
-            $db = Database::getInstance()->getConnection();
-            $stmt = $db->prepare("SELECT id, full_name, email, phone FROM study_users WHERE id = ?");
-            $stmt->execute([$userId]);
-            $user = $stmt->fetch(\PDO::FETCH_ASSOC);
-
-            if (!$user) {
-                http_response_code(401);
-                echo json_encode(['error' => 'User found in token but not in DB']);
-                return;
+                // Anonymous user
+                $userId = null;
+                $user = null;
+            } else {
+                $userId = $tokenData['sub'];
+                $db = Database::getInstance()->getConnection();
+                $stmt = $db->prepare("SELECT id, full_name, email, phone FROM study_users WHERE id = ?");
+                $stmt->execute([$userId]);
+                $user = $stmt->fetch(\PDO::FETCH_ASSOC);
             }
 
             $input = json_decode(file_get_contents('php://input'), true);
@@ -80,13 +73,17 @@ class ChatController
             
             $formattedHistory[] = ['role' => 'user', 'content' => $message];
 
-            $existingLead = $this->getLeadByUser($user['id']); 
+            if ($userId) {
+                $existingLead = $this->getLeadByUser($userId); 
+            } else {
+                $existingLead = $this->getLeadBySession($sessionId);
+            }
             
             $context = [];
             if ($existingLead) {
                 $details = json_decode($existingLead['details'] ?? '{}', true);
                 $context = [
-                    'name' => $existingLead['name'],
+                    'name' => $existingLead['name'] ?? 'Гость',
                     'phone' => $existingLead['phone'],
                     'budget' => $existingLead['budget'],
                     'gpa' => $existingLead['gpa'],
@@ -97,20 +94,23 @@ class ChatController
                 ];
             } else {
                 $context = [
-                    'name' => $user['full_name'],
-                    'phone' => $user['phone'], 
-                    'email' => $user['email']
+                    'name' => $user ? $user['full_name'] : 'Гость',
+                    'phone' => $user ? $user['phone'] : null, 
+                    'email' => $user ? $user['email'] : null
                 ];
             }
 
-            $profileStmt = $db->prepare("
-                SELECT ud.*, su.name as university_name 
-                FROM study_user_details ud 
-                LEFT JOIN study_universities su ON ud.desired_university_id = su.id 
-                WHERE ud.user_id = ?
-            ");
-            $profileStmt->execute([$userId]);
-            $userProfile = $profileStmt->fetch(\PDO::FETCH_ASSOC);
+            $userProfile = null;
+            if ($userId) {
+                $profileStmt = $db->prepare("
+                    SELECT ud.*, su.name as university_name 
+                    FROM study_user_details ud 
+                    LEFT JOIN study_universities su ON ud.desired_university_id = su.id 
+                    WHERE ud.user_id = ?
+                ");
+                $profileStmt->execute([$userId]);
+                $userProfile = $profileStmt->fetch(\PDO::FETCH_ASSOC);
+            }
 
             $profileFilled = false;
             $programSelected = false;
@@ -157,7 +157,7 @@ class ChatController
                 $aiData = $this->extractDataFromText($aiResponseText);
             }
             if (!empty($aiData)) {
-                $this->saveLead($aiData, $formattedHistory, $userId);
+                $this->saveLead($aiData, $formattedHistory, $userId, $sessionId);
             }
 
             $aiResponse = $aiResponseText;
@@ -183,7 +183,7 @@ class ChatController
                 $manager = $managerModel->getRandomActive();
                 
                 if ($manager) {
-                    $lead = $this->getLeadByUser($user['id']);
+                    $lead = $userId ? $this->getLeadByUser($userId) : $this->getLeadBySession($sessionId);
                     
                     $parts = [];
                     
@@ -294,6 +294,9 @@ class ChatController
         $lang = $data['language_level'] ?? null;
         
         $newDetails = $data['details'] ?? [];
+        if ($sessionId && !$userId) {
+            $newDetails['session_id'] = $sessionId;
+        }
         if (!empty($data['program_of_interest'])) {
             $newDetails['program_of_interest'] = $data['program_of_interest'];
         }
@@ -308,8 +311,13 @@ class ChatController
         $status = $data['status'] ?? 'new';
         $jsonHistory = json_encode($history, JSON_UNESCAPED_UNICODE);
 
-        $stmt = $db->prepare("SELECT id, details, status FROM study_leads WHERE user_id = ?");
-        $stmt->execute([$userId]);
+        if ($userId) {
+            $stmt = $db->prepare("SELECT id, details, status FROM study_leads WHERE user_id = ?");
+            $stmt->execute([$userId]);
+        } else {
+            $stmt = $db->prepare("SELECT id, details, status FROM study_leads WHERE JSON_UNQUOTE(JSON_EXTRACT(details, '$.session_id')) = ? LIMIT 1");
+            $stmt->execute([$sessionId]);
+        }
         $existingLead = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         if ($existingLead) {
@@ -374,7 +382,7 @@ class ChatController
                 $score, $status, $jsonHistory, $managerId
             ]);
             
-            if ($managerId) {
+            if ($managerId && $userId) {
                 $userStmt = $db->prepare("UPDATE study_users SET manager_id = ? WHERE id = ? AND manager_id IS NULL");
                 $userStmt->execute([$managerId, $userId]);
             }
@@ -397,6 +405,14 @@ class ChatController
         $db = Database::getInstance()->getConnection();
         $stmt = $db->prepare("SELECT * FROM study_leads WHERE user_id = ?");
         $stmt->execute([$userId]);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    private function getLeadBySession(string $sessionId)
+    {
+        $db = Database::getInstance()->getConnection();
+        $stmt = $db->prepare("SELECT * FROM study_leads WHERE JSON_UNQUOTE(JSON_EXTRACT(details, '$.session_id')) = ? LIMIT 1");
+        $stmt->execute([$sessionId]);
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 

@@ -39,6 +39,7 @@ $router->get('/api/cities/list', [\App\Controllers\CityController::class, 'listC
 // Community Chat (только авторизованные; enrolled-проверка внутри контроллера)
 $router->get('/api/chat/rooms',            [\App\Controllers\CommunityChatController::class, 'getRooms'],           ['auth']);
 $router->get('/api/chat/messages',         [\App\Controllers\CommunityChatController::class, 'getMessages'],        ['auth']);
+$router->get('/api/chat/stream',           [\App\Controllers\CommunityChatController::class, 'streamMessages'],     ['auth']);
 $router->post('/api/chat/messages',        [\App\Controllers\CommunityChatController::class, 'sendMessage'],        ['auth']);
 $router->post('/api/chat/messages/edit',   [\App\Controllers\CommunityChatController::class, 'editMessage'],        ['auth']);
 $router->post('/api/chat/messages/delete', [\App\Controllers\CommunityChatController::class, 'deleteMessage'],      ['auth']);

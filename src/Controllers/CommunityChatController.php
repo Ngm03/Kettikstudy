@@ -134,6 +134,76 @@ class CommunityChatController
         }
     }
 
+    public function streamMessages(): void
+    {
+        header('Content-Type: text/event-stream');
+        header('Cache-Control: no-cache');
+        header('Connection: keep-alive');
+
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        try {
+            $userId  = $this->requireUser();
+            $this->requireEnrolled($userId);
+
+            $roomId  = (int) ($_GET['room_id'] ?? 0);
+            $afterId = (int) ($_GET['after_id'] ?? 0);
+
+            if (!$roomId) {
+                echo "event: error\ndata: " . json_encode(['error' => 'room_id required']) . "\n\n";
+                flush();
+                exit;
+            }
+
+            $room = $this->roomService->findRoom($roomId);
+            if (!$room) {
+                echo "event: error\ndata: " . json_encode(['error' => 'Room not found']) . "\n\n";
+                flush();
+                exit;
+            }
+
+            $userRole = $this->getUserRole($userId);
+            if (!$this->roomService->userCanAccessRoom($userId, $userRole, $room)) {
+                echo "event: error\ndata: " . json_encode(['error' => 'Access denied']) . "\n\n";
+                flush();
+                exit;
+            }
+
+            session_write_close();
+            ignore_user_abort(true);
+
+            $lastId = $afterId;
+
+            while (true) {
+                if (connection_aborted()) {
+                    break;
+                }
+
+                $messages = $this->messageService->getMessages($roomId, $lastId, $userId);
+                
+                if (!empty($messages)) {
+                    foreach ($messages as $msg) {
+                        if ($msg['id'] > $lastId) {
+                            $lastId = $msg['id'];
+                        }
+                    }
+                    echo "data: " . json_encode(['messages' => $messages]) . "\n\n";
+                    if (ob_get_level() > 0) ob_flush();
+                    flush();
+                }
+
+                sleep(2);
+            }
+        } catch (\Exception $e) {
+            echo "event: error\ndata: " . json_encode(['error' => 'Server error']) . "\n\n";
+            if (ob_get_level() > 0) ob_flush();
+            flush();
+            exit;
+        }
+    }
+
     public function sendMessage(): void
     {
         header('Content-Type: application/json');

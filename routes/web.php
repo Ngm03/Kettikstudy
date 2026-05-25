@@ -34,3 +34,6 @@ $router->get('/dashboard/community',  [\App\Controllers\DashboardController::cla
 $router->get('/dashboard/prices',     [\App\Controllers\DashboardController::class, 'prices'],    ['auth']);
 $router->get('/dashboard/schedule',   [\App\Controllers\DashboardController::class, 'schedule'],  ['auth']);
 $router->get('/dashboard/tasks',      [\App\Controllers\DashboardController::class, 'tasks'],     ['auth']);
+
+// Панель партнера (SMM)
+$router->get('/affiliate',            [\App\Controllers\AffiliateController::class, 'index'],     ['auth', 'role:affiliate']);

@@ -71,11 +71,22 @@ class AuthController
             error_log('Registration Random Manager Fetch Error: ' . $e->getMessage());
         }
 
+        $referredBy = null;
+        if (isset($_COOKIE['ref_code'])) {
+            try {
+                $refStmt = $this->db->prepare("SELECT id FROM study_users WHERE affiliate_code = ? AND role = 'affiliate'");
+                $refStmt->execute([$_COOKIE['ref_code']]);
+                $referredBy = $refStmt->fetchColumn() ?: null;
+            } catch (\Exception $e) {
+                // Ignore DB errors related to new field if migration not run
+            }
+        }
+
         try {
             $this->db->beginTransaction();
 
-            $stmt = $this->db->prepare("INSERT INTO study_users (email, password, full_name, role, manager_id) VALUES (?, ?, ?, 'student', ?)");
-            $stmt->execute([$email, $hashedPassword, $name, $managerId]);
+            $stmt = $this->db->prepare("INSERT INTO study_users (email, password, full_name, role, manager_id, referred_by) VALUES (?, ?, ?, 'student', ?, ?)");
+            $stmt->execute([$email, $hashedPassword, $name, $managerId, $referredBy]);
             $userId = $this->db->lastInsertId();
 
             $leadStmt = $this->db->prepare("INSERT INTO study_leads (user_id, status, manager_id, score, details) VALUES (?, 'new', ?, 0, '{}')");

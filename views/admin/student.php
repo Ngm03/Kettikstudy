@@ -315,6 +315,9 @@
                             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                             Email
                         </a>
+                        <button onclick="makeAffiliate()" id="btn-make-affiliate" class="btn btn-sm btn-outline" style="border-color:#a855f7; color:#a855f7;">
+                            SMM-Партнер
+                        </button>
                     </div>
                 </div>
             </div>
@@ -629,6 +632,21 @@
             body: JSON.stringify({ id: studentId, notes })
         }).then(res=>res.json()).then(d => {
             if(d.success) alert('<?= __('msg_note_saved') ?>');
+        });
+    }
+
+    function makeAffiliate() {
+        if(!confirm('Превратить этого пользователя в SMM-партнера? Он потеряет доступ к панели студента.')) return;
+        fetch('<?= BASE_URL ?>/api/admin/users/make-affiliate', {
+            method: 'POST',
+            body: JSON.stringify({ id: studentId })
+        }).then(res=>res.json()).then(d => {
+            if(d.success) {
+                alert('Пользователь стал партнером! Его код: ' + d.code);
+                window.location.href = '<?= BASE_URL ?>/admin/dashboard';
+            } else {
+                alert('Ошибка: ' + (d.error || 'Unknown'));
+            }
         });
     }
 

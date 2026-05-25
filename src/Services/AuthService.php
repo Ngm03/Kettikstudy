@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use Dotenv\Dotenv;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 class AuthService
 {
@@ -27,23 +29,16 @@ class AuthService
 
     public function generateToken(int $userId, string $role): string
     {
-        $header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
-        $payload = json_encode([
+        $payload = [
             'iss' => 'study-app',
             'aud' => 'study-app',
             'iat' => time(),
             'exp' => time() + 86400,
             'sub' => $userId,
             'role' => $role
-        ]);
+        ];
 
-        $base64UrlHeader = $this->base64UrlEncode($header);
-        $base64UrlPayload = $this->base64UrlEncode($payload);
-
-        $signature = hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, $this->secretKey, true);
-        $base64UrlSignature = $this->base64UrlEncode($signature);
-
-        return $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
+        return JWT::encode($payload, $this->secretKey, 'HS256');
     }
 
     public function validateToken(string $token): ?array
@@ -53,32 +48,12 @@ class AuthService
             return null;
         }
 
-        [$header, $payload, $signature] = $parts;
-
-        $validSignature = hash_hmac('sha256', $header . "." . $payload, $this->secretKey, true);
-        $base64UrlSignature = $this->base64UrlEncode($validSignature);
-
-        if (!hash_equals($signature, $base64UrlSignature)) {
+        try {
+            $decoded = JWT::decode($token, new Key($this->secretKey, 'HS256'));
+            return (array) $decoded;
+        } catch (\Exception $e) {
             return null;
         }
-
-        $decodedPayload = json_decode($this->base64UrlDecode($payload), true);
-
-        if ($decodedPayload['exp'] < time()) {
-            return null;
-        }
-
-        return $decodedPayload;
-    }
-
-    private function base64UrlEncode($data)
-    {
-        return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
-    }
-
-    private function base64UrlDecode($data)
-    {
-        return base64_decode(str_pad(strtr($data, '-_', '+/'), strlen($data) % 4, '=', STR_PAD_RIGHT));
     }
 
     public function getUserFromCookie()

@@ -403,6 +403,11 @@ $companyNameWidget = $settings['company_name'] ?? 'Kettik Study';
         <div class="message bot">
             Сәлем! Я <?= htmlspecialchars($botName) ?>, твой AI-гид по поступлению. Подберу ВУЗ, расскажу про визу или про жизнь в Польше. О чем хочешь узнать?
         </div>
+        <div class="flex flex-col gap-2 mt-2 px-2" id="chat-quick-actions">
+            <button onclick="sendQuickAction('🎓 Оценить мои шансы на поступление')" class="text-left px-4 py-2 bg-white border border-blue-200 text-blue-700 text-sm rounded-xl hover:bg-blue-50 transition shadow-sm font-medium">🎓 Оценить мои шансы на поступление</button>
+            <button onclick="sendQuickAction('📄 Список документов для визы')" class="text-left px-4 py-2 bg-white border border-blue-200 text-blue-700 text-sm rounded-xl hover:bg-blue-50 transition shadow-sm font-medium">📄 Список документов для визы</button>
+            <button onclick="sendQuickAction('💰 Узнать стоимость обучения')" class="text-left px-4 py-2 bg-white border border-blue-200 text-blue-700 text-sm rounded-xl hover:bg-blue-50 transition shadow-sm font-medium">💰 Узнать стоимость обучения</button>
+        </div>
     </div>
     <div class="chat-input-area">
         <input type="text" id="chat-input" placeholder="Напишите сообщение..." autocomplete="off">
@@ -412,3 +417,15 @@ $companyNameWidget = $settings['company_name'] ?? 'Kettik Study';
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+function sendQuickAction(text) {
+    const input = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('chat-send');
+    if (input && sendBtn) {
+        input.value = text;
+        sendBtn.click();
+        const actions = document.getElementById('chat-quick-actions');
+        if (actions) actions.style.display = 'none';
+    }
+}
+</script>

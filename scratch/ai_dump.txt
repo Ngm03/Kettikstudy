@@ -1,0 +1,105 @@
+<?php
+
+namespace App\Services;
+
+class AiService
+{
+    private KnowledgeBaseService $knowledgeBaseService;
+    private array $providers;
+
+    public function __construct()
+    {
+        $this->knowledgeBaseService = new KnowledgeBaseService();
+
+        $this->providers = [
+            [
+                'name' => 'Groq-1',
+                'type' => 'groq',
+                'url'  => 'https://api.groq.com/openai/v1/chat/completions',
+                'key'  => $_ENV['GROQ_API_KEY_1'] ?? $_ENV['GROQ_API_KEY'] ?? '',
+                'model'=> 'llama-3.3-70b-versatile',
+                'json_mode' => true,
+            ],
+            [
+                'name' => 'Groq-2',
+                'type' => 'groq',
+                'url'  => 'https://api.groq.com/openai/v1/chat/completions',
+                'key'  => $_ENV['GROQ_API_KEY_2'] ?? '',
+                'model'=> 'llama-3.3-70b-versatile',
+                'json_mode' => true,
+            ],
+            [
+                'name' => 'Gemini',
+                'type' => 'gemini',
+                'url'  => 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
+                'key'  => $_ENV['GEMINI_API_KEY'] ?? '',
+                'model'=> 'gemini-2.0-flash',
+                'json_mode' => true,
+            ],
+            [
+                'name' => 'OpenRouter-Nemotron',
+                'type' => 'groq',
+                'url'  => 'https://openrouter.ai/api/v1/chat/completions',
+                'key'  => $_ENV['OPENROUTER_API_KEY'] ?? '',
+                'model'=> 'nvidia/nemotron-3-nano-30b-a3b:free',
+                'json_mode' => true,
+            ],
+        ];
+    }
+
+    public function getResponse(array $messages, array $context = [], string $lang = 'ru'): array
+    {
+        $settings = (new \App\Models\Setting())->getAll();
+        $botName = $settings['ai_bot_name'] ?? 'Абай';
+        $companyName = $settings['site_title'] ?? 'Kettik Study';
+        $kb = $this->knowledgeBaseService->getContext();
+
+        $knownInfo = [];
+        $contextStr = "";
+        if (!empty($context)) {
+            $contextStr = "\n[ИЗВЕСТНЫЕ ФАКТЫ - НЕ СПРАШИВАЙ ЭТО]:\n";
+
+            if (!empty($context['name']) && stripos($context['name'], $botName) === false) {
+                $contextStr .= "- Имя клиента: {$context['name']}\n";
+                $knownInfo[] = 'ИМЯ';
+            }
+            if (!empty($context['details']['program_of_interest'])) {
+                $contextStr .= "- Интерес: {$context['details']['program_of_interest']}\n";
+                $knownInfo[] = 'ТИП ОБУЧЕНИЯ';
+            } elseif (!empty($context['program_of_interest'])) {
+                $contextStr .= "- Интерес: {$context['program_of_interest']}\n";
+                $knownInfo[] = 'ТИП ОБУЧЕНИЯ';
+            }
+            if (!empty($context['language_level'])) {
+                $contextStr .= "- Уровень языка: {$context['language_level']}\n";
+                $knownInfo[] = 'ЯЗЫК';
+            }
+            if (!empty($context['budget'])) {
+                $contextStr .= "- Бюджет: {$context['budget']}\n";
+                $knownInfo[] = 'БЮДЖЕТ';
+            }
+        }
+        $knownList = implode(', ', $knownInfo);
+
+        if (!empty($context)) {
+            if (!empty($context['details']['city'])) {
+                $contextStr .= "- Город: {$context['details']['city']}\n";
+                $knownInfo[] = 'ГОРОД';
+            }
+            if (!empty($context['details']['specialty'])) {
+                $contextStr .= "- Специальность: {$context['details']['specialty']}\n";
+                $knownInfo[] = 'СПЕЦИАЛЬНОСТЬ';
+            }
+        }
+        $knownList = implode(', ', $knownInfo);
+
+        $languageInstruction = ($lang === 'kk') ? 'КАЗАХСКОМ ЯЗЫКЕ (Қазақша)' : 'РУССКОМ ЯЗЫКЕ';
+
+        $systemPrompt = <<<PROMPT
+Ты — {$botName}, дружелюбный и энергичный консультант {$companyName}. ВАЖНО: ТЫ ОБЯЗАН ОТВЕЧАТЬ ТОЛЬКО НА {$languageInstruction}. 
+
+ТВОЯ РОЛЬ И ЦЕЛЬ:
+Ты — {$botName}, экспертный образовательный консультант в компании {$companyName}. 
+Твоя главная цель — делика�1. **Профессионализм и эмпатия**: Общайся как опытный эксперт. Будь вежливым, уверенным и помогающим. 
+2. **Никакой навязчивости**: Не превращай диалог в допрос. Не пиши постоянно "Отличный выбор!", "Супер!". Реагируй адекватно и естественно.
+3. **Консультация ПЕРЕД воп

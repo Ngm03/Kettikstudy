@@ -19,5 +19,8 @@
             "name": "Kettik Digital Team",
             "email": "dev@kettik.digital"
         }
-    ]
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^11.5"
+    }
 }

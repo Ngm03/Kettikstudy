@@ -681,4 +681,39 @@ class AdminController
 
         echo json_encode(['success' => true]);
     }
+
+    public function makeAffiliate()
+    {
+        header('Content-Type: application/json');
+        
+        $user = $this->authService->getUserFromCookie();
+        if (!$user || $user['role'] !== 'admin') {
+            http_response_code(403);
+            echo json_encode(['error' => 'Access Denied']);
+            return;
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        $userId = $input['id'] ?? null;
+        
+        if (!$userId) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Missing ID']);
+            return;
+        }
+
+        $code = strtoupper(substr(md5(uniqid((string)rand(), true)), 0, 8));
+        
+        try {
+            $stmt = $this->db->prepare("UPDATE study_users SET role = 'affiliate', affiliate_code = ? WHERE id = ?");
+            $stmt->execute([$code, $userId]);
+            
+            $this->logger->log($user['sub'], 'make_affiliate', $userId, "User converted to Affiliate with code $code");
+            
+            echo json_encode(['success' => true, 'code' => $code]);
+        } catch (\Exception $e) {
+            http_response_code(500);
+            echo json_encode(['error' => 'Internal server error']);
+        }
+    }
 }

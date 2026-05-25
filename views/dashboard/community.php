@@ -1375,6 +1375,7 @@ body, html {
     let currentRoomId = null;
     let lastMessageId = 0;
     let pollInterval = null;
+    let eventSource = null;
     let knownMessageIds = new Set();
     
     let studentName = '';
@@ -1535,8 +1536,19 @@ body, html {
         document.getElementById('chat-messages').innerHTML = '<div style="text-align:center; padding:30px; font-weight:500; color:#94a3b8;"><?= __('loading_messages') ?></div>';
         
         if(pollInterval) clearInterval(pollInterval);
-        loadMessages();
-        pollInterval = setInterval(loadMessages, 3000);
+        if(eventSource) { eventSource.close(); eventSource = null; }
+
+        eventSource = new EventSource(`<?= BASE_URL ?>/api/chat/stream?room_id=${currentRoomId}&after_id=${lastMessageId}`);
+        eventSource.onmessage = function(e) {
+            try {
+                const data = JSON.parse(e.data);
+                if(data.messages && data.messages.length > 0) {
+                    renderMessages(data.messages);
+                }
+            } catch(err) {
+                console.error('SSE Error:', err);
+            }
+        };
 
         openMobileChat();
     }
@@ -1549,15 +1561,21 @@ body, html {
             .then(res => res.json())
             .then(data => {
                 if(!data || !data.messages) return;
-                const container = document.getElementById('chat-messages');
-                if(lastMessageId === 0) container.innerHTML = '';
+                renderMessages(data.messages);
+            })
+            .catch(err => console.error(err));
+    }
 
-                let hasNewMsg = false;
-                data.messages.forEach(msg => {
-                    if (knownMessageIds.has(msg.id)) return;
-                    knownMessageIds.add(msg.id);
-                    
-                    const div = document.createElement('div');
+    function renderMessages(messages) {
+        const container = document.getElementById('chat-messages');
+        if(lastMessageId === 0) container.innerHTML = '';
+
+        let hasNewMsg = false;
+        messages.forEach(msg => {
+            if (knownMessageIds.has(msg.id)) return;
+            knownMessageIds.add(msg.id);
+            
+            const div = document.createElement('div');
                     
                     let isSystemMsg = false;
                     let displayMsg = msg.message;
@@ -1677,8 +1695,6 @@ body, html {
                 });
 
                 if(hasNewMsg) scrollToBottom();
-            })
-            .catch(err => console.error(err));
     }
 
     function handleAttachment(input) {

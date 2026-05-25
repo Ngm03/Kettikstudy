@@ -36,18 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res.ok) {
                 if (!isAuthenticated) {
                     isAuthenticated = true;
-                    restoreInputArea();
                 }
             } else {
-                if (isAuthenticated || !inputArea.querySelector('.auth-buttons')) {
-                    isAuthenticated = false;
-                    showLoginPrompt();
-                }
+                isAuthenticated = false;
             }
         } catch (e) {
             isAuthenticated = false;
-            showLoginPrompt();
         }
+        restoreInputArea();
     }
 
     checkAuth();
@@ -97,10 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function sendMessage() {
-        if (!isAuthenticated) {
-            window.location.href = `${window.BASE_URL}/login`;
-            return;
-        }
         if (!input) return;
 
         const text = input.value.trim();
