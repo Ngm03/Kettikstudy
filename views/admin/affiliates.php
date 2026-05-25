@@ -96,14 +96,27 @@
         
         <form onsubmit="submitAffiliate(event)">
             <label style="font-size: 0.85rem; font-weight: 600;">Пользователь</label>
-            <select name="user_id" id="user_id_select" required class="am-form-input">
-                <option value="">-- Выберите студента --</option>
-                <?php if(!empty($students)): foreach($students as $st): ?>
-                    <option value="<?= $st['id'] ?>">
-                        <?= htmlspecialchars($st['full_name'] ?: $st['email']) ?>
-                    </option>
-                <?php endforeach; endif; ?>
-            </select>
+            <div style="position: relative; margin-top: 8px; margin-bottom: 20px;">
+                <input type="hidden" name="user_id" id="user_id_select" required>
+                
+                <input type="text" id="smm_search_input" class="am-form-input" style="margin-top:0; margin-bottom:0;"
+                       placeholder="Поиск по имени или email..." 
+                       autocomplete="off">
+                       
+                <div id="smm_search_dropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; background: #fff; border: 1px solid #cbd5e1; border-top: none; border-radius: 0 0 10px 10px; z-index: 10; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <?php if(!empty($students)): foreach($students as $st): ?>
+                        <div class="smm-option" data-id="<?= $st['id'] ?>" data-search="<?= strtolower(htmlspecialchars($st['full_name'] . ' ' . $st['email'] . ' ' . $st['phone'])) ?>" style="padding: 10px 14px; cursor: pointer; border-bottom: 1px solid #f1f5f9; transition: background 0.2s;">
+                            <div style="font-weight: 600; color: #1e293b; font-size: 0.9rem;"><?= htmlspecialchars($st['full_name'] ?: 'Без имени') ?></div>
+                            <div style="font-size: 0.75rem; color: #64748b; margin-top: 2px;">
+                                <?= htmlspecialchars($st['email']) ?>
+                                <?= $st['phone'] ? ' • ' . htmlspecialchars($st['phone']) : '' ?>
+                            </div>
+                        </div>
+                    <?php endforeach; else: ?>
+                        <div style="padding: 10px 14px; color: #64748b; font-size: 0.85rem; text-align: center;">Нет студентов</div>
+                    <?php endif; ?>
+                </div>
+            </div>
             
             <div style="display: flex; gap: 12px;">
                 <button type="button" onclick="closeModal()" class="am-btn" style="background:#f1f5f9;">Отмена</button>
@@ -117,7 +130,65 @@
     const aModal = document.getElementById('affiliateModal');
 
     function openModal() { aModal.classList.add('open'); }
-    function closeModal() { aModal.classList.remove('open'); }
+    function closeModal() { 
+        aModal.classList.remove('open'); 
+        setTimeout(() => {
+            document.getElementById('smm_search_input').value = '';
+            document.getElementById('user_id_select').value = '';
+            document.querySelectorAll('.smm-option').forEach(opt => opt.style.display = 'block');
+        }, 300);
+    }
+
+    // Custom Select JS for SMM
+    const searchInput = document.getElementById('smm_search_input');
+    const searchDropdown = document.getElementById('smm_search_dropdown');
+    const selectedUserId = document.getElementById('user_id_select');
+    const userOptions = document.querySelectorAll('.smm-option');
+
+    searchInput.addEventListener('focus', () => {
+        searchDropdown.style.display = 'block';
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+            searchDropdown.style.display = 'none';
+        }
+    });
+
+    searchInput.addEventListener('input', (e) => {
+        const q = e.target.value.toLowerCase();
+        searchDropdown.style.display = 'block';
+        userOptions.forEach(opt => {
+            if (opt.dataset.search.includes(q)) {
+                opt.style.display = 'block';
+            } else {
+                opt.style.display = 'none';
+            }
+        });
+        if (q === '') {
+            selectedUserId.value = '';
+        }
+    });
+
+    userOptions.forEach(opt => {
+        opt.addEventListener('click', () => {
+            const nameEl = opt.querySelector('div:first-child');
+            const emailEl = opt.querySelector('div:last-child');
+            
+            searchInput.value = nameEl.textContent.trim() + ' (' + emailEl.textContent.trim().split('•')[0].trim() + ')';
+            selectedUserId.value = opt.dataset.id;
+            searchDropdown.style.display = 'none';
+            
+            userOptions.forEach(o => o.style.background = 'transparent');
+            opt.style.background = '#f1f5f9';
+        });
+        
+        opt.addEventListener('mouseenter', () => { opt.style.background = '#f8fafc'; });
+        opt.addEventListener('mouseleave', () => { 
+            if(selectedUserId.value !== opt.dataset.id) opt.style.background = 'transparent'; 
+            else opt.style.background = '#f1f5f9'; 
+        });
+    });
 
     function submitAffiliate(e) {
         e.preventDefault();
