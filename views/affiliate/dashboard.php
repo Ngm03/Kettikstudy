@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?= \App\Core\Csrf::token() ?>">
     <title>Панель Партнера (SMM) | Kettik Study</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -103,5 +104,6 @@ function logout() {
         .then(() => window.location.href = '<?= BASE_URL ?>/login');
 }
 </script>
+<script src="<?= BASE_URL ?>/assets/js/csrf.js"></script>
 </body>
 </html>
