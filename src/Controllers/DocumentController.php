@@ -67,7 +67,13 @@ class DocumentController
             mkdir($uploadDir, 0755, true);
         }
 
-        $filename = time() . '_' . basename($file['name']);
+        $safeExt = match($mimeType) {
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'application/pdf' => 'pdf',
+            default => 'bin'
+        };
+        $filename = time() . '_' . bin2hex(random_bytes(8)) . '.' . $safeExt;
         $destination = $uploadDir . $filename;
         $relativePath = 'uploads/docs/' . $userId . '/' . $filename;
 
@@ -266,8 +272,8 @@ class DocumentController
             return;
         }
 
-        $roleStr = strtolower($role ?? '');
-        if (!str_contains($roleStr, 'admin') && $doc['user_id'] != $userId) {
+        $roleStr = strtolower(trim($role ?? ''));
+        if (!in_array($roleStr, ['admin', 'manager']) && $doc['user_id'] != $userId) {
             http_response_code(403);
             echo 'Access Denied';
             return;

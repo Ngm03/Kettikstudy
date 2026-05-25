@@ -101,8 +101,13 @@ class PaymentController
             return;
         }
 
-        $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $filename = uniqid('receipt_') . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
+        $safeExt = match($mimeType) {
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'application/pdf' => 'pdf',
+            default => 'bin'
+        };
+        $filename = uniqid('receipt_') . '_' . bin2hex(random_bytes(4)) . '.' . $safeExt;
         
         $userDir = $this->uploadDir . '/' . $userId;
         if (!is_dir($userDir)) {
