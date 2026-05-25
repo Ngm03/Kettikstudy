@@ -1599,9 +1599,9 @@ body, html {
                         const authorHtml = msg.is_mine ? '' : `<div class="msg-author" style="display:flex; align-items:center; gap:4px;">${isBroadcast ? '<?= __('admin_kettik_study') ?>' : escapeHtml(msg.author_name)}${adminBadge}</div>`;
                         
                         let finalMsg = displayMsg ? displayMsg : '';
+                        finalMsg = escapeHtml(finalMsg).replace(/\n/g, '<br>');
                         finalMsg = finalMsg.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-                        const formattedMsg = escapeHtml(finalMsg).replace(/\n/g, '<br>');
+                        const formattedMsg = finalMsg;
                         
                         let actionMenuHtml = '';
                         const msgTimeTimestamp = new Date(msg.created_at).getTime();
