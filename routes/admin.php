@@ -9,8 +9,8 @@ $router->get('/admin/dashboard',      [\App\Controllers\AdminController::class, 
 $router->get('/admin/prices',         [\App\Controllers\AdminController::class, 'pricesPage'],     ['auth', 'role:admin']);
 $router->get('/admin/student',        [\App\Controllers\AdminController::class, 'studentPage'],    ['auth', 'role:admin']);
 $router->get('/admin/documents',      [\App\Controllers\AdminController::class, 'documentsPage'],  ['auth', 'role:admin']);
-$router->get('/admin/logs',           [\App\Controllers\AdminController::class, 'logsPage'],       ['auth', 'role:admin']);
 $router->get('/admin/settings',       [\App\Controllers\AdminController::class, 'settingsPage'],   ['auth', 'role:admin']);
+$router->get('/admin/affiliates',     [\App\Controllers\AdminController::class, 'affiliatesPage'], ['auth', 'role:admin']);
 
 $router->get('/admin/analytics', function () {
     $page      = 'analytics';
@@ -38,6 +38,8 @@ $router->post('/api/admin/logs/clear',       [\App\Controllers\AdminController::
 $router->get('/api/admin/download-pdf',      [\App\Controllers\AdminController::class, 'downloadPdf'],        ['auth', 'role:admin,manager']);
 $router->post('/api/admin/doc-status',       [\App\Controllers\AdminController::class, 'updateDocStatus'],    ['auth', 'role:admin,manager']);
 $router->post('/api/admin/student-notes',    [\App\Controllers\AdminController::class, 'updateStudentNotes'], ['auth', 'role:admin,manager']);
+$router->post('/api/admin/users/make-affiliate', [\App\Controllers\AdminController::class, 'makeAffiliate'], ['auth', 'role:admin']);
+$router->post('/api/admin/users/remove-affiliate', [\App\Controllers\AdminController::class, 'removeAffiliate'], ['auth', 'role:admin']);
 
 $router->get('/api/admin/fix-db', function() {
     $db = \App\Core\Database::getInstance()->getConnection();

@@ -682,6 +682,46 @@ class AdminController
         echo json_encode(['success' => true]);
     }
 
+    public function affiliatesPage()
+    {
+        $page = 'affiliates';
+        $stmt = $this->db->query("SELECT id, full_name as name, phone, email, affiliate_code, created_at FROM study_users WHERE role = 'affiliate' ORDER BY created_at DESC");
+        $affiliates = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $stmt = $this->db->query("SELECT id, full_name, email, phone FROM study_users WHERE role = 'student' ORDER BY full_name ASC");
+        $students = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        require __DIR__ . '/../../views/layouts/admin.php';
+    }
+
+    public function removeAffiliate()
+    {
+        header('Content-Type: application/json');
+        $user = $this->authService->getUserFromCookie();
+        if (!$user || $user['role'] !== 'admin') {
+            http_response_code(403);
+            echo json_encode(['error' => 'Access Denied']);
+            return;
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        $userId = $input['id'] ?? null;
+        if (!$userId) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Missing ID']);
+            return;
+        }
+
+        try {
+            $stmt = $this->db->prepare("UPDATE study_users SET role = 'student', affiliate_code = NULL WHERE id = ?");
+            $stmt->execute([$userId]);
+            echo json_encode(['success' => true]);
+        } catch (\Exception $e) {
+            http_response_code(500);
+            echo json_encode(['error' => 'Internal error']);
+        }
+    }
+
     public function makeAffiliate()
     {
         header('Content-Type: application/json');
