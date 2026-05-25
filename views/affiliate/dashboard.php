@@ -25,7 +25,7 @@
             <h1 class="text-3xl font-bold text-gray-900">Панель Партнера</h1>
             <p class="text-gray-500 mt-1">Отслеживайте свои приглашения и конверсии</p>
         </div>
-        <a href="<?= BASE_URL ?>/logout" class="text-red-500 font-medium hover:underline">Выйти</a>
+        <button onclick="logout()" class="text-red-500 font-medium hover:underline bg-transparent border-none cursor-pointer">Выйти</button>
     </header>
 
     <div class="glass-card mb-8">
@@ -96,6 +96,11 @@ function copyLink() {
     navigator.clipboard.writeText(input.value).then(() => {
         alert("Ссылка скопирована!");
     });
+}
+
+function logout() {
+    fetch('<?= BASE_URL ?>/api/auth/logout', { method: 'POST' })
+        .then(() => window.location.href = '<?= BASE_URL ?>/login');
 }
 </script>
 </body>
