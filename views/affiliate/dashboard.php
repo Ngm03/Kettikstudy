@@ -32,10 +32,10 @@
         <h2 class="text-lg font-semibold mb-2">Ваша реферальная ссылка</h2>
         <p class="text-sm text-gray-500 mb-4">Скопируйте эту ссылку и отправляйте потенциальным клиентам. Все, кто зарегистрируются по ней, будут закреплены за вами.</p>
         
-        <div class="flex items-center gap-3">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <input type="text" readonly id="ref-link" value="<?= (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . BASE_URL ?>/register?ref=<?= htmlspecialchars($affiliateCode) ?>" 
-                   class="flex-1 p-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 font-mono text-sm focus:outline-none">
-            <button onclick="copyLink()" class="px-6 py-3 bg-[#0052FF] text-white font-semibold rounded-xl hover:bg-blue-700 transition">Скопировать</button>
+                   class="flex-1 w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 font-mono text-sm sm:text-base focus:outline-none text-center sm:text-left truncate">
+            <button onclick="copyLink()" class="w-full sm:w-auto px-6 py-3 bg-[#0052FF] text-white font-semibold rounded-xl hover:bg-blue-700 transition flex-shrink-0 whitespace-nowrap">Скопировать</button>
         </div>
     </div>
 
