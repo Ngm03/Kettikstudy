@@ -333,66 +333,6 @@ class AdminController
         echo json_encode(['success' => true]);
     }
 
-    public function updateChatRoom()
-    {
-        $token = $_COOKIE['auth_token'] ?? null;
-        if (!$token) {
-            http_response_code(401);
-            echo json_encode(['error' => 'No token provided']);
-            return;
-        }
-
-        $decoded = $this->authService->validateToken($token);
-        $role = strtolower($decoded['role'] ?? '');
-        if (!$decoded || !str_contains($role, 'admin')) {
-            http_response_code(403);
-            echo json_encode(['error' => 'Access Denied: Admin only']);
-            exit;
-        }
-        
-        header('Content-Type: application/json');
-
-        $roomId = $_POST['id'] ?? null;
-        $name = trim($_POST['name'] ?? '');
-
-        if (!$roomId || empty($name)) {
-            http_response_code(400);
-            echo json_encode(['error' => 'ID and Name are required']);
-            return;
-        }
-
-        $avatarUrl = trim($_POST['avatar_url'] ?? '');
-
-        if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = __DIR__ . '/../../public/uploads/avatars/';
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
-            }
-            $ext = pathinfo($_FILES['avatar']['name'], PATHINFO_EXTENSION);
-            $filename = uniqid('avatar_') . '.' . $ext;
-            $destination = $uploadDir . $filename;
-            
-            if (move_uploaded_file($_FILES['avatar']['tmp_name'], $destination)) {
-                $baseUrl = defined('BASE_URL') ? BASE_URL : '';
-                $avatarUrl = $baseUrl . '/uploads/avatars/' . $filename;
-            }
-        }
-
-        $finalAvatar = $avatarUrl !== '' ? $avatarUrl : null;
-
-        try {
-            $stmt = $this->db->prepare("UPDATE study_chat_rooms SET name = ?, avatar = ? WHERE id = ?");
-            if ($stmt->execute([$name, $finalAvatar, $roomId])) {
-                echo json_encode(['success' => true]);
-            } else {
-                http_response_code(500);
-                echo json_encode(['error' => 'Failed to update chat room']);
-            }
-        } catch (\PDOException $e) {
-            http_response_code(500);
-            echo json_encode(['error' => 'Database error']);
-        }
-    }
 
     public function logsPage()
     {

@@ -4,7 +4,6 @@ $router->get('/manager',                   [\App\Controllers\ManagerPanelControl
 $router->get('/manager/leads',             [\App\Controllers\ManagerPanelController::class, 'leads'],          ['auth', 'role:admin,manager']);
 $router->get('/manager/students',          [\App\Controllers\ManagerPanelController::class, 'students'],       ['auth', 'role:admin,manager']);
 $router->get('/manager/student',           [\App\Controllers\ManagerPanelController::class, 'studentProfile'], ['auth', 'role:admin,manager']);
-$router->get('/manager/chat',              [\App\Controllers\ManagerPanelController::class, 'chat'],           ['auth', 'role:admin,manager']);
 
 $router->get('/api/manager/dashboard-stats',   [\App\Controllers\ManagerPanelController::class, 'getDashboardStats'], ['auth', 'role:admin,manager']);
 $router->get('/api/manager/leads',             [\App\Controllers\ManagerPanelController::class, 'getLeads'],          ['auth', 'role:admin,manager']);

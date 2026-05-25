@@ -55,11 +55,6 @@ class DashboardController
         require __DIR__ . '/../../views/layouts/dashboard.php';
     }
 
-    public function community()
-    {
-        $page = 'community';
-        require __DIR__ . '/../../views/layouts/dashboard.php';
-    }
 
     public function prices()
     {

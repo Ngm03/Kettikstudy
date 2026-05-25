@@ -30,7 +30,6 @@ $router->post('/api/leads/request-call', [\App\Controllers\LeadController::class
 $router->get('/dashboard',            [\App\Controllers\DashboardController::class, 'index'],     ['auth']);
 $router->get('/dashboard/documents',  [\App\Controllers\DashboardController::class, 'documents'], ['auth']);
 $router->get('/dashboard/profile',    [\App\Controllers\DashboardController::class, 'profile'],   ['auth']);
-$router->get('/dashboard/community',  [\App\Controllers\DashboardController::class, 'community'], ['auth']);
 $router->get('/dashboard/prices',     [\App\Controllers\DashboardController::class, 'prices'],    ['auth']);
 $router->get('/dashboard/schedule',   [\App\Controllers\DashboardController::class, 'schedule'],  ['auth']);
 $router->get('/dashboard/tasks',      [\App\Controllers\DashboardController::class, 'tasks'],     ['auth']);

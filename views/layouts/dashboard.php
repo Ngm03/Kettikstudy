@@ -96,11 +96,6 @@
                         <div style="margin: 8px 16px; height: 1px; background: #e5e7eb;"></div>
                     <?php endif; ?>
                     <?php if ($isEnrolled): ?>
-                        <!-- CHAT: приватный чат с менеджером (общий/городской чаты заморожены) -->
-                        <a href="<?= BASE_URL ?>/dashboard/community" class="nav-link <?php echo $page === 'community' ? 'active' : ''; ?>">
-                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
-                           Чат с менеджером
-                        </a>
                         <!-- prices/schedule/tasks заморожены до поступления -->
                     <?php endif; ?>
                 </div>

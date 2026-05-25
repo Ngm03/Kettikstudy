@@ -64,6 +64,5 @@ $router->post('/api/admin/update-details',   [\App\Controllers\AdminController::
 $router->get('/api/admin/documents',         [\App\Controllers\AdminController::class, 'getAllDocuments'],     ['auth', 'role:admin,manager']);
 $router->get('/api/admin/settings',          [\App\Controllers\AdminController::class, 'getSettings'],        ['auth', 'role:admin']);
 $router->post('/api/admin/settings',         [\App\Controllers\AdminController::class, 'updateSettings'],     ['auth', 'role:admin']);
-$router->post('/api/admin/chat-rooms',       [\App\Controllers\AdminController::class, 'updateChatRoom'],     ['auth', 'role:admin']);
 
 $router->get('/api/analytics/dashboard',     [\App\Controllers\AnalyticsController::class, 'getDashboardStats'], ['auth', 'role:admin']);

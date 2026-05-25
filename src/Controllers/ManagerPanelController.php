@@ -43,12 +43,7 @@ class ManagerPanelController
         require __DIR__ . '/../../views/layouts/manager.php';
     }
 
-    public function chat()
-    {
-        $page = 'manager_chat';
-        $pageTitle = 'Чат со студентами';
-        require __DIR__ . '/../../views/layouts/manager.php';
-    }
+
 
     public function studentProfile()
     {
