@@ -29,6 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             window.location.href = `${window.BASE_URL}/admin/dashboard`;
                         } else if (data.user.role === 'manager') {
                             window.location.href = `${window.BASE_URL}/manager`;
+                        } else if (data.user.role === 'affiliate') {
+                            window.location.href = `${window.BASE_URL}/affiliate`;
                         } else {
                             window.location.href = `${window.BASE_URL}/dashboard`;
                         }

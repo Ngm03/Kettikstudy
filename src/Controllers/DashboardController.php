@@ -11,6 +11,23 @@ class DashboardController
     public function __construct()
     {
         $this->authService = new AuthService();
+        
+        // Prevent non-students from accessing the student dashboard
+        $user = $this->authService->user();
+        if ($user) {
+            $role = strtolower(trim($user['role'] ?? ''));
+            if ($role === 'admin') {
+                header('Location: ' . BASE_URL . '/admin/dashboard');
+                exit;
+            } elseif ($role === 'manager') {
+                header('Location: ' . BASE_URL . '/manager'); // Or /manager/dashboard if that exists
+                exit;
+            } elseif ($role === 'affiliate') {
+                header('Location: ' . BASE_URL . '/affiliate');
+                exit;
+            }
+            // If student, do nothing and allow access
+        }
     }
 
 
