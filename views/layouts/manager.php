@@ -205,10 +205,7 @@ $lang = $_COOKIE['lang'] ?? 'ru';
             </a>
 
             <div style="margin: 12px 16px; height: 1px; background: rgba(255,255,255,0.1);"></div>
-            <a href="<?= BASE_URL ?>/dashboard" class="man-nav-item" title="<?= __('man_nav_cabinet') ?>">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                <?= __('man_nav_cabinet') ?>
-            </a>
+
             <div style="padding: 0 16px; margin-top: auto; margin-bottom: 24px;">
                 <button onclick="switchLang('<?= \App\Helpers\I18n::getLocale() === 'ru' ? 'kk' : 'ru' ?>')" style="width: 100%; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:10px; font-weight:500; cursor:pointer; font-size:13px; color:var(--man-sidebar-text); transition:all 0.2s;" onmouseover="this.style.background='var(--man-sidebar-hover)'; this.style.color='#fff';" onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.color='var(--man-sidebar-text)';">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16" style="margin-right: 8px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
