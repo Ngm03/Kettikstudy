@@ -44,7 +44,14 @@ $router->post('/api/admin/users/remove-affiliate', [\App\Controllers\AdminContro
 $router->get('/api/admin/fix-db', function() {
     $db = \App\Core\Database::getInstance()->getConnection();
     $db->exec("ALTER TABLE study_leads MODIFY COLUMN status VARCHAR(50) NOT NULL DEFAULT 'new'");
-    echo "Fixed DB ENUM issue!";
+    
+    // Fix role ENUM to include 'affiliate' and 'student'
+    $db->exec("ALTER TABLE study_users MODIFY COLUMN role ENUM('admin', 'manager', 'student', 'affiliate', 'user') NOT NULL DEFAULT 'student'");
+    
+    // Convert old 'user' or broken '' roles to 'student'
+    $db->exec("UPDATE study_users SET role = 'student' WHERE role = '' OR role = 'user'");
+    
+    echo "Fixed DB ENUM issues and updated user roles!";
 });
 
 $router->post('/api/admin/clear-urgent',     [\App\Controllers\AdminController::class, 'clearUrgent'],        ['auth', 'role:admin,manager']);
