@@ -345,17 +345,28 @@
         </div>
         <div class="am-modal-body">
             <form id="managerForm" onsubmit="submitManager(event)" enctype="multipart/form-data">
-                <div class="am-form-group" style="margin-bottom: 24px;">
+                <div class="am-form-group" style="margin-bottom: 24px; position: relative;">
                     <label class="am-form-label"><?= ($translatedSelect = __('global_select_user')) === 'global_select_user' ? 'Выберите пользователя' : $translatedSelect ?></label>
-                    <select name="user_id" required class="am-form-input">
-                        <option value=""><?= ($translatedOpt = __('global_select_user')) === 'global_select_user' ? '-- Выберите пользователя --' : '-- ' . $translatedOpt . ' --' ?></option>
+                    
+                    <input type="hidden" name="user_id" id="selected_user_id" required>
+                    
+                    <input type="text" id="user_search_input" class="am-form-input" 
+                           placeholder="<?= ($translatedOpt = __('global_select_user')) === 'global_select_user' ? 'Поиск по имени, email или телефону...' : 'Поиск...' ?>" 
+                           autocomplete="off">
+                           
+                    <div id="user_search_dropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; background: #fff; border: 1px solid #cbd5e1; border-top: none; border-radius: 0 0 10px 10px; z-index: 10; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
                         <?php if(!empty($students)): foreach($students as $st): ?>
-                            <option value="<?= $st['id'] ?>">
-                                <?= htmlspecialchars($st['full_name'] ?: $st['email']) ?>
-                                <?= $st['phone'] ? '(' . htmlspecialchars($st['phone']) . ')' : '' ?>
-                            </option>
-                        <?php endforeach; endif; ?>
-                    </select>
+                            <div class="user-option" data-id="<?= $st['id'] ?>" data-search="<?= strtolower(htmlspecialchars($st['full_name'] . ' ' . $st['email'] . ' ' . $st['phone'])) ?>" style="padding: 10px 14px; cursor: pointer; border-bottom: 1px solid #f1f5f9; transition: background 0.2s;">
+                                <div style="font-weight: 600; color: #1e293b; font-size: 0.9rem;"><?= htmlspecialchars($st['full_name'] ?: 'Без имени') ?></div>
+                                <div style="font-size: 0.75rem; color: #64748b; margin-top: 2px;">
+                                    <?= htmlspecialchars($st['email']) ?>
+                                    <?= $st['phone'] ? ' • ' . htmlspecialchars($st['phone']) : '' ?>
+                                </div>
+                            </div>
+                        <?php endforeach; else: ?>
+                            <div style="padding: 10px 14px; color: #64748b; font-size: 0.85rem; text-align: center;">Нет пользователей</div>
+                        <?php endif; ?>
+                    </div>
                 </div>
                 
                 <div>
@@ -380,11 +391,65 @@
         mModal.classList.remove('open');
         setTimeout(() => {
             form.reset();
+            document.getElementById('user_search_input').value = '';
+            document.getElementById('selected_user_id').value = '';
+            document.querySelectorAll('.user-option').forEach(opt => opt.style.display = 'block');
         }, 300);
     }
 
     mModal.addEventListener('click', (e) => {
         if (e.target === mModal) closeManagerModal();
+    });
+
+    // Custom Select JS
+    const searchInput = document.getElementById('user_search_input');
+    const searchDropdown = document.getElementById('user_search_dropdown');
+    const selectedUserId = document.getElementById('selected_user_id');
+    const userOptions = document.querySelectorAll('.user-option');
+
+    searchInput.addEventListener('focus', () => {
+        searchDropdown.style.display = 'block';
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+            searchDropdown.style.display = 'none';
+        }
+    });
+
+    searchInput.addEventListener('input', (e) => {
+        const q = e.target.value.toLowerCase();
+        searchDropdown.style.display = 'block';
+        userOptions.forEach(opt => {
+            if (opt.dataset.search.includes(q)) {
+                opt.style.display = 'block';
+            } else {
+                opt.style.display = 'none';
+            }
+        });
+        if (q === '') {
+            selectedUserId.value = '';
+        }
+    });
+
+    userOptions.forEach(opt => {
+        opt.addEventListener('click', () => {
+            const nameEl = opt.querySelector('div:first-child');
+            const emailEl = opt.querySelector('div:last-child');
+            
+            searchInput.value = nameEl.textContent.trim() + ' (' + emailEl.textContent.trim().split('•')[0].trim() + ')';
+            selectedUserId.value = opt.dataset.id;
+            searchDropdown.style.display = 'none';
+            
+            userOptions.forEach(o => o.style.background = 'transparent');
+            opt.style.background = '#f1f5f9';
+        });
+        
+        opt.addEventListener('mouseenter', () => { opt.style.background = '#f8fafc'; });
+        opt.addEventListener('mouseleave', () => { 
+            if(selectedUserId.value !== opt.dataset.id) opt.style.background = 'transparent'; 
+            else opt.style.background = '#f1f5f9'; 
+        });
     });
 
 
