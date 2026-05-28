@@ -59,7 +59,28 @@ class AuthService
     public function getUserFromCookie()
     {
         if (!isset($_COOKIE['auth_token'])) return null;
-        return $this->validateToken($_COOKIE['auth_token']);
+        $decoded = $this->validateToken($_COOKIE['auth_token']);
+        if (!$decoded) return null;
+        
+        try {
+            $db = \App\Core\Database::getInstance()->getConnection();
+            $stmt = $db->prepare("SELECT role, full_name, email FROM study_users WHERE id = ?");
+            $stmt->execute([$decoded['sub']]);
+            $dbUser = $stmt->fetch(\PDO::FETCH_ASSOC);
+            
+            if ($dbUser) {
+                // Update the decoded payload with fresh DB data
+                $decoded['role'] = $dbUser['role'];
+                $decoded['name'] = $dbUser['full_name'];
+                $decoded['email'] = $dbUser['email'];
+                return $decoded;
+            }
+        } catch (\Exception $e) {
+            // Fallback to token if DB fails
+            return $decoded;
+        }
+        
+        return null;
     }
 
     public function check()

@@ -283,7 +283,7 @@ class ChatController
         return $data;
     }
 
-    private function saveLead(array $data, array $history, int $userId)
+    private function saveLead(array $data, array $history, ?int $userId, ?string $sessionId = null)
     {
         $db = Database::getInstance()->getConnection();
         

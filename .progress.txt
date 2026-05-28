@@ -198,3 +198,5 @@
   - Переведён механизм авторизации AuthService.php на firebase/php-jwt.
   - Чат (CommunityChatController.php) переведён с HTTP-polling на Server-Sent Events (SSE). Снижена нагрузка на сервер.
   - Интегрирован PHPUnit (11.5). Написаны тесты для AuthService и MessageService, тесты успешно проходят.
+
+2026-05-28 (Fix AI Chat): Исправлена синтаксическая ошибка в AiService.php и ошибка типизации в ChatController.php, вызывавшие 500 ошибку сервера при отправке сообщений Ассистенту Абаю.
